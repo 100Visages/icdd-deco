@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny Catch-All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Validation for Quotes / Consultation requests
+    function isValidQuote(data) {
+      return (
+        data.keys().hasAll(['userId', 'clientName', 'clientEmail', 'propertyType', 'surfaceArea', 'projectScope', 'status', 'createdAt']) &&
+        data.userId is string && data.userId.size() <= 128 &&
+        (!isSignedIn() ? data.userId == 'guest' : (data.userId == request.auth.uid || data.userId == 'guest')) &&
+        data.clientName is string && data.clientName.size() >= 2 && data.clientName.size() <= 100 &&
+        data.clientEmail is string && data.clientEmail.size() >= 5 && data.clientEmail.size() <= 150 &&
+        data.propertyType in ['Appartement', 'Maison / Villa', 'Espace Commercial', 'Penthouse'] &&
+        data.surfaceArea is number && data.surfaceArea > 0 && data.surfaceArea <= 50000 &&
+        data.projectScope in ['Rénovation Complète', 'Design & Furnishing', 'Aménagement de Pièce', 'Consultation 3D'] &&
+        data.status in ['pending', 'in_review', 'contacted'] &&
+        data.createdAt == request.time &&
+        (!('clientPhone' in data) || (data.clientPhone is string && data.clientPhone.size() <= 50)) &&
+        (!('clientMessage' in data) || (data.clientMessage is string && data.clientMessage.size() <= 2000)) &&
+        (!('preferredStyle' in data) || (data.preferredStyle is string && data.preferredStyle.size() <= 100)) &&
+        (!('materials' in data) || (data.materials is list && data.materials.size() <= 20)) &&
+        (!('estimatedBudgetMin' in data) || (data.estimatedBudgetMin is number && data.estimatedBudgetMin >= 0)) &&
+        (!('estimatedBudgetMax' in data) || (data.estimatedBudgetMax is number && data.estimatedBudgetMax >= 0))
+      );
+    }
+
+    // Validation for Contact & Showroom Messages
+    function isValidMessage(data) {
+      return (
+        data.keys().hasAll(['userId', 'name', 'email', 'subject', 'message', 'status', 'createdAt']) &&
+        data.userId is string && data.userId.size() <= 128 &&
+        (!isSignedIn() ? data.userId == 'guest' : (data.userId == request.auth.uid || data.userId == 'guest')) &&
+        data.name is string && data.name.size() >= 2 && data.name.size() <= 100 &&
+        data.email is string && data.email.size() >= 5 && data.email.size() <= 150 &&
+        data.subject is string && data.subject.size() >= 2 && data.subject.size() <= 150 &&
+        data.message is string && data.message.size() >= 3 && data.message.size() <= 2000 &&
+        data.status in ['unread', 'read'] &&
+        data.createdAt == request.time &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 50))
+      );
+    }
+
+    // Validation for Bookmarked Projects
+    function isValidFavorite(data, projectId) {
+      return (
+        data.keys().hasAll(['projectId', 'projectTitle', 'savedAt']) &&
+        data.projectId == projectId &&
+        data.projectId is string && data.projectId.size() <= 128 &&
+        data.projectTitle is string && data.projectTitle.size() <= 200 &&
+        data.savedAt == request.time
+      );
+    }
+
+    // Collection: /quotes/{quoteId}
+    match /quotes/{quoteId} {
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow create: if isValidId(quoteId) && isValidQuote(incoming());
+      allow update, delete: if false;
+    }
+
+    // Collection: /messages/{messageId}
+    match /messages/{messageId} {
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow create: if isValidId(messageId) && isValidMessage(incoming());
+      allow update, delete: if false;
+    }
+
+    // Subcollection: /users/{userId}/favorites/{projectId}
+    match /users/{userId}/favorites/{projectId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidId(projectId) && isValidFavorite(incoming(), projectId);
+      allow delete: if isOwner(userId) && isValidId(projectId);
+      allow update: if false;
+    }
+  }
+}

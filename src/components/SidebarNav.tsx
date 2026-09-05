@@ -36,7 +36,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
   ];
 
   return (
-    <aside id="sidebar-navigation" className="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center">
+    <aside id="sidebar-navigation" className="absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center">
       {/* Floating Glass Pill Container */}
       <div className="flex flex-col items-center gap-4 p-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-full border border-white/60 dark:border-white/20 shadow-2xl shadow-black/10 transition-all duration-300">
         

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Project } from '../types';
-import { X, MapPin, Calendar, Compass, Layers, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight, FileText, Share2 } from 'lucide-react';
+import { X, MapPin, Calendar, Compass, Layers, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight, FileText, Share2, Bookmark } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -13,6 +14,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   onClose,
   onRequestSimilar,
 }) => {
+  const { isFavorite, toggleFavorite } = useAuth();
   if (!project) return null;
 
   const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -200,16 +202,31 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
               <span className="text-sm font-extrabold text-slate-900 dark:text-white">Concevons votre espace sur la même inspiration</span>
             </div>
 
-            <button
-              onClick={() => {
-                onClose();
-                onRequestSimilar(project);
-              }}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs tracking-wide shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Demander un Projet Similaire</span>
-            </button>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => toggleFavorite(project)}
+                className={`px-5 py-3.5 rounded-full border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
+                  isFavorite(project.id)
+                    ? 'bg-amber-500 text-white border-amber-500 hover:bg-amber-600'
+                    : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-750'
+                }`}
+                title={isFavorite(project.id) ? "Retirer des favoris" : "Enregistrer dans mes favoris"}
+              >
+                <Bookmark className={`w-4 h-4 ${isFavorite(project.id) ? 'fill-current text-white' : ''}`} />
+                <span>{isFavorite(project.id) ? 'Enregistré' : 'Favori'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  onClose();
+                  onRequestSimilar(project);
+                }}
+                className="flex-1 sm:flex-none px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs tracking-wide shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Demander un Projet Similaire</span>
+              </button>
+            </div>
           </div>
 
         </div>

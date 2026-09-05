@@ -44,10 +44,10 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-4 sm:p-8 md:p-10 lg:p-12 xl:p-16 pointer-events-none">
+    <div className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar flex flex-col justify-between p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 pointer-events-auto">
       
       {/* Hero Title & Descriptive Text (Center-Top Overlay) */}
-      <div className="pointer-events-auto max-w-3xl lg:max-w-4xl pt-2 sm:pt-4 lg:pt-6">
+      <div className="max-w-3xl lg:max-w-4xl pt-2 sm:pt-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-white/50 text-slate-900 dark:text-white text-xs font-semibold tracking-wide mb-3.5 shadow-md">
           <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
           <span>Cabinet d’Architecture d’Intérieur de Luxe</span>
@@ -63,12 +63,12 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
       </div>
 
       {/* Bottom Row: Overlay Cards (Left Panel & Right Panel) */}
-      <div className="w-full flex flex-col lg:flex-row items-end justify-between gap-6 pt-8 mt-auto">
+      <div className="w-full flex flex-col lg:flex-row items-stretch lg:items-end justify-between gap-6 pt-6 mt-auto pb-4">
         
         {/* Left Panel (Action Card - Consultation / Devis) */}
         <div 
           onClick={openQuoteModal}
-          className="pointer-events-auto w-full lg:w-[380px] xl:w-[420px] bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl p-6 sm:p-7 xl:p-8 rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/15 transition-all duration-300 hover:scale-[1.02] cursor-pointer group relative overflow-hidden"
+          className="w-full lg:w-[380px] xl:w-[420px] bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl p-6 sm:p-7 xl:p-8 rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/15 transition-all duration-300 hover:scale-[1.02] cursor-pointer group relative overflow-hidden"
         >
           {/* Subtle gradient highlight on hover */}
           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -129,7 +129,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* Right Panel (Featured Project Card) */}
         <div 
           onClick={() => onOpenProject(featuredProject)}
-          className="pointer-events-auto w-full lg:w-[480px] xl:w-[560px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 sm:p-7 xl:p-8 rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/20 transition-all duration-300 hover:scale-[1.01] cursor-pointer group relative"
+          className="w-full lg:w-[480px] xl:w-[560px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-6 sm:p-7 xl:p-8 rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/20 transition-all duration-300 hover:scale-[1.01] cursor-pointer group relative"
         >
           {/* Card Header with Location & Action Arrow */}
           <div className="flex items-start justify-between gap-4 mb-3">

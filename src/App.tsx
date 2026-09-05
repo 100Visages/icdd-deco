@@ -54,11 +54,11 @@ export default function App() {
       {/* Outer Pill-Shaped Glass Frame matching reference image structure */}
       <main 
         id="pill-shaped-container"
-        className="relative w-full h-full max-w-none rounded-none sm:rounded-[28px] lg:rounded-[36px] xl:rounded-[44px] border-0 sm:border-[3px] border-white/80 dark:border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col justify-between bg-slate-950 transition-all duration-500"
+        className="relative w-full h-full max-w-none rounded-none sm:rounded-[28px] lg:rounded-[36px] xl:rounded-[44px] border-0 sm:border-[3px] border-white/80 dark:border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col bg-slate-950 transition-all duration-500"
       >
         
         {/* Main Background Image (Luxury ICDD Interior Photography) */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <img
             src={ICDD_PROJECTS[0].coverImage}
             alt="ICDD Interior Design"
@@ -79,7 +79,7 @@ export default function App() {
         />
 
         {/* Mobile Top Navigation Pills (for mobile screens) */}
-        <div className="md:hidden z-40 p-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-around border-b border-white/40">
+        <div className="md:hidden z-40 p-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-around border-b border-white/40 flex-shrink-0">
           <button
             onClick={() => setActiveTab('accueil')}
             className={`text-xs font-bold px-3 py-1.5 rounded-full ${activeTab === 'accueil' ? 'bg-slate-900 text-white' : 'text-slate-700'}`}
@@ -115,7 +115,7 @@ export default function App() {
         />
 
         {/* Main Dynamic View Content */}
-        <div className="relative z-20 flex-1 w-full overflow-hidden flex flex-col justify-between md:pl-20">
+        <div className="relative z-20 flex-1 min-h-0 w-full overflow-hidden flex flex-col md:pl-20">
           
           {activeTab === 'accueil' && (
             <HeroOverlay

@@ -33,7 +33,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
   ];
 
   return (
-    <div className="w-full h-full overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
+    <div className="w-full h-full min-h-0 overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
       <div className="max-w-6xl mx-auto space-y-12 pb-16">
         
         {/* Hero Section */}

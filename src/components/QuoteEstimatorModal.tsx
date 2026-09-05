@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { X, Check, Calculator, Sparkles, Send, Calendar, CheckCircle2, Building, Home, Store, Layers } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Check, Calculator, Sparkles, Send, Calendar, CheckCircle2, Building, Home, Store, Layers, Loader2, AlertCircle } from 'lucide-react';
 import { QuoteFormData, Project } from '../types';
+import { useAuth } from '../context/AuthContext';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 interface QuoteEstimatorModalProps {
   isOpen: boolean;
@@ -13,9 +16,13 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
   onClose,
   preselectedProject,
 }) => {
+  const { user } = useAuth();
+
   if (!isOpen) return null;
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<QuoteFormData>({
     propertyType: 'Appartement',
@@ -25,13 +32,24 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
     materials: ['Chêne massif', 'Marbre de Carrare'],
     estimatedBudgetMin: 120000,
     estimatedBudgetMax: 210000,
-    clientName: '',
-    clientEmail: '',
+    clientName: user?.displayName || '',
+    clientEmail: user?.email || '',
     clientPhone: '',
     clientMessage: preselectedProject ? `Je souhaite un projet similaire à "${preselectedProject.title}".` : '',
   });
 
   const [submitted, setSubmitted] = useState(false);
+
+  // Pre-fill user data when user logs in
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        clientName: prev.clientName || user.displayName || '',
+        clientEmail: prev.clientEmail || user.email || '',
+      }));
+    }
+  }, [user]);
 
   // Material options
   const materialOptions = [
@@ -86,9 +104,40 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const quoteDocId = 'q_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const quoteDocRef = doc(db, 'quotes', quoteDocId);
+
+    try {
+      await setDoc(quoteDocRef, {
+        userId: user ? user.uid : 'guest',
+        clientName: formData.clientName.trim(),
+        clientEmail: formData.clientEmail.trim(),
+        clientPhone: formData.clientPhone?.trim() || '',
+        clientMessage: formData.clientMessage?.trim() || '',
+        propertyType: formData.propertyType,
+        surfaceArea: Number(formData.surfaceArea),
+        projectScope: formData.projectScope,
+        preferredStyle: formData.preferredStyle || 'Minimaliste',
+        materials: formData.materials || [],
+        estimatedBudgetMin: Number(formData.estimatedBudgetMin),
+        estimatedBudgetMax: Number(formData.estimatedBudgetMax),
+        status: 'pending',
+        createdAt: serverTimestamp(),
+      });
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Error submitting quote:', err);
+      setSubmitError("Une erreur est survenue lors de l'enregistrement de votre devis sur Firestore. Veuillez réessayer.");
+      handleFirestoreError(err, OperationType.WRITE, `quotes/${quoteDocId}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -416,21 +465,40 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </p>
                 </div>
 
+                {/* Submit Error Alert if any */}
+                {submitError && (
+                  <div className="p-3 rounded-xl bg-red-100 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center pt-4">
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900"
+                    disabled={isSubmitting}
+                    className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900 disabled:opacity-50"
                   >
                     &larr; Retour
                   </button>
 
                   <button
                     type="submit"
-                    className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Envoyer & Réserver Consultation</span>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Envoi en cours...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Envoyer & Réserver Consultation</span>
+                      </>
+                    )}
                   </button>
                 </div>
 

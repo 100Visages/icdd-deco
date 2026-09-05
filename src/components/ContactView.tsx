@@ -1,27 +1,69 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, Sparkles, Calendar, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, Sparkles, Calendar, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 interface ContactViewProps {
   openQuoteModal: () => void;
 }
 
 export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
+  const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: user?.displayName || '',
+    email: user?.email || '',
     phone: '',
     subject: 'Projet d’Architecture d’Intérieur',
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || user.displayName || '',
+        email: prev.email || user.email || '',
+      }));
+    }
+  }, [user]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const msgDocRef = doc(db, 'messages', messageId);
+
+    try {
+      await setDoc(msgDocRef, {
+        userId: user ? user.uid : 'guest',
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        status: 'unread',
+        createdAt: serverTimestamp(),
+      });
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Error saving contact message:', err);
+      setErrorMessage("Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.");
+      handleFirestoreError(err, OperationType.WRITE, `messages/${messageId}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
+    <div className="w-full h-full min-h-0 overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
       <div className="max-w-6xl mx-auto space-y-12 pb-16">
         
         {/* Header */}
@@ -197,13 +239,30 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                   />
                 </div>
 
+                {errorMessage && (
+                  <div className="p-3 rounded-xl bg-red-100 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
                 <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
-                    className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Envoyer le Message</span>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Envoi en cours...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Envoyer le Message</span>
+                      </>
+                    )}
                   </button>
                 </div>
 

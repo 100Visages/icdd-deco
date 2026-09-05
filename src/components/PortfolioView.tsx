@@ -1,6 +1,7 @@
 import React from 'react';
 import { Project, FilterState } from '../types';
-import { MapPin, ArrowUpRight, Search, Sparkles, Filter, SlidersHorizontal } from 'lucide-react';
+import { MapPin, ArrowUpRight, Search, Sparkles, Filter, SlidersHorizontal, Bookmark } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface PortfolioViewProps {
   projects: Project[];
@@ -17,6 +18,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   onOpenProject,
   openQuoteModal,
 }) => {
+  const { isFavorite, toggleFavorite } = useAuth();
   // Filter logic
   const filteredProjects = projects.filter(project => {
     if (filters.category !== 'Tous' && project.category !== filters.category) return false;
@@ -35,7 +37,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   });
 
   return (
-    <div className="w-full h-full overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
+    <div className="w-full h-full min-h-0 overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
       <div className="max-w-7xl mx-auto space-y-8 pb-16">
         
         {/* Header Section */}
@@ -106,10 +108,27 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                   {project.category}
                 </div>
 
-                {/* Location Top Right */}
-                <div className="absolute top-4 right-4 bg-slate-950/80 text-white backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-medium flex items-center gap-1 border border-white/20">
-                  <MapPin className="w-3 h-3 text-amber-400" />
-                  <span>{project.location}</span>
+                {/* Top Right: Location and Bookmark Action */}
+                <div className="absolute top-4 right-4 flex items-center gap-1.5">
+                  <div className="bg-slate-950/80 text-white backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-medium flex items-center gap-1 border border-white/20">
+                    <MapPin className="w-3 h-3 text-amber-400" />
+                    <span>{project.location}</span>
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(project);
+                    }}
+                    title={isFavorite(project.id) ? "Retirer des favoris" : "Enregistrer dans mes favoris"}
+                    className={`p-1.5 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
+                      isFavorite(project.id)
+                        ? 'bg-amber-500 text-white border-amber-400 shadow-md scale-105'
+                        : 'bg-slate-950/70 text-white/80 border-white/20 hover:text-white hover:bg-slate-900'
+                    }`}
+                  >
+                    <Bookmark className={`w-3.5 h-3.5 ${isFavorite(project.id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
 
                 {/* Title Overlay at bottom of image */}

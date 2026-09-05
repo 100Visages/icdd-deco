@@ -1,0 +1,189 @@
+{
+  "entities": {
+    "Quote": {
+      "title": "Quote",
+      "description": "Architectural interior design quote and consultation request submitted by a client",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User UID of authenticated user or 'guest'",
+          "maxLength": 128
+        },
+        "clientName": {
+          "type": "string",
+          "description": "Full name of the requesting client",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "clientEmail": {
+          "type": "string",
+          "description": "Email address of the client",
+          "format": "email",
+          "maxLength": 150
+        },
+        "clientPhone": {
+          "type": "string",
+          "description": "Phone number of the client",
+          "maxLength": 50
+        },
+        "clientMessage": {
+          "type": "string",
+          "description": "Additional project details or notes",
+          "maxLength": 2000
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": ["Appartement", "Maison / Villa", "Espace Commercial", "Penthouse"],
+          "description": "Type of real estate property"
+        },
+        "surfaceArea": {
+          "type": "number",
+          "description": "Area in square meters"
+        },
+        "projectScope": {
+          "type": "string",
+          "enum": ["Rénovation Complète", "Design & Furnishing", "Aménagement de Pièce", "Consultation 3D"],
+          "description": "Scope of work requested"
+        },
+        "preferredStyle": {
+          "type": "string",
+          "description": "Desired architectural design style",
+          "maxLength": 100
+        },
+        "materials": {
+          "type": "array",
+          "description": "Selected luxury materials"
+        },
+        "estimatedBudgetMin": {
+          "type": "number",
+          "description": "Estimated minimum budget in Euros"
+        },
+        "estimatedBudgetMax": {
+          "type": "number",
+          "description": "Estimated maximum budget in Euros"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "in_review", "contacted"],
+          "description": "Workflow processing status"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        }
+      },
+      "required": [
+        "userId",
+        "clientName",
+        "clientEmail",
+        "propertyType",
+        "surfaceArea",
+        "projectScope",
+        "status",
+        "createdAt"
+      ]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Direct inquiry or showroom meeting request sent to the ICDD architecture agency",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User UID of authenticated user or 'guest'",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the sender",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the sender",
+          "format": "email",
+          "maxLength": 150
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the sender",
+          "maxLength": 50
+        },
+        "subject": {
+          "type": "string",
+          "description": "Inquiry subject",
+          "maxLength": 150
+        },
+        "message": {
+          "type": "string",
+          "description": "Inquiry text message",
+          "minLength": 3,
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["unread", "read"],
+          "description": "Read status for the agency"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        }
+      },
+      "required": [
+        "userId",
+        "name",
+        "email",
+        "subject",
+        "message",
+        "status",
+        "createdAt"
+      ]
+    },
+    "FavoriteProject": {
+      "title": "FavoriteProject",
+      "description": "User bookmarked luxury portfolio project",
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "Identifier of the saved project",
+          "maxLength": 128
+        },
+        "projectTitle": {
+          "type": "string",
+          "description": "Title of the project",
+          "maxLength": 200
+        },
+        "savedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when bookmarked"
+        }
+      },
+      "required": [
+        "projectId",
+        "projectTitle",
+        "savedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/quotes/{quoteId}": {
+      "schema": "Quote",
+      "description": "Collection storing quote and consultation requests"
+    },
+    "/messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection storing contact inquiries and showroom appointments"
+    },
+    "/users/{userId}/favorites/{projectId}": {
+      "schema": "FavoriteProject",
+      "description": "User subcollection for bookmarked architecture projects"
+    }
+  }
+}
