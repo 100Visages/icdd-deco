@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Calculator, Sparkles, Send, Calendar, CheckCircle2, Building, Home, Store, Layers, Loader2, AlertCircle } from 'lucide-react';
-import { QuoteFormData, Project } from '../types';
+import { X, Check, Calculator, Sparkles, Send, Calendar, CheckCircle2, ShieldCheck, Loader2, AlertCircle, Phone, MessageCircle } from 'lucide-react';
+import { QuoteFormData, Project, DecorOffer } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ICDD_OFFERS_CONFIG } from '../data/projects';
 
 interface QuoteEstimatorModalProps {
   isOpen: boolean;
@@ -18,27 +19,36 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 }) => {
   const { user } = useAuth();
 
-  if (!isOpen) return null;
-
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const initialOffer: DecorOffer = (preselectedProject?.category as DecorOffer) || 'Décoration Top Modèle';
+
   const [formData, setFormData] = useState<QuoteFormData>({
-    propertyType: 'Appartement',
-    surfaceArea: preselectedProject ? preselectedProject.area : 120,
-    projectScope: 'Rénovation Complète',
-    preferredStyle: preselectedProject ? preselectedProject.style : 'Minimaliste',
-    materials: ['Chêne massif', 'Marbre de Carrare'],
-    estimatedBudgetMin: 120000,
-    estimatedBudgetMax: 210000,
+    selectedOffer: initialOffer,
+    wallArea: preselectedProject ? preselectedProject.area : 50,
+    roomType: 'Salon',
+    preferredFinish: 'Finitions professionnelles adaptées au style',
+    materialsIncluded: ['Matériaux de décoration sélectionnés', 'Enduits haute résistance'],
+    estimatedBudgetMin: 800,
+    estimatedBudgetMax: 1050,
     clientName: user?.displayName || '',
     clientEmail: user?.email || '',
-    clientPhone: '',
+    clientPhone: '+243 ',
     clientMessage: preselectedProject ? `Je souhaite un projet similaire à "${preselectedProject.title}".` : '',
   });
 
   const [submitted, setSubmitted] = useState(false);
+
+  // Recalculate estimated materials budget in $ based on offer & wall dimension
+  const calculateEstimate = (offer: DecorOffer, area: number) => {
+    const conf = ICDD_OFFERS_CONFIG[offer];
+    const ratio = Math.max(1, area / conf.minWallM2);
+    const min = Math.round(conf.basePrice * ratio);
+    const max = Math.round(min * 1.3);
+    return { min, max };
+  };
 
   // Pre-fill user data when user logs in
   useEffect(() => {
@@ -51,57 +61,63 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
     }
   }, [user]);
 
-  // Material options
-  const materialOptions = [
-    'Chêne massif blanchi',
-    'Marbre de Carrare',
-    'Travertin italien',
-    'Laiton brossé',
-    'Béton ciré',
-    'Velours de soie',
-    'Noyer d’Amérique',
-    'Verre électrochrome'
-  ];
+  // Reset or sync when modal opens or preselectedProject changes
+  useEffect(() => {
+    if (isOpen) {
+      setSubmitted(false);
+      setSubmitError(null);
+      setStep(1);
+      const offer: DecorOffer = (preselectedProject?.category as DecorOffer) || 'Décoration Top Modèle';
+      const area = preselectedProject ? preselectedProject.area : 50;
+      const { min, max } = calculateEstimate(offer, area);
+      setFormData(prev => ({
+        ...prev,
+        selectedOffer: offer,
+        wallArea: area,
+        estimatedBudgetMin: min,
+        estimatedBudgetMax: max,
+        clientMessage: preselectedProject ? `Intéressé par l'offre ${offer} (inspiré de ${preselectedProject.title}).` : '',
+      }));
+    }
+  }, [isOpen, preselectedProject]);
 
-  const handleMaterialToggle = (mat: string) => {
-    setFormData(prev => {
-      const exists = prev.materials.includes(mat);
-      const updated = exists ? prev.materials.filter(m => m !== mat) : [...prev.materials, mat];
-      return { ...prev, materials: updated };
-    });
-  };
-
-  // Recalculate estimated budget
-  const calculateEstimate = (area: number, scope: string) => {
-    let pricePerM2Base = 1200;
-    if (scope === 'Rénovation Complète') pricePerM2Base = 1800;
-    if (scope === 'Design & Furnishing') pricePerM2Base = 1000;
-    if (scope === 'Aménagement de Pièce') pricePerM2Base = 800;
-    if (scope === 'Consultation 3D') pricePerM2Base = 350;
-
-    const min = Math.round(area * pricePerM2Base);
-    const max = Math.round(area * (pricePerM2Base * 1.5));
-    return { min, max };
+  const handleOfferChange = (offer: DecorOffer) => {
+    const { min, max } = calculateEstimate(offer, formData.wallArea);
+    setFormData(prev => ({
+      ...prev,
+      selectedOffer: offer,
+      estimatedBudgetMin: min,
+      estimatedBudgetMax: max,
+    }));
   };
 
   const handleAreaChange = (val: number) => {
-    const { min, max } = calculateEstimate(val, formData.projectScope);
+    const { min, max } = calculateEstimate(formData.selectedOffer, val);
     setFormData(prev => ({
       ...prev,
-      surfaceArea: val,
+      wallArea: val,
       estimatedBudgetMin: min,
-      estimatedBudgetMax: max
+      estimatedBudgetMax: max,
     }));
   };
 
-  const handleScopeChange = (scope: QuoteFormData['projectScope']) => {
-    const { min, max } = calculateEstimate(formData.surfaceArea, scope);
-    setFormData(prev => ({
-      ...prev,
-      projectScope: scope,
-      estimatedBudgetMin: min,
-      estimatedBudgetMax: max
-    }));
+  const finishOptions = [
+    'Peinture mate poudrée haute résistance',
+    'Finition veloutée soyeuse sans traces',
+    'Enduit stuc effet marbré vénitien',
+    'Patine nacrée & touches dorées Gold',
+    'Fresque murale artistique 3D & reliefs',
+    'Baguettes & moulures décoratives peintes',
+  ];
+
+  const handleFinishToggle = (finish: string) => {
+    setFormData(prev => {
+      const exists = prev.materialsIncluded.includes(finish);
+      const updated = exists 
+        ? prev.materialsIncluded.filter(m => m !== finish) 
+        : [...prev.materialsIncluded, finish];
+      return { ...prev, materialsIncluded: updated };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,15 +133,16 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
         userId: user ? user.uid : 'guest',
         clientName: formData.clientName.trim(),
         clientEmail: formData.clientEmail.trim(),
-        clientPhone: formData.clientPhone?.trim() || '',
+        clientPhone: formData.clientPhone.trim(),
         clientMessage: formData.clientMessage?.trim() || '',
-        propertyType: formData.propertyType,
-        surfaceArea: Number(formData.surfaceArea),
-        projectScope: formData.projectScope,
-        preferredStyle: formData.preferredStyle || 'Minimaliste',
-        materials: formData.materials || [],
+        selectedOffer: formData.selectedOffer,
+        wallArea: Number(formData.wallArea),
+        roomType: formData.roomType,
+        materialsIncluded: formData.materialsIncluded || [],
         estimatedBudgetMin: Number(formData.estimatedBudgetMin),
         estimatedBudgetMax: Number(formData.estimatedBudgetMax),
+        currency: 'USD ($)',
+        laborIncluded: false, // Explicitly marked as per user mandate
         status: 'pending',
         createdAt: serverTimestamp(),
       });
@@ -133,231 +150,247 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
       setSubmitted(true);
     } catch (err) {
       console.error('Error submitting quote:', err);
-      setSubmitError("Une erreur est survenue lors de l'enregistrement de votre devis sur Firestore. Veuillez réessayer.");
+      setSubmitError("Une erreur est survenue lors de l'enregistrement de votre devis. Vous pouvez nous contacter directement au +243 897504570.");
       handleFirestoreError(err, OperationType.WRITE, `quotes/${quoteDocId}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const sendDirectWhatsApp = () => {
+    const text = encodeURIComponent(
+      `Bonjour ICDD 🦺✨\nJe souhaite obtenir un devis pour mes murs :\n` +
+      `- Offre : ${formData.selectedOffer}\n` +
+      `- Dimension murale estimée : ${formData.wallArea} m²\n` +
+      `- Espace : ${formData.roomType}\n` +
+      `- Estimation matériaux : ${formData.estimatedBudgetMin} $ - ${formData.estimatedBudgetMax} $\n` +
+      `- Nom : ${formData.clientName}\n` +
+      `- Message : ${formData.clientMessage || 'Merci de me contacter pour convenir d’un devis détaillé.'}`
+    );
+    window.open(`https://wa.me/243897504570?text=${text}`, '_blank');
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-950/70 backdrop-blur-xl animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 bg-slate-950/70 backdrop-blur-xl animate-fade-in">
       
       {/* Modal Glass Panel */}
       <div 
-        className="relative w-full max-w-3xl max-h-[90vh] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[36px] border border-white/80 dark:border-white/20 shadow-2xl overflow-y-auto custom-scrollbar p-6 sm:p-10 flex flex-col"
+        className="relative w-full max-w-3xl max-h-[92vh] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-2xl overflow-y-auto custom-scrollbar p-5 sm:p-10 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-white flex items-center justify-center transition-transform hover:scale-110 cursor-pointer"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
         {!submitted ? (
           <>
-            {/* Modal Header */}
-            <div className="mb-6 space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 text-xs font-bold border border-amber-200">
-                <Calculator className="w-3.5 h-3.5 text-amber-500" />
-                <span>Estimateur de Devis Sur-Mesure</span>
+            {/* Modal Header with ICDD Identity */}
+            <div className="mb-5 sm:mb-6 space-y-1.5 sm:space-y-2 pr-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300">
+                <Calculator className="w-3.5 h-3.5 text-amber-600" />
+                <span>ICDD • Estimateur de Matériaux de Décoration</span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                Estimation de votre Projet D’Architecture
+              <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                Estimer vos Travaux de Décoration & Peinture
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                Calculez un budget estimatif personnalisé pour vos travaux et réservez votre consultation en agence.
+                Sélectionnez votre offre et ajustez la dimension de votre espace mural pour une estimation instantanée.
               </p>
             </div>
 
             {/* Step Progress Pills */}
-            <div className="flex items-center gap-2 mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div className="flex items-center gap-2 mb-5 sm:mb-7 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto custom-scrollbar">
               <button
                 onClick={() => setStep(1)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 1
                     ? 'bg-slate-900 text-white shadow-md'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
-                1. Caractéristiques du bien
+                1. Offre & Surface Murale
               </button>
               <button
                 onClick={() => setStep(2)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 2
                     ? 'bg-slate-900 text-white shadow-md'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
-                2. Style & Matériaux
+                2. Finitions & Pièce
               </button>
               <button
                 onClick={() => setStep(3)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 3
                     ? 'bg-slate-900 text-white shadow-md'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
-                3. Consultation & Validation
+                3. Coordonnées & Envoi
               </button>
             </div>
 
-            {/* STEP 1: Surface area & property type */}
+            {/* STEP 1: Offer selection & wall area slider */}
             {step === 1 && (
               <div className="space-y-6">
                 
-                {/* Property Type Picker */}
+                {/* 5 Real ICDD Offers Selection */}
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                    Type de Bien Immobilier
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2.5">
+                    💰 Choisissez votre Offre ICDD
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {(['Appartement', 'Maison / Villa', 'Espace Commercial', 'Penthouse'] as const).map(type => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, propertyType: type }))}
-                        className={`p-3.5 rounded-2xl text-xs font-bold border transition-all flex flex-col items-center gap-2 cursor-pointer ${
-                          formData.propertyType === type
-                            ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md font-extrabold'
-                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        {type === 'Appartement' && <Building className="w-5 h-5" />}
-                        {type === 'Maison / Villa' && <Home className="w-5 h-5" />}
-                        {type === 'Espace Commercial' && <Store className="w-5 h-5" />}
-                        {type === 'Penthouse' && <Layers className="w-5 h-5" />}
-                        <span>{type}</span>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {(Object.keys(ICDD_OFFERS_CONFIG) as DecorOffer[]).map(offer => {
+                      const item = ICDD_OFFERS_CONFIG[offer];
+                      const isSelected = formData.selectedOffer === offer;
+                      return (
+                        <button
+                          key={offer}
+                          type="button"
+                          onClick={() => handleOfferChange(offer)}
+                          className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between ${
+                            isSelected
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
+                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-black">{offer}</span>
+                              {isSelected && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
+                            </div>
+                            <div className={`text-sm font-black mt-1 ${isSelected ? 'text-amber-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                              {item.badge}
+                            </div>
+                          </div>
+                          <p className={`text-[10px] mt-1.5 leading-snug line-clamp-2 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                            {item.description}
+                          </p>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Surface Area Slider */}
+                {/* Wall Area Slider */}
                 <div className="bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-900 dark:text-white">
-                      Superficie Totale à Aménager
-                    </label>
-                    <span className="text-xl font-black text-amber-600 dark:text-amber-400">
-                      {formData.surfaceArea} m²
+                    <div>
+                      <label className="text-xs font-bold text-slate-900 dark:text-white block">
+                        ✨ Dimension de votre espace mural
+                      </label>
+                      <span className="text-[11px] text-slate-500">Surface totale des murs à peindre / décorer</span>
+                    </div>
+                    <span className="text-2xl font-black text-amber-600 dark:text-amber-400">
+                      {formData.wallArea} m²
                     </span>
                   </div>
                   <input
                     type="range"
-                    min="30"
-                    max="500"
+                    min="15"
+                    max="250"
                     step="5"
-                    value={formData.surfaceArea}
+                    value={formData.wallArea}
                     onChange={(e) => handleAreaChange(Number(e.target.value))}
                     className="w-full accent-amber-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
-                    <span>30 m²</span>
-                    <span>180 m² (Standard Villa)</span>
-                    <span>500 m²</span>
-                  </div>
-                </div>
-
-                {/* Project Scope */}
-                <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                    Nature des Travaux
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(['Rénovation Complète', 'Design & Furnishing', 'Aménagement de Pièce', 'Consultation 3D'] as const).map(scope => (
-                      <button
-                        key={scope}
-                        type="button"
-                        onClick={() => handleScopeChange(scope)}
-                        className={`p-4 rounded-2xl text-xs font-bold text-left border transition-all cursor-pointer flex items-center justify-between ${
-                          formData.projectScope === scope
-                            ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
-                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
-                        }`}
-                      >
-                        <span>{scope}</span>
-                        {formData.projectScope === scope && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
-                      </button>
-                    ))}
+                    <span>15 m² (Petite chambre)</span>
+                    <span>60 m² (Grand Salon)</span>
+                    <span>250 m² (Villa complète)</span>
                   </div>
                 </div>
 
                 {/* Live Estimate Card */}
-                <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-amber-800 dark:text-amber-300 block">
-                      Fourchette Budgétaire Estimée
+                      Fourchette Estimative des Matériaux
                     </span>
-                    <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                      {formData.estimatedBudgetMin.toLocaleString('fr-FR')} € – {formData.estimatedBudgetMax.toLocaleString('fr-FR')} €
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                      {formData.estimatedBudgetMin} $ – {formData.estimatedBudgetMax} $
+                    </span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">
+                      (Pour {formData.wallArea} m² de murs en {formData.selectedOffer})
                     </span>
                   </div>
                   <button
                     onClick={() => setStep(2)}
-                    className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer text-center"
                   >
-                    Suivant &rarr;
+                    Étape suivante &rarr;
                   </button>
+                </div>
+
+                {/* Official Disclaimer Note */}
+                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-300/60 p-3 rounded-xl flex items-start gap-2.5 text-xs text-amber-950 dark:text-amber-200">
+                  <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <span>
+                    <strong>📝 Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
+                  </span>
                 </div>
 
               </div>
             )}
 
-            {/* STEP 2: Style & Materials */}
+            {/* STEP 2: Room Type & Desired Finishes */}
             {step === 2 && (
               <div className="space-y-6">
                 
-                {/* Style Choice */}
+                {/* Room Type */}
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                    Style Architectural Souhaité
+                    Type de Pièce à Décorer
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {(['Minimaliste', 'Contemporain', 'Haussmannien', 'Japandi'] as const).map(st => (
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                    {(['Salon', 'Chambre', 'Bureau', 'Appartement complet', 'Espace Commercial'] as const).map(r => (
                       <button
-                        key={st}
+                        key={r}
                         type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, preferredStyle: st }))}
-                        className={`p-3.5 rounded-2xl text-xs font-bold border transition-all text-center cursor-pointer ${
-                          formData.preferredStyle === st
+                        onClick={() => setFormData(prev => ({ ...prev, roomType: r }))}
+                        className={`p-3 rounded-2xl text-xs font-bold border transition-all text-center cursor-pointer ${
+                          formData.roomType === r
                             ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md font-extrabold'
                             : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                         }`}
                       >
-                        {st}
+                        {r}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Noble Materials Selection */}
+                {/* Decorative Finishes Selection */}
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                    Matériaux de Prédilection (Plusieurs Choix Possibles)
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2.5">
+                    Finitions et effets décoratifs souhaités
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    {materialOptions.map(mat => {
-                      const isSelected = formData.materials.includes(mat);
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {finishOptions.map(finish => {
+                      const isSelected = formData.materialsIncluded.includes(finish);
                       return (
                         <button
-                          key={mat}
+                          key={finish}
                           type="button"
-                          onClick={() => handleMaterialToggle(mat)}
+                          onClick={() => handleFinishToggle(finish)}
                           className={`p-3 rounded-xl text-xs font-medium border text-left transition-all flex items-center justify-between cursor-pointer ${
                             isSelected
                               ? 'bg-slate-900 text-white border-slate-900 shadow-md'
                               : 'bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                           }`}
                         >
-                          <span className="truncate">{mat}</span>
-                          {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />}
+                          <span className="truncate">{finish}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 ml-2" />}
                         </button>
                       );
                     })}
@@ -367,7 +400,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 <div className="flex justify-between items-center pt-4">
                   <button
                     onClick={() => setStep(1)}
-                    className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900"
+                    className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900 cursor-pointer"
                   >
                     &larr; Retour
                   </button>
@@ -394,7 +427,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     <input
                       type="text"
                       required
-                      placeholder="ex: Jean Dupont"
+                      placeholder="M. / Mme"
                       value={formData.clientName}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientName: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -408,7 +441,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     <input
                       type="email"
                       required
-                      placeholder="ex: jean.dupont@email.com"
+                      placeholder="votre.email@exemple.com"
                       value={formData.clientEmail}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientEmail: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -419,11 +452,12 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Téléphone
+                      Téléphone (ex: +243 ...) *
                     </label>
                     <input
                       type="tel"
-                      placeholder="ex: 06 12 34 56 78"
+                      required
+                      placeholder="+243 ..."
                       value={formData.clientPhone}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientPhone: e.target.value }))}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -432,7 +466,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 
                   <div>
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Date de Rendez-vous Souhaitée
+                      Disponibilité souhaitée (Lundi au Samedi)
                     </label>
                     <input
                       type="date"
@@ -445,23 +479,26 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 
                 <div>
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                    Détails ou précisions sur votre projet
+                    Précisions sur vos murs (commune, état actuel des murs...)
                   </label>
                   <textarea
-                    rows={3}
-                    placeholder="Parlez-nous de vos attentes, vos délais ou vos contraintes spécifiques..."
+                    rows={2}
+                    placeholder="Ex: Murs du salon avec quelques trous à reboucher, nous sommes à Gombe..."
                     value={formData.clientMessage}
                     onChange={(e) => setFormData(prev => ({ ...prev, clientMessage: e.target.value }))}
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
 
-                {/* Recap Badge */}
+                {/* Recap Box */}
                 <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                  <span className="font-bold block text-slate-900 dark:text-white">Récapitulatif de votre demande :</span>
-                  <p>{formData.propertyType} de {formData.surfaceArea}m² ({formData.projectScope}) • Style {formData.preferredStyle}</p>
-                  <p className="text-amber-600 dark:text-amber-400 font-extrabold">
-                    Budget estimé : {formData.estimatedBudgetMin.toLocaleString('fr-FR')} € – {formData.estimatedBudgetMax.toLocaleString('fr-FR')} €
+                  <span className="font-bold block text-slate-900 dark:text-white">Récapitulatif de l'estimation :</span>
+                  <p><strong>{formData.selectedOffer}</strong> pour {formData.wallArea} m² de surface murale ({formData.roomType})</p>
+                  <p className="text-amber-600 dark:text-amber-400 font-extrabold text-sm">
+                    Matériaux estimés : {formData.estimatedBudgetMin} $ – {formData.estimatedBudgetMax} $
+                  </p>
+                  <p className="text-[10px] text-slate-500">
+                    * Hors main-d'œuvre et accessoires. Devis final détaillé convenu avec vous.
                   </p>
                 </div>
 
@@ -473,33 +510,44 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </div>
                 )}
 
-                <div className="flex justify-between items-center pt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
                   <button
                     type="button"
                     onClick={() => setStep(2)}
                     disabled={isSubmitting}
-                    className="px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900 disabled:opacity-50"
+                    className="w-full sm:w-auto px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-900 disabled:opacity-50"
                   >
                     &larr; Retour
                   </button>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Envoi en cours...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        <span>Envoyer & Réserver Consultation</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={sendDirectWhatsApp}
+                      className="flex-1 sm:flex-none px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>WhatsApp Direct</span>
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex-1 sm:flex-none px-6 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Envoi en cours...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          <span>Valider & Envoyer</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
               </form>
@@ -507,22 +555,29 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
           </>
         ) : (
           /* Confirmation State */
-          <div className="text-center py-12 space-y-4 my-auto">
-            <div className="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xl animate-bounce">
+          <div className="text-center py-10 space-y-4 my-auto">
+            <div className="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xl">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-black text-slate-900 dark:text-white">
-              Votre Demande a été Transmise à ICDD !
+              Demande Reçue avec Succès par ICDD !
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-              Un architecte d'intérieur référent d'ICDD étudie votre estimation et vous recontactera sous 24h pour confirmer votre consultation.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+              Merci {formData.clientName}. Notre équipe étudie les dimensions de vos murs ({formData.wallArea} m²) et vous contactera au {formData.clientPhone} du lundi au samedi.
             </p>
-            <div className="pt-6">
+            <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
+              <a
+                href="tel:+243897504570"
+                className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 flex items-center justify-center gap-1.5"
+              >
+                <Phone className="w-3.5 h-3.5 text-amber-400" />
+                <span>Appeler le +243 897504570</span>
+              </a>
               <button
                 onClick={onClose}
-                className="px-8 py-3 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 transition-colors cursor-pointer"
+                className="px-6 py-2.5 rounded-full bg-amber-500 text-slate-950 text-xs font-bold hover:bg-amber-600 transition-colors cursor-pointer"
               >
-                Fermer la fenêtre
+                Fermer
               </button>
             </div>
           </div>

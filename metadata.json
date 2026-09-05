@@ -1,6 +1,6 @@
 {
   "name": "ICDD Architecture d'Intérieur",
-  "description": "Cabinet d'architecture d'intérieur et design - Interface Futuristic Glassmorphism",
+  "description": "ICDD – Excellence en Décoration et Peinture Intérieure. Nous transformons vos espaces avec élégance, modernité et créativité.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

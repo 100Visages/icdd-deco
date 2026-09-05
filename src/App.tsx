@@ -72,39 +72,11 @@ export default function App() {
           <div className="absolute inset-0 bg-radial-gradient from-transparent via-slate-950/30 to-slate-950/70" />
         </div>
 
-        {/* Sidebar Navigation (Reconstructed 4-Icon Sidebar on Left) */}
+        {/* Sidebar Navigation (Left Vertical Pill on Desktop, Floating Bottom Dock on Mobile) */}
         <SidebarNav
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
-
-        {/* Mobile Top Navigation Pills (for mobile screens) */}
-        <div className="md:hidden z-40 p-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-around border-b border-white/40 flex-shrink-0">
-          <button
-            onClick={() => setActiveTab('accueil')}
-            className={`text-xs font-bold px-3 py-1.5 rounded-full ${activeTab === 'accueil' ? 'bg-slate-900 text-white' : 'text-slate-700'}`}
-          >
-            Accueil
-          </button>
-          <button
-            onClick={() => setActiveTab('portfolio')}
-            className={`text-xs font-bold px-3 py-1.5 rounded-full ${activeTab === 'portfolio' ? 'bg-slate-900 text-white' : 'text-slate-700'}`}
-          >
-            Portfolio
-          </button>
-          <button
-            onClick={() => setActiveTab('agence')}
-            className={`text-xs font-bold px-3 py-1.5 rounded-full ${activeTab === 'agence' ? 'bg-slate-900 text-white' : 'text-slate-700'}`}
-          >
-            À Propos
-          </button>
-          <button
-            onClick={() => setActiveTab('contact')}
-            className={`text-xs font-bold px-3 py-1.5 rounded-full ${activeTab === 'contact' ? 'bg-slate-900 text-white' : 'text-slate-700'}`}
-          >
-            Contact
-          </button>
-        </div>
 
         {/* Top Header Bar inside Pill Container */}
         <TopBar
@@ -154,18 +126,22 @@ export default function App() {
       </main>
 
       {/* Project Detail View Modal */}
-      <ProjectDetailModal
-        project={selectedProject}
-        onClose={handleCloseProjectModal}
-        onRequestSimilar={(p) => handleOpenQuoteModal(p)}
-      />
+      {selectedProject && (
+        <ProjectDetailModal
+          project={selectedProject}
+          onClose={handleCloseProjectModal}
+          onRequestSimilar={(p) => handleOpenQuoteModal(p)}
+        />
+      )}
 
       {/* Interactive Quote Estimator Modal */}
-      <QuoteEstimatorModal
-        isOpen={isQuoteModalOpen}
-        onClose={handleCloseQuoteModal}
-        preselectedProject={preselectedProjectForQuote}
-      />
+      {isQuoteModalOpen && (
+        <QuoteEstimatorModal
+          isOpen={isQuoteModalOpen}
+          onClose={handleCloseQuoteModal}
+          preselectedProject={preselectedProjectForQuote}
+        />
+      )}
 
     </div>
   );

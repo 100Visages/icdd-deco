@@ -1,6 +1,6 @@
 import React from 'react';
 import { TEAM_MEMBERS } from '../data/projects';
-import { Sparkles, Award, ShieldCheck, Compass, Users, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { Sparkles, Award, ShieldCheck, Compass, Users, CheckCircle2, ArrowUpRight, Phone, MessageCircle, Clock } from 'lucide-react';
 import { NavTab } from '../types';
 
 interface AgencyViewProps {
@@ -12,90 +12,105 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
   const processSteps = [
     {
       step: '01',
-      title: 'Consultation & Étude de Faisabilité',
-      desc: 'Analyse approfondie de votre mode de vie, de la lumière naturelle et du potentiel architectural de votre lieu.'
+      title: 'Diagnostic de votre Espace Mural',
+      desc: 'Analyse de vos murs, prise des dimensions précises et évaluation du style architectural de votre intérieur.'
     },
     {
       step: '02',
-      title: 'Conception 3D & Matériauthèque',
-      desc: 'Modélisation volumétrique photoréaliste et sélection rigoureuse d’échantillons physiques de marbres, bois et laitons.'
+      title: 'Sélection de l’Offre & Matériaux',
+      desc: 'Choix entre Décoration simple, classique, luxueuse, Gold ou Top Modèle selon vos goûts et votre budget.'
     },
     {
       step: '03',
-      title: 'Gestion Administrative & Artisans',
-      desc: 'Prise en charge complète des autorisations de copropriété, permis et coordination des meilleurs maîtres artisans.'
+      title: 'Finitions Professionnelles & Application',
+      desc: 'Mise en œuvre par nos peintres et décorateurs qualifiés : enduits soignés, stuc, effets 3D et patines raffinées.'
     },
     {
       step: '04',
-      title: 'Suivi de Chantier Clef en Main',
-      desc: 'Supervision hebdomadaire rigoureuse jusqu’à la livraison finale avec installation du mobilier et scénographie lumineuse.'
+      title: 'Contrôle Qualité & Livraison',
+      desc: 'Nettoyage minutieux du chantier et remise d’un espace transformé avec modernité, élégance et garantie.'
     }
   ];
 
   return (
-    <div className="w-full h-full min-h-0 overflow-y-auto p-4 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-6xl mx-auto space-y-12 pb-16">
+    <div className="w-full h-full min-h-0 overflow-y-auto p-3 sm:p-8 md:p-12 custom-scrollbar">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-10 pb-28 sm:pb-20">
         
         {/* Hero Section */}
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-8 sm:p-12 rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 text-xs font-bold border border-amber-200">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>L’Agence ICDD Design</span>
+        <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl space-y-4 sm:space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300">
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            <span>Excellence en Décoration et Peinture Intérieure</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-            L'Élégance Architecturale au Service du Mode de Vie
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+            🎨 ICDD – L’Art de Sublimer Vos Espaces
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-700 dark:text-slate-200 font-normal leading-relaxed max-w-3xl">
-            Fondé à Paris, le cabinet <strong className="text-slate-900 dark:text-white">ICDD (Interior Concept & Design Direction)</strong> façonne des espaces de vie d’exception où chaque détail est pensé comme une œuvre sur-mesure. Nous marions la rigueur de l’architecture d’intérieur à la sensualité des matériaux nobles.
+          <p className="text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200 font-normal leading-relaxed max-w-3xl">
+            Nous transformons vos espaces avec <strong>élégance, modernité et créativité</strong> grâce à des finitions professionnelles adaptées à votre style. Que vous souhaitiez un rafraîchissement épuré ou une décoration prestigieuse de type Gold ou Top Modèle, nous matérialisons votre vision murale.
           </p>
 
+          {/* Quick Contact & Availability Badge */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold">
+              <Clock className="w-3.5 h-3.5 text-amber-500" />
+              <span>Disponible du lundi au samedi</span>
+            </div>
+            <a
+              href="tel:+243897504570"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Contact : +243 897504570</span>
+            </a>
+          </div>
+
           {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 pt-4 sm:pt-6 border-t border-slate-200 dark:border-slate-800">
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white block">100+</span>
-              <span className="text-xs text-slate-500 font-medium">Projets D’exception Livrés</span>
+              <span className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white block">5 Offres</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 font-medium">De Simple à Top Modèle</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white block">20 Ans</span>
-              <span className="text-xs text-slate-500 font-medium">D’Excellence à Paris & Int.</span>
+              <span className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white block">dès 250 $</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Matériaux Déco Inclus</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white block">100%</span>
-              <span className="text-xs text-slate-500 font-medium">Menuiserie & Mobilier Sur-Mesure</span>
+              <span className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white block">100%</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Finitions Professionnelles</span>
             </div>
             <div>
-              <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white block">1 Chantier</span>
-              <span className="text-xs text-slate-500 font-medium">1 Interlocuteur Dédié</span>
+              <span className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white block">Lun - Sam</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Disponibilité Équipe</span>
             </div>
           </div>
         </div>
 
         {/* Methodology Process Section */}
         <div className="space-y-6">
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Notre Méthodologie en 4 Étapes
+          <div className="text-center max-w-2xl mx-auto px-2">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Notre Démarche en 4 Étapes Clés
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
-              Un processus structuré garantissant sérénité, respect des délais et maîtrise budgétaire.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-2">
+              Une méthode rigoureuse pour vous assurer un résultat impeccable, durable et conforme à vos envies.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {processSteps.map((item) => (
               <div
                 key={item.step}
-                className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-6 rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-3 relative overflow-hidden"
+                className="bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl p-5 sm:p-6 rounded-[24px] sm:rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-2.5 relative overflow-hidden"
               >
-                <span className="text-4xl font-black text-amber-500/20 dark:text-amber-400/20 absolute top-4 right-6 pointer-events-none">
+                <span className="text-3xl sm:text-4xl font-black text-amber-500/20 dark:text-amber-400/20 absolute top-4 right-5 pointer-events-none">
                   {item.step}
                 </span>
-                <div className="w-9 h-9 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
                   {item.step}
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   {item.title}
                 </h4>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
@@ -108,31 +123,29 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
 
         {/* Team Members Section */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                L'Équipe des Architectes & Designers
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
-                Des passionnés d'architecture, d'ébénisterie et de scénographie lumineuse.
-              </p>
-            </div>
+          <div className="px-2">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Les Artisans & Experts Décorateurs ICDD
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+              Des maîtres peintres, enduiseurs et créateurs d'ambiances passionnés par la perfection.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {TEAM_MEMBERS.map((member, idx) => (
               <div
                 key={idx}
-                className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 rounded-[32px] border border-white/80 dark:border-white/20 shadow-lg space-y-4 flex flex-col items-center text-center"
+                className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-5 rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-3 flex flex-col items-center text-center"
               >
                 <img
                   src={member.avatar}
                   alt={member.name}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md"
                   referrerPolicy="no-referrer"
                 />
                 <div>
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                     {member.name}
                   </h4>
                   <span className="text-xs font-bold text-amber-600 dark:text-amber-400 block mt-0.5">
@@ -147,27 +160,39 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
           </div>
         </div>
 
-        {/* Call To Action Banner */}
-        <div className="bg-slate-950 text-white p-8 sm:p-12 rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
-          <div className="space-y-2 max-w-xl">
+        {/* Call To Action Banner with WhatsApp & Call */}
+        <div className="bg-slate-950 text-white p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
+          <div className="space-y-2 max-w-xl text-center md:text-left">
             <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
-              Prêt à concrétiser votre vision ?
+              Disponible du lundi au samedi
             </span>
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Discutons de votre futur projet d’intérieur
+            <h3 className="text-xl sm:text-3xl font-black tracking-tight">
+              Prêt à métamorphoser vos murs ?
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 font-normal">
-              Prenez rendez-vous directement pour un premier échange en agence à Paris ou en visioconférence.
+              Contactez-nous directement au <strong>+243 897504570</strong> ou calculez votre devis estimatif en quelques clics.
             </p>
           </div>
 
-          <button
-            onClick={openQuoteModal}
-            className="px-8 py-4 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 flex-shrink-0 cursor-pointer"
-          >
-            <span>Prendre RDV en Agence</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+            <a
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD%20%F0%9F%A7%BA%E2%9C%A8%20Je%20souhaite%20des%20renseignements%20pour%20la%20d%C3%A9coration%20de%20mes%20murs."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Direct</span>
+            </a>
+
+            <button
+              onClick={openQuoteModal}
+              className="px-6 py-3.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <span>Calculer un Devis</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
       </div>

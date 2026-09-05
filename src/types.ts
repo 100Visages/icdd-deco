@@ -1,23 +1,31 @@
 export type NavTab = 'accueil' | 'portfolio' | 'agence' | 'contact';
 
+export type DecorOffer = 
+  | 'Décoration simple' 
+  | 'Décoration classique' 
+  | 'Décoration luxueuse' 
+  | 'Décoration Gold' 
+  | 'Décoration Top Modèle';
+
 export interface Project {
   id: string;
   title: string;
   subtitle: string;
   location: string;
-  area: number; // m²
+  area: number; // m² mural ou espace
   year: number;
-  category: 'Résidentiel' | 'Commercial' | 'Penthouse' | 'Rénovation Complexe';
-  style: 'Minimaliste' | 'Contemporain' | 'Haussmannien' | 'Japandi';
-  budgetRange: 'Sur Devis' | '100k - 200k€' | '200k - 400k€' | '> 400k€';
+  category: DecorOffer;
+  style: 'Moderne & Épuré' | 'Classique Élégant' | 'Luxe Contemporain' | 'Gold Prestige' | 'Haute Couture';
+  budgetRange: '250 $ - 350 $' | '350 $ - 500 $' | '500 $ - 700 $' | '≥ 700 $';
+  startingPrice: number; // in $
   description: string;
   fullDescription: string;
   coverImage: string;
   galleryImages: string[];
   specs: {
     duration: string;
-    rooms: number;
-    bathrooms: number;
+    wallSurface: string;
+    finishType: string;
     materials: string[];
     lighting: string;
   };
@@ -26,13 +34,13 @@ export interface Project {
 }
 
 export interface QuoteFormData {
-  propertyType: 'Appartement' | 'Maison / Villa' | 'Espace Commercial' | 'Penthouse';
-  surfaceArea: number; // m²
-  projectScope: 'Rénovation Complète' | 'Design & Furnishing' | 'Aménagement de Pièce' | 'Consultation 3D';
-  preferredStyle: 'Minimaliste' | 'Contemporain' | 'Haussmannien' | 'Japandi' | 'Libre';
-  materials: string[];
-  estimatedBudgetMin: number;
-  estimatedBudgetMax: number;
+  selectedOffer: DecorOffer;
+  wallArea: number; // m² espace mural
+  roomType: 'Salon' | 'Chambre' | 'Bureau' | 'Appartement complet' | 'Espace Commercial';
+  preferredFinish: string;
+  materialsIncluded: string[];
+  estimatedBudgetMin: number; // in $
+  estimatedBudgetMax: number; // in $
   clientName: string;
   clientEmail: string;
   clientPhone: string;
@@ -46,3 +54,4 @@ export interface FilterState {
   budget: string;
   searchQuery: string;
 }
+
