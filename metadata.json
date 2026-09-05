@@ -1,0 +1,6 @@
+{
+  "name": "ICDD Architecture d'Intérieur",
+  "description": "Cabinet d'architecture d'intérieur et design - Interface Futuristic Glassmorphism",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
