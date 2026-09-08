@@ -52,9 +52,21 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
       {/* Hero Title & Official Presentation */}
       <div className="max-w-3xl lg:max-w-5xl pt-1 sm:pt-4 space-y-3 sm:space-y-4">
         
-        {/* Welcome Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-400/90 dark:bg-amber-500/30 backdrop-blur-md border border-amber-300 text-slate-950 dark:text-amber-200 text-[11px] sm:text-xs font-bold tracking-wide shadow-md">
-          <span className="text-base leading-none">🦺✨</span>
+        {/* Welcome Badge with Official ICDD Logo */}
+        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/90 dark:bg-amber-500/30 backdrop-blur-md border border-amber-300 text-slate-950 dark:text-amber-200 text-[11px] sm:text-xs font-bold tracking-wide shadow-md">
+          <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-950 border border-amber-600/40 shadow-sm flex-shrink-0 relative">
+            <span className="text-[8px] text-amber-400 flex items-center justify-center h-full">IC</span>
+            <img 
+              src="/icdd.jpeg" 
+              alt="Logo ICDD" 
+              className="absolute inset-0 w-full h-full object-cover" 
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.currentTarget as HTMLElement).style.display = 'none';
+              }}
+            />
+          </div>
+          <span className="text-sm leading-none">🦺✨</span>
           <span>Bonjour chers clients, bienvenue chez ICDD</span>
         </div>
         

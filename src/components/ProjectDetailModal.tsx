@@ -107,6 +107,12 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                   dès {project.startingPrice}
                 </span>
               )}
+              <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/70 backdrop-blur-md text-white text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 border border-white/30">
+                <div className="w-3.5 h-3.5 rounded-full overflow-hidden bg-slate-950 flex-shrink-0 relative">
+                  <img src="/icdd.jpeg" alt="Logo ICDD" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <span>Réalisation ICDD</span>
+              </span>
               <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] sm:text-xs font-medium flex items-center gap-1 border border-white/30">
                 <MapPin className="w-3 h-3 text-amber-400" />
                 {project.location}

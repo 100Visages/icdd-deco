@@ -70,8 +70,20 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
         {/* Header with Welcome Announcement */}
         <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
           <div className="space-y-2.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-400/80 dark:bg-amber-500/20 text-slate-950 dark:text-amber-200 text-xs font-bold border border-amber-300 shadow-sm">
-              <span className="text-base leading-none">🦺✨</span>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/80 dark:bg-amber-500/20 text-slate-950 dark:text-amber-200 text-xs font-bold border border-amber-300 shadow-sm">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-950 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
+                <span className="text-[8px] text-amber-400 flex items-center justify-center h-full">IC</span>
+                <img 
+                  src="/icdd.jpeg" 
+                  alt="Logo ICDD" 
+                  className="absolute inset-0 w-full h-full object-cover" 
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = 'none';
+                  }}
+                />
+              </div>
+              <span className="text-sm leading-none">🦺✨</span>
               <span>Bonjour chers clients, bienvenue chez ICDD</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">

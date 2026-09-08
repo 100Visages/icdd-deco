@@ -33,8 +33,17 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={() => setActiveTab('accueil')}
           className="flex items-center gap-2 cursor-pointer group"
         >
-          <div className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-black text-xs shadow-md border border-amber-400/50 tracking-tight group-hover:scale-105 transition-transform">
-            IC
+          <div className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-black text-xs shadow-md border border-amber-400/50 tracking-tight group-hover:scale-105 transition-transform overflow-hidden relative">
+            <span className="text-[10px] text-amber-400">IC</span>
+            <img 
+              src="/icdd.jpeg" 
+              alt="Logo ICDD" 
+              className="absolute inset-0 w-full h-full object-cover" 
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                (e.currentTarget as HTMLElement).style.display = 'none';
+              }}
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-black text-xs tracking-wider text-slate-900 dark:text-white uppercase leading-none">
@@ -108,20 +117,50 @@ export const TopBar: React.FC<TopBarProps> = ({
       {/* Desktop Top Header Bar (Full Layout with Filters) */}
       <div className="hidden md:flex max-w-7xl mx-auto items-center justify-between gap-4">
         
-        {/* Left Action Button: "Demander un Devis" */}
-        <button
-          id="btn-demander-devis"
-          onClick={openQuoteModal}
-          className="w-auto px-6 py-3 rounded-full bg-white/80 hover:bg-white backdrop-blur-xl text-slate-900 font-semibold text-sm shadow-xl shadow-slate-900/5 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border border-white/80 flex items-center justify-center gap-2.5 group cursor-pointer"
-        >
-          <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:rotate-12 transition-transform">
-            <FileText className="w-3.5 h-3.5" />
+        {/* Left: Brand Identity with Logo + Action Button */}
+        <div className="flex items-center gap-3">
+          <div 
+            onClick={() => setActiveTab('accueil')}
+            className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border border-white/80 dark:border-white/20 shadow-md cursor-pointer hover:scale-105 transition-transform group"
+            title="ICDD – Accueil"
+          >
+            <div className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-black text-xs shadow-sm border border-amber-400/50 tracking-tight overflow-hidden relative flex-shrink-0">
+              <span className="text-[10px] text-amber-400">IC</span>
+              <img 
+                src="/icdd.jpeg" 
+                alt="Logo ICDD" 
+                className="absolute inset-0 w-full h-full object-cover" 
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = 'none';
+                }}
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-xs tracking-wider text-slate-900 dark:text-white uppercase leading-none">
+                ICDD 🦺✨
+              </span>
+              <span className="text-[9px] font-semibold text-slate-600 dark:text-slate-400 tracking-tight leading-tight">
+                Décoration & Peinture
+              </span>
+            </div>
           </div>
-          <span>Demander un Devis</span>
-          <span className="text-[10px] uppercase tracking-wider font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-200/60 inline-block">
-            Rapide
-          </span>
-        </button>
+
+          {/* Left Action Button: "Demander un Devis" */}
+          <button
+            id="btn-demander-devis"
+            onClick={openQuoteModal}
+            className="w-auto px-5 py-2.5 rounded-full bg-white/80 hover:bg-white backdrop-blur-xl text-slate-900 font-semibold text-xs shadow-xl shadow-slate-900/5 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border border-white/80 flex items-center justify-center gap-2 group cursor-pointer"
+          >
+            <div className="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:rotate-12 transition-transform">
+              <FileText className="w-3 h-3 text-amber-400" />
+            </div>
+            <span>Devis Matériaux</span>
+            <span className="text-[9px] uppercase tracking-wider font-black bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full inline-block">
+              Rapide
+            </span>
+          </button>
+        </div>
 
         {/* Center Filters Dropdowns (Frosted Glass Container) */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 px-4 py-2.5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl rounded-full border border-white/60 dark:border-white/20 shadow-lg">
