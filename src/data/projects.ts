@@ -1,16 +1,24 @@
 import { Project, DecorOffer } from '../types';
-import icddLuxuryInterior from '../assets/images/icdd_luxury_interior_1786542633755.jpg';
-import villaRiviera from '../assets/images/villa_riviera_1786542646750.jpg';
-import haussmannReborn from '../assets/images/haussmann_reborn_1786542659834.jpg';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
-import icdddPhoto from '../assets/images/icddd.jpeg';
+
+// Photos authentiques des chantiers et réalisations réelles ICDD
+import realProject1 from '../assets/projects/real_project_1.jpg';
+import realProject2 from '../assets/projects/real_project_2.jpg';
+import realProject3 from '../assets/projects/real_project_3.jpg';
+import realProject4 from '../assets/projects/real_project_4.jpg';
+import realProject5 from '../assets/projects/real_project_5.jpg';
+import realProject6 from '../assets/projects/real_project_6.jpg';
+import realProject7 from '../assets/projects/real_project_7.jpg';
 
 export const ICDD_ASSETS = {
   logo: icddOfficialLogo,
-  luxuryInterior: icddLuxuryInterior,
-  villaRiviera: villaRiviera,
-  haussmannReborn: haussmannReborn,
-  decorPhoto: icdddPhoto,
+  project1: realProject1,
+  project2: realProject2,
+  project3: realProject3,
+  project4: realProject4,
+  project5: realProject5,
+  project6: realProject6,
+  project7: realProject7,
 };
 
 export const ICDD_OFFERS_CONFIG: Record<DecorOffer, { basePrice: number; description: string; badge: string; minWallM2: number }> = {
@@ -60,13 +68,12 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 800,
     description: "Finitions sur-mesure d'exception pour un grand salon avec effets de matières artistiques et niches lumineuses.",
     fullDescription: "Réalisation emblématique de la collection Top Modèle d'ICDD. Nos artisans peintres et décorateurs ont créé un jeu de textures murales uniques alliant enduit à la chaux poli, effets de feuilles dorées subtiles et préparation murale au millimètre près.",
-    coverImage: icddLuxuryInterior,
+    coverImage: realProject4,
     galleryImages: [
-      icddLuxuryInterior,
-      villaRiviera,
-      icdddPhoto,
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80'
+      realProject4,
+      realProject1,
+      realProject7,
+      realProject6
     ],
     specs: {
       duration: '5 à 7 Jours',
@@ -95,12 +102,12 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 700,
     description: "Ambiance chaleureuse et lumineuse avec patines dorées, bandeaux de peinture métallisée et finitions velours.",
     fullDescription: "Pour cette suite parentale, ICDD a déployé sa formule Décoration Gold. Les murs se parent d'un jeu de lumière raffiné grâce à des peintures à reflets métalliques doux et des boiseries murales peintes dans des tons chauds.",
-    coverImage: haussmannReborn,
+    coverImage: realProject1,
     galleryImages: [
-      haussmannReborn,
-      icdddPhoto,
-      'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80'
+      realProject1,
+      realProject7,
+      realProject6,
+      realProject4
     ],
     specs: {
       duration: '4 à 6 Jours',
@@ -127,12 +134,14 @@ export const ICDD_PROJECTS: Project[] = [
     style: 'Luxe Contemporain',
     budgetRange: '500 $ - 700 $',
     startingPrice: 500,
-    description: "Transformation des espaces de vie avec des enduits texturés façon stuc et une palette neutre raffinée.",
+    description: "Transformation des espaces de vie avec des enduits texturés façon stuc et une palette chaleureuse raffinée.",
     fullDescription: "La Décoration Luxueuse met en scène un enduit décoratif minéral texturé, apportant de la profondeur et du relief aux murs. Les lignes modernes structurent le salon tout en conservant une grande douceur visuelle.",
-    coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80',
+    coverImage: realProject6,
     galleryImages: [
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80',
-      'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80'
+      realProject6,
+      realProject7,
+      realProject2,
+      realProject1
     ],
     specs: {
       duration: '3 à 5 Jours',
@@ -150,7 +159,7 @@ export const ICDD_PROJECTS: Project[] = [
   },
   {
     id: 'bureau-classique',
-    title: 'Décoration Classique – Bureau & Bibliothèque',
+    title: 'Décoration Classique – Salon & Boiseries',
     subtitle: 'Harmonie des teintes profondes & boiseries peintes',
     location: 'Kinshasa, Limete',
     area: 45,
@@ -161,10 +170,11 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 350,
     description: "Peinture double couche haute opacité avec teintes personnalisées et finitions soignées.",
     fullDescription: "La Décoration Classique d'ICDD offre une alliance parfaite entre sobriété et élégance. Les murs sont soigneusement préparés pour recevoir une peinture mate lavable haut de gamme, complétée par des baguettes d'encadrement classiques.",
-    coverImage: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1600&q=80',
+    coverImage: realProject2,
     galleryImages: [
-      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1600&q=80',
-      'https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1600&q=80'
+      realProject2,
+      realProject3,
+      realProject5
     ],
     specs: {
       duration: '2 à 3 Jours',
@@ -182,7 +192,7 @@ export const ICDD_PROJECTS: Project[] = [
   },
   {
     id: 'studio-simple',
-    title: 'Décoration Simple – Chambre Moderne',
+    title: 'Décoration Simple – Espace Contemporain',
     subtitle: 'Fraîcheur, netteté et pureté des couleurs',
     location: 'Kinshasa, Bandalungwa',
     area: 30,
@@ -193,10 +203,11 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 250,
     description: "Rafraîchissement complet et peinture impeccable pour un intérieur lumineux à prix maîtrisé.",
     fullDescription: "Idéal pour redonner vie à une pièce, l'offre Décoration simple assure un rendu net et contemporain. Préparation des murs, rebouchage des imperfections et application de peintures certifiées anti-odeurs.",
-    coverImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80',
+    coverImage: realProject5,
     galleryImages: [
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80',
-      'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1600&q=80'
+      realProject5,
+      realProject3,
+      realProject2
     ],
     specs: {
       duration: '1 à 2 Jours',
@@ -218,19 +229,19 @@ export const TEAM_MEMBERS = [
   {
     name: 'Direction ICDD',
     role: 'Chef de Projets & Coordination Décoration',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    avatar: icddOfficialLogo,
     bio: 'Supervision technique de tous les chantiers de décoration et peinture intérieure.'
   },
   {
     name: 'Maîtres Peintres ICDD',
     role: 'Spécialistes Enduits, Stucs & Finitions Gold',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80',
+    avatar: icddOfficialLogo,
     bio: 'Experts en patines dorées, textures en relief et application d’enduits décoratifs nobles.'
   },
   {
     name: 'Équipe Conseil Nuancier & Devis',
     role: 'Conseillers Décoration & Métré Mural',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
+    avatar: icddOfficialLogo,
     bio: 'À votre écoute du lundi au samedi au +243 897504570 pour établir votre devis personnalisé.'
   }
 ];

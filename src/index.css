@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
-/* Custom Sleek Scrollbar for luxury frosted glass interface */
+@theme {
+  --color-icdd-blue: #005EA6;
+  --color-icdd-cyan: #00D7FF;
+  --color-icdd-magenta: #FF77FF;
+  --color-icdd-slate: #555555;
+}
+
+/* Custom Sleek Scrollbar for ICDD interface */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -11,16 +18,17 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 94, 166, 0.3);
   border-radius: 9999px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.6);
+  background: rgba(0, 215, 255, 0.7);
 }
 
 /* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: rgba(0, 94, 166, 0.3) transparent;
 }
+

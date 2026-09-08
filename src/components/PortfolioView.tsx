@@ -43,8 +43,8 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6 bg-white/75 dark:bg-slate-900/75 backdrop-blur-2xl p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border border-white/80 dark:border-white/20 shadow-xl">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 text-xs font-semibold mb-2.5 sm:mb-3 border border-amber-200">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#005EA6]/10 dark:bg-[#005EA6]/30 text-[#005EA6] dark:text-[#00D7FF] text-xs font-semibold mb-2.5 sm:mb-3 border border-[#00D7FF]/30">
+              <Sparkles className="w-3.5 h-3.5 text-[#00D7FF]" />
               <span>Réalisations d'Exception</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -63,7 +63,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
               placeholder="Rechercher par lieu, style..."
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-full bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 border border-white/80 dark:border-slate-700 shadow-inner"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-full bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] border border-white/80 dark:border-slate-700 shadow-inner"
             />
           </div>
         </div>
@@ -76,7 +76,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
               onClick={() => setFilters(prev => ({ ...prev, category: cat }))}
               className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all min-h-[36px] flex items-center cursor-pointer active:scale-95 ${
                 filters.category === cat
-                  ? 'bg-slate-900 text-white shadow-md'
+                  ? 'bg-[#005EA6] text-white border border-[#00D7FF]/40 shadow-md'
                   : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-white/60 hover:bg-white'
               }`}
             >
@@ -88,7 +88,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         {/* Filter Pills Summary */}
         <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 px-1 sm:px-2">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
+            <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#005EA6] dark:text-[#00D7FF]" />
             <span className="font-semibold text-slate-900 dark:text-slate-100">
               {filteredProjects.length} projet(s) trouvé(s)
             </span>
@@ -97,7 +97,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
           {(filters.category !== 'Tous' || filters.style !== 'Tous' || filters.budget !== 'Tous' || filters.searchQuery) && (
             <button
               onClick={() => setFilters({ category: 'Tous', style: 'Tous', budget: 'Tous', searchQuery: '' })}
-              className="text-amber-600 dark:text-amber-400 font-bold hover:underline cursor-pointer"
+              className="text-[#005EA6] dark:text-[#00D7FF] font-bold hover:underline cursor-pointer"
             >
               Réinitialiser
             </button>
@@ -120,7 +120,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80';
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
@@ -133,7 +133,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 {/* Top Right: Location and Bookmark Action */}
                 <div className="absolute top-4 right-4 flex items-center gap-1.5">
                   <div className="bg-slate-950/80 text-white backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-medium flex items-center gap-1 border border-white/20">
-                    <MapPin className="w-3 h-3 text-amber-400" />
+                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
                     <span>{project.location}</span>
                   </div>
 
@@ -145,7 +145,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                     title={isFavorite(project.id) ? "Retirer des favoris" : "Enregistrer dans mes favoris"}
                     className={`p-1.5 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
                       isFavorite(project.id)
-                        ? 'bg-amber-500 text-white border-amber-400 shadow-md scale-105'
+                        ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-md scale-105'
                         : 'bg-slate-950/70 text-white/80 border-white/20 hover:text-white hover:bg-slate-900'
                     }`}
                   >
@@ -155,7 +155,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
                 {/* Title Overlay at bottom of image */}
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold tracking-tight drop-shadow-md group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-xl font-bold tracking-tight drop-shadow-md group-hover:text-[#00D7FF] transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-xs text-slate-200 opacity-90 line-clamp-1 font-medium">
@@ -187,12 +187,12 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-[10px] text-slate-500 font-medium">Matériaux dès</span>
-                    <span className="text-sm font-extrabold text-amber-600 dark:text-amber-400">
+                    <span className="text-sm font-extrabold text-[#005EA6] dark:text-[#00D7FF]">
                       {project.startingPrice ? `${project.startingPrice} $` : project.budgetRange}
                     </span>
                   </div>
 
-                  <button className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-amber-500 group-hover:rotate-45 transition-all duration-300 shadow-md">
+                  <button className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-[#005EA6] group-hover:text-[#00D7FF] group-hover:rotate-45 transition-all duration-300 shadow-md">
                     <ArrowUpRight className="w-4.5 h-4.5" />
                   </button>
                 </div>
@@ -213,7 +213,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             </p>
             <button
               onClick={() => setFilters({ category: 'Tous', style: 'Tous', budget: 'Tous', searchQuery: '' })}
-              className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 transition-colors"
+              className="px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] transition-colors border border-[#00D7FF]/40 shadow-md"
             >
               Réinitialiser la recherche
             </button>

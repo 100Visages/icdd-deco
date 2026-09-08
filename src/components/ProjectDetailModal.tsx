@@ -100,7 +100,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
           {/* Header Info Overlay inside Image */}
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 text-white pr-6">
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
-              <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500 text-slate-950 text-[10px] sm:text-xs font-black uppercase tracking-wider shadow">
+              <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#005EA6] text-white border border-[#00D7FF]/50 text-[10px] sm:text-xs font-black uppercase tracking-wider shadow">
                 {project.category}
               </span>
               {project.startingPrice && (
@@ -123,7 +123,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 <span>Réalisation ICDD</span>
               </span>
               <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] sm:text-xs font-medium flex items-center gap-1 border border-white/30">
-                <MapPin className="w-3 h-3 text-amber-400" />
+                <MapPin className="w-3 h-3 text-[#00D7FF]" />
                 {project.location}
               </span>
             </div>
@@ -144,7 +144,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                   key={idx}
                   onClick={() => setActiveImgIndex(idx)}
                   className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden border-2 transition-all ${
-                    idx === activeImgIndex ? 'border-amber-400 scale-110' : 'border-transparent opacity-60'
+                    idx === activeImgIndex ? 'border-[#00D7FF] scale-110' : 'border-transparent opacity-60'
                   }`}
                 >
                   <img src={img} alt="miniature" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -167,7 +167,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
             </div>
             <div>
               <span className="text-[10px] text-slate-500 uppercase font-semibold block">Tarif Matériaux</span>
-              <span className="text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400">
+              <span className="text-xs sm:text-sm font-bold text-[#005EA6] dark:text-[#00D7FF]">
                 {project.startingPrice ? `à partir de ${project.startingPrice}` : (offerInfo?.badge || 'Sur devis')}
               </span>
             </div>
@@ -198,7 +198,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
             
             {/* Noble Materials Palette */}
             <div className="p-4 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2.5">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-xs sm:text-sm">
+              <div className="flex items-center gap-2 text-[#005EA6] dark:text-[#00D7FF] font-bold text-xs sm:text-sm">
                 <Layers className="w-4 h-4" />
                 <span>Matériaux & Produits de Décoration</span>
               </div>
@@ -216,7 +216,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
 
             {/* Lighting & Scenography */}
             <div className="p-4 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2.5">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-xs sm:text-sm">
+              <div className="flex items-center gap-2 text-[#005EA6] dark:text-[#00D7FF] font-bold text-xs sm:text-sm">
                 <Lightbulb className="w-4 h-4" />
                 <span>Ambiance & Harmonie des Couleurs</span>
               </div>
@@ -243,8 +243,8 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
           </div>
 
           {/* Official Disclaimer Banner */}
-          <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300/60 text-amber-950 dark:text-amber-200 text-xs flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="p-3 rounded-xl bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 text-slate-800 dark:text-slate-100 text-xs flex items-start gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
             <p className="leading-snug text-[11px] sm:text-xs">
               <strong>📝 Note ICDD :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
             </p>
@@ -264,7 +264,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 onClick={() => toggleFavorite(project)}
                 className={`px-3.5 py-2.5 rounded-full border text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm ${
                   isFavorite(project.id)
-                    ? 'bg-amber-500 text-white border-amber-500'
+                    ? 'bg-[#005EA6] text-white border-[#00D7FF]'
                     : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-slate-300 dark:border-slate-700'
                 }`}
                 title={isFavorite(project.id) ? "Retirer des favoris" : "Enregistrer dans mes favoris"}
@@ -287,9 +287,9 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                   onClose();
                   onRequestSimilar(project);
                 }}
-                className="flex-1 sm:flex-none px-6 py-2.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs tracking-wide shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 sm:flex-none px-6 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs tracking-wide shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5" />
+                <FileText className="w-3.5 h-3.5 text-[#00D7FF]" />
                 <span>Demander un Devis</span>
               </button>
             </div>

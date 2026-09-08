@@ -194,9 +194,9 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
           <>
             {/* Modal Header with ICDD Identity */}
             <div className="mb-5 sm:mb-6 space-y-1.5 sm:space-y-2 pr-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300">
-                <div className="w-4 h-4 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                  <span className="text-[7px] text-amber-500 flex items-center justify-center h-full">IC</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#005EA6]/15 text-[#005EA6] dark:text-[#00D7FF] text-xs font-bold border border-[#00D7FF]/40">
+                <div className="w-4 h-4 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/60 shadow-sm flex-shrink-0 relative">
+                  <span className="text-[7px] text-[#005EA6] flex items-center justify-center h-full">IC</span>
                   <img 
                     src={icddOfficialLogo} 
                     alt="Logo ICDD" 
@@ -224,7 +224,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 onClick={() => setStep(1)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 1
-                    ? 'bg-slate-900 text-white shadow-md'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
@@ -234,7 +234,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 onClick={() => setStep(2)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 2
-                    ? 'bg-slate-900 text-white shadow-md'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
@@ -244,7 +244,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 onClick={() => setStep(3)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 3
-                    ? 'bg-slate-900 text-white shadow-md'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                 }`}
               >
@@ -272,20 +272,20 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                           onClick={() => handleOfferChange(offer)}
                           className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between ${
                             isSelected
-                              ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
+                              ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-lg'
                               : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                           }`}
                         >
                           <div>
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-black">{offer}</span>
-                              {isSelected && <CheckCircle2 className="w-4 h-4 text-amber-400" />}
+                              {isSelected && <CheckCircle2 className="w-4 h-4 text-[#00D7FF]" />}
                             </div>
-                            <div className={`text-sm font-black mt-1 ${isSelected ? 'text-amber-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                            <div className={`text-sm font-black mt-1 ${isSelected ? 'text-[#00D7FF]' : 'text-[#005EA6] dark:text-[#00D7FF]'}`}>
                               {item.badge}
                             </div>
                           </div>
-                          <p className={`text-[10px] mt-1.5 leading-snug line-clamp-2 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                          <p className={`text-[10px] mt-1.5 leading-snug line-clamp-2 ${isSelected ? 'text-slate-100' : 'text-slate-500'}`}>
                             {item.description}
                           </p>
                         </button>
@@ -303,7 +303,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       </label>
                       <span className="text-[11px] text-slate-500">Surface totale des murs à peindre / décorer</span>
                     </div>
-                    <span className="text-2xl font-black text-amber-600 dark:text-amber-400">
+                    <span className="text-2xl font-black text-[#005EA6] dark:text-[#00D7FF]">
                       {formData.wallArea} m²
                     </span>
                   </div>
@@ -314,7 +314,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     step="5"
                     value={formData.wallArea}
                     onChange={(e) => handleAreaChange(Number(e.target.value))}
-                    className="w-full accent-amber-500 cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg"
+                    className="w-full accent-[#005EA6] cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
                     <span>15 m² (Petite chambre)</span>
@@ -324,9 +324,9 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 </div>
 
                 {/* Live Estimate Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="p-4 sm:p-5 rounded-2xl bg-[#005EA6]/10 border border-[#00D7FF]/35 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-amber-800 dark:text-amber-300 block">
+                    <span className="text-[10px] uppercase font-bold text-[#005EA6] dark:text-[#00D7FF] block">
                       Fourchette Estimative des Matériaux
                     </span>
                     <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
@@ -338,15 +338,15 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </div>
                   <button
                     onClick={() => setStep(2)}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer text-center"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-[#00D7FF]/40 shadow-md transition-colors cursor-pointer text-center"
                   >
                     Étape suivante &rarr;
                   </button>
                 </div>
 
                 {/* Official Disclaimer Note */}
-                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-300/60 p-3 rounded-xl flex items-start gap-2.5 text-xs text-amber-950 dark:text-amber-200">
-                  <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 p-3 rounded-xl flex items-start gap-2.5 text-xs text-slate-800 dark:text-slate-100">
+                  <ShieldCheck className="w-4 h-4 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
                   <span>
                     <strong>📝 Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
                   </span>
@@ -372,7 +372,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                         onClick={() => setFormData(prev => ({ ...prev, roomType: r }))}
                         className={`p-3 rounded-2xl text-xs font-bold border transition-all text-center cursor-pointer ${
                           formData.roomType === r
-                            ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md font-extrabold'
+                            ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-md font-extrabold'
                             : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                         }`}
                       >
@@ -402,7 +402,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                           }`}
                         >
                           <span className="truncate">{finish}</span>
-                          {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 ml-2" />}
+                          {isSelected && <Check className="w-3.5 h-3.5 text-[#00D7FF] flex-shrink-0 ml-2" />}
                         </button>
                       );
                     })}
@@ -418,7 +418,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </button>
                   <button
                     onClick={() => setStep(3)}
-                    className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer"
+                    className="px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-[#00D7FF]/30 shadow-md transition-colors cursor-pointer"
                   >
                     Suivant (Vos coordonnées) &rarr;
                   </button>
@@ -442,7 +442,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="M. / Mme"
                       value={formData.clientName}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientName: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
 
@@ -456,7 +456,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="votre.email@exemple.com"
                       value={formData.clientEmail}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientEmail: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
                 </div>
@@ -472,7 +472,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="+243 ..."
                       value={formData.clientPhone}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientPhone: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
 
@@ -484,7 +484,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       type="date"
                       value={formData.preferredDate || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, preferredDate: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
                 </div>
@@ -498,7 +498,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     placeholder="Ex: Murs du salon avec quelques trous à reboucher, nous sommes à Gombe..."
                     value={formData.clientMessage}
                     onChange={(e) => setFormData(prev => ({ ...prev, clientMessage: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                   />
                 </div>
 
@@ -506,7 +506,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1">
                   <span className="font-bold block text-slate-900 dark:text-white">Récapitulatif de l'estimation :</span>
                   <p><strong>{formData.selectedOffer}</strong> pour {formData.wallArea} m² de surface murale ({formData.roomType})</p>
-                  <p className="text-amber-600 dark:text-amber-400 font-extrabold text-sm">
+                  <p className="text-[#005EA6] dark:text-[#00D7FF] font-extrabold text-sm">
                     Matériaux estimés : {formData.estimatedBudgetMin} $ – {formData.estimatedBudgetMax} $
                   </p>
                   <p className="text-[10px] text-slate-500">
@@ -545,7 +545,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 sm:flex-none px-6 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 sm:flex-none px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <>
@@ -554,7 +554,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                         </>
                       ) : (
                         <>
-                          <Send className="w-4 h-4" />
+                          <Send className="w-4 h-4 text-[#00D7FF]" />
                           <span>Valider & Envoyer</span>
                         </>
                       )}
@@ -580,14 +580,14 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
             <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
               <a
                 href="tel:+243897504570"
-                className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 flex items-center justify-center gap-1.5"
+                className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-[#005EA6] border border-white/10 flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-amber-400" />
+                <Phone className="w-3.5 h-3.5 text-[#00D7FF]" />
                 <span>Appeler le +243 897504570</span>
               </a>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-full bg-amber-500 text-slate-950 text-xs font-bold hover:bg-amber-600 transition-colors cursor-pointer"
+                className="px-6 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-bold border border-[#00D7FF]/40 shadow-md transition-colors cursor-pointer"
               >
                 Fermer
               </button>

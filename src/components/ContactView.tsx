@@ -71,9 +71,9 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
         {/* Header with Welcome Announcement */}
         <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
           <div className="space-y-2.5">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/80 dark:bg-amber-500/20 text-slate-950 dark:text-amber-200 text-xs font-bold border border-amber-300 shadow-sm">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                <span className="text-[8px] text-amber-500 flex items-center justify-center h-full">IC</span>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#005EA6]/15 text-[#005EA6] dark:text-[#00D7FF] text-xs font-bold border border-[#00D7FF]/40 shadow-sm">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/60 shadow-sm flex-shrink-0 relative">
+                <span className="text-[8px] text-[#005EA6] flex items-center justify-center h-full">IC</span>
                 <img 
                   src={icddOfficialLogo} 
                   alt="Logo ICDD" 
@@ -97,9 +97,9 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
 
           <button
             onClick={openQuoteModal}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4 text-[#00D7FF]" />
             <span>Calculer mon Devis Matériaux</span>
           </button>
         </div>
@@ -127,20 +127,20 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
               <div 
                 key={title} 
                 onClick={openQuoteModal}
-                className="bg-white/90 dark:bg-slate-800/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-amber-400 dark:hover:border-amber-400 transition-all hover:scale-[1.02] cursor-pointer shadow-sm group flex flex-col justify-between"
+                className="bg-white/90 dark:bg-slate-800/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-[#00D7FF] dark:hover:border-[#00D7FF] transition-all hover:scale-[1.02] cursor-pointer shadow-sm group flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
+                  <div className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-[#005EA6] dark:group-hover:text-[#00D7FF] transition-colors">
                     {title}
                   </div>
-                  <div className="text-lg font-black text-amber-600 dark:text-amber-400 mt-1 mb-2">
+                  <div className="text-lg font-black text-[#005EA6] dark:text-[#00D7FF] mt-1 mb-2">
                     {item.badge}
                   </div>
                   <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
                     {item.description}
                   </p>
                 </div>
-                <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700 text-[10px] font-bold text-amber-700 dark:text-amber-300 flex items-center justify-between">
+                <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700 text-[10px] font-bold text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-between">
                   <span>Sélectionner</span>
                   <span>→</span>
                 </div>
@@ -149,9 +149,9 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
           </div>
 
           {/* Important Notice Banner */}
-          <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 p-4 rounded-2xl flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-            <div className="text-xs sm:text-sm text-amber-950 dark:text-amber-200 leading-relaxed">
+          <div className="bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 p-4 rounded-2xl flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
               <strong>📝 Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
             </div>
           </div>
@@ -170,12 +170,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
 
               {/* Direct Phone / Call */}
               <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
                   <strong className="block text-slate-900 dark:text-white font-bold text-sm">Téléphone & Appel Direct :</strong>
-                  <a href="tel:+243897504570" className="text-amber-600 dark:text-amber-400 font-black text-base hover:underline">
+                  <a href="tel:+243897504570" className="text-[#005EA6] dark:text-[#00D7FF] font-black text-base hover:underline">
                     +243 897504570
                   </a>
                   <p className="text-[11px] text-slate-500 mt-0.5">Appel direct pour prise en charge rapide de vos projets.</p>
@@ -203,7 +203,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
 
               {/* Working Hours */}
               <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
@@ -215,7 +215,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
 
               {/* Location */}
               <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -229,7 +229,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
             {/* Quick Call Action Card */}
             <div className="bg-slate-900 text-white p-6 rounded-[28px] border border-white/20 shadow-lg space-y-3 relative overflow-hidden">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Assistance Décoration</span>
+                <span className="text-xs font-bold text-[#00D7FF] uppercase tracking-wider">Assistance Décoration</span>
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Lundi au Samedi</span>
               </div>
               <h4 className="text-lg font-bold">Un conseil sur vos peintures ?</h4>
@@ -239,7 +239,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
               <div className="pt-2 flex gap-2">
                 <a
                   href="tel:+243897504570"
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black text-center transition-all shadow-md"
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-black text-center transition-all shadow-md border border-[#00D7FF]/30"
                 >
                   Appeler +243 897504570
                 </a>
@@ -267,7 +267,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="M. / Mme"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
 
@@ -281,7 +281,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="votre.email@exemple.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
                 </div>
@@ -297,7 +297,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="+243 ..."
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                     />
                   </div>
 
@@ -308,7 +308,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] cursor-pointer"
                     >
                       <option value="Décoration simple (dès 250 $)">Décoration simple (dès 250 $)</option>
                       <option value="Décoration classique (dès 350 $)">Décoration classique (dès 350 $)</option>
@@ -330,7 +330,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                     placeholder="Précisez la dimension approximative de vos murs, votre commune, le type de pièce (salon, chambre, bureau) et vos attentes particulières..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
                   />
                 </div>
 
@@ -348,7 +348,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-slate-900 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
@@ -357,7 +357,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       </>
                     ) : (
                       <>
-                        <Send className="w-4 h-4" />
+                        <Send className="w-4 h-4 text-[#00D7FF]" />
                         <span>Envoyer la Demande</span>
                       </>
                     )}

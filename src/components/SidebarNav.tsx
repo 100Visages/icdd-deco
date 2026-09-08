@@ -45,10 +45,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
           {/* Brand Monogram Icon at top of Sidebar */}
           <div 
             onClick={() => setActiveTab('accueil')}
-            className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black tracking-tighter text-xs shadow-md cursor-pointer hover:scale-105 transition-transform border border-amber-400/60 mb-2 group relative overflow-hidden"
+            className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black tracking-tighter text-xs shadow-md cursor-pointer hover:scale-105 transition-transform border border-[#00D7FF]/80 mb-2 group relative overflow-hidden"
             title="ICDD – Décoration & Peinture"
           >
-            <span className="text-[10px] font-black uppercase text-amber-500">ICDD</span>
+            <span className="text-[10px] font-black uppercase text-[#005EA6]">ICDD</span>
             <img 
               src={icddOfficialLogo} 
               alt="Logo ICDD" 
@@ -75,8 +75,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
                 onClick={() => setActiveTab(item.id)}
                 className={`group relative p-3.5 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer ${
                   isActive
-                    ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/30 scale-105'
-                    : 'text-slate-700 hover:text-slate-900 hover:bg-white/60 dark:text-slate-200 dark:hover:bg-slate-800/50'
+                    ? 'bg-[#005EA6] text-white shadow-lg shadow-[#005EA6]/40 scale-105 border border-[#00D7FF]/50'
+                    : 'text-slate-700 hover:text-[#005EA6] hover:bg-white/60 dark:text-slate-200 dark:hover:bg-slate-800/50'
                 }`}
                 aria-label={item.label}
               >
@@ -90,7 +90,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
 
                 {/* Active Dot indicator */}
                 {isActive && (
-                  <span className="absolute -right-1 w-1.5 h-1.5 bg-amber-400 rounded-full shadow-sm animate-pulse" />
+                  <span className="absolute -right-1 w-1.5 h-1.5 bg-[#00D7FF] rounded-full shadow-sm animate-pulse" />
                 )}
               </button>
             );
@@ -116,11 +116,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
                 onClick={() => setActiveTab(item.id)}
                 className={`flex-1 flex flex-col items-center justify-center py-2 px-2 rounded-full transition-all duration-300 cursor-pointer min-h-[44px] ${
                   isActive
-                    ? 'bg-slate-900 text-white shadow-md shadow-slate-950/20 scale-[1.03]'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 active:bg-slate-100/50'
+                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/30 scale-[1.03] border border-[#00D7FF]/40'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#005EA6] active:bg-slate-100/50'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-current'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-[#00D7FF]' : 'text-current'}`} />
                 <span className="text-[10px] font-bold tracking-tight mt-0.5 leading-tight">
                   {item.label}
                 </span>

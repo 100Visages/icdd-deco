@@ -49,7 +49,7 @@ export default function App() {
   };
 
   return (
-    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-[#dcd8d0] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center p-0 sm:p-2 lg:p-3 xl:p-4 font-sans selection:bg-amber-400 selection:text-slate-950">
+    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center p-0 sm:p-2 lg:p-3 xl:p-4 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
       
       {/* Outer Pill-Shaped Glass Frame matching reference image structure */}
       <main 
@@ -67,7 +67,7 @@ export default function App() {
             }`}
             referrerPolicy="no-referrer"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = '/images/icdd_luxury_interior_1786542633755.jpg';
+              (e.currentTarget as HTMLImageElement).src = '/projects/real_project_4.jpg';
             }}
           />
           {/* Subtle Vignetting & Ambient Gradient Overlay */}

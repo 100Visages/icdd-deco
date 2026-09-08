@@ -40,14 +40,14 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
         {/* Hero Section */}
         <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl space-y-4 sm:space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300 w-fit">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                <span className="text-[8px] text-amber-500 flex items-center justify-center h-full">IC</span>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#005EA6]/15 text-[#005EA6] dark:text-[#00D7FF] text-xs font-bold border border-[#00D7FF]/40 w-fit">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/60 shadow-sm flex-shrink-0 relative">
+                <span className="text-[8px] text-[#005EA6] flex items-center justify-center h-full">IC</span>
                 <img 
                   src={icddOfficialLogo} 
                   alt="Logo ICDD" 
                   className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
-                  referrerPolicy="no-referrer"
+                  referrerPolicy="no-referrer" 
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
                   }}
@@ -57,7 +57,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
             </div>
 
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 w-fit">
-              <div className="w-6 h-6 rounded-full overflow-hidden border border-amber-400/60 bg-white dark:bg-slate-900 flex-shrink-0 relative">
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-[#00D7FF]/60 bg-white dark:bg-slate-900 flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
                   alt="Logo ICDD" 
@@ -85,7 +85,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
           {/* Quick Contact & Availability Badge */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold">
-              <Clock className="w-3.5 h-3.5 text-amber-500" />
+              <Clock className="w-3.5 h-3.5 text-[#00D7FF]" />
               <span>Disponible du lundi au samedi</span>
             </div>
             <a
@@ -135,10 +135,10 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
                 key={item.step}
                 className="bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl p-5 sm:p-6 rounded-[24px] sm:rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-2.5 relative overflow-hidden"
               >
-                <span className="text-3xl sm:text-4xl font-black text-amber-500/20 dark:text-amber-400/20 absolute top-4 right-5 pointer-events-none">
+                <span className="text-3xl sm:text-4xl font-black text-[#005EA6]/20 dark:text-[#00D7FF]/20 absolute top-4 right-5 pointer-events-none">
                   {item.step}
                 </span>
-                <div className="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#005EA6] text-white font-bold text-xs flex items-center justify-center border border-[#00D7FF]/30">
                   {item.step}
                 </div>
                 <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
@@ -169,17 +169,22 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
                 key={idx}
                 className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-5 rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-3 flex flex-col items-center text-center"
               >
-                <img
-                  src={member.avatar}
-                  alt={member.name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md"
-                  referrerPolicy="no-referrer"
-                />
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-[#005EA6]/20 dark:border-[#00D7FF]/30 shadow-md relative bg-white dark:bg-slate-900 flex-shrink-0">
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="w-full h-full object-cover scale-[1.32]"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                    }}
+                  />
+                </div>
                 <div>
                   <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                     {member.name}
                   </h4>
-                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400 block mt-0.5">
+                  <span className="text-xs font-bold text-[#005EA6] dark:text-[#00D7FF] block mt-0.5">
                     {member.role}
                   </span>
                 </div>
@@ -194,7 +199,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
         {/* Call To Action Banner with WhatsApp & Call */}
         <div className="bg-slate-950 text-white p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-white/20">
           <div className="space-y-2 max-w-xl text-center md:text-left">
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#00D7FF]">
               Disponible du lundi au samedi
             </span>
             <h3 className="text-xl sm:text-3xl font-black tracking-tight">
@@ -218,10 +223,10 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
 
             <button
               onClick={openQuoteModal}
-              className="px-6 py-3.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/50 hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
             >
               <span>Calculer un Devis</span>
-              <ArrowUpRight className="w-4 h-4" />
+              <ArrowUpRight className="w-4 h-4 text-[#00D7FF]" />
             </button>
           </div>
         </div>
