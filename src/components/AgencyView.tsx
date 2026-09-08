@@ -2,6 +2,7 @@ import React from 'react';
 import { TEAM_MEMBERS } from '../data/projects';
 import { Sparkles, Award, ShieldCheck, Compass, Users, CheckCircle2, ArrowUpRight, Phone, MessageCircle, Clock } from 'lucide-react';
 import { NavTab } from '../types';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface AgencyViewProps {
   openQuoteModal: () => void;
@@ -40,15 +41,15 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
         <div className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl space-y-4 sm:space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300 w-fit">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-950 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                <span className="text-[8px] text-amber-400 flex items-center justify-center h-full">IC</span>
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
+                <span className="text-[8px] text-amber-500 flex items-center justify-center h-full">IC</span>
                 <img 
-                  src="/icdd.jpeg" 
+                  src={icddOfficialLogo} 
                   alt="Logo ICDD" 
-                  className="absolute inset-0 w-full h-full object-cover" 
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = 'none';
+                    (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
                   }}
                 />
               </div>
@@ -56,12 +57,15 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
             </div>
 
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 w-fit">
-              <div className="w-6 h-6 rounded-full overflow-hidden border border-amber-400/40 bg-slate-950 flex-shrink-0 relative">
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-amber-400/60 bg-white dark:bg-slate-900 flex-shrink-0 relative">
                 <img 
-                  src="/icdd.jpeg" 
+                  src={icddOfficialLogo} 
                   alt="Logo ICDD" 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover scale-[1.32]" 
                   referrerPolicy="no-referrer" 
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                  }}
                 />
               </div>
               <span className="text-[11px] font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider">

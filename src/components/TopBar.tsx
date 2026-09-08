@@ -2,6 +2,7 @@ import React from 'react';
 import { FilterState, NavTab } from '../types';
 import { ChevronDown, FileText, FolderKanban, LogIn, LogOut, User as UserIcon, Bookmark } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface TopBarProps {
   filters: FilterState;
@@ -33,15 +34,15 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={() => setActiveTab('accueil')}
           className="flex items-center gap-2 cursor-pointer group"
         >
-          <div className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-black text-xs shadow-md border border-amber-400/50 tracking-tight group-hover:scale-105 transition-transform overflow-hidden relative">
-            <span className="text-[10px] text-amber-400">IC</span>
+          <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black text-xs shadow-md border border-amber-400/60 tracking-tight group-hover:scale-105 transition-transform overflow-hidden relative">
+            <span className="text-[10px] text-amber-500">IC</span>
             <img 
-              src="/icdd.jpeg" 
+              src={icddOfficialLogo} 
               alt="Logo ICDD" 
-              className="absolute inset-0 w-full h-full object-cover" 
+              className="absolute inset-0 w-full h-full object-cover scale-[1.32] transition-transform" 
               referrerPolicy="no-referrer"
               onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
+                (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
               }}
             />
           </div>
@@ -124,15 +125,15 @@ export const TopBar: React.FC<TopBarProps> = ({
             className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border border-white/80 dark:border-white/20 shadow-md cursor-pointer hover:scale-105 transition-transform group"
             title="ICDD – Accueil"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-950 text-white flex items-center justify-center font-black text-xs shadow-sm border border-amber-400/50 tracking-tight overflow-hidden relative flex-shrink-0">
-              <span className="text-[10px] text-amber-400">IC</span>
+            <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black text-xs shadow-sm border border-amber-400/60 tracking-tight overflow-hidden relative flex-shrink-0">
+              <span className="text-[10px] text-amber-500">IC</span>
               <img 
-                src="/icdd.jpeg" 
+                src={icddOfficialLogo} 
                 alt="Logo ICDD" 
-                className="absolute inset-0 w-full h-full object-cover" 
+                className="absolute inset-0 w-full h-full object-cover scale-[1.32] transition-transform" 
                 referrerPolicy="no-referrer"
                 onError={(e) => {
-                  (e.currentTarget as HTMLElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
                 }}
               />
             </div>

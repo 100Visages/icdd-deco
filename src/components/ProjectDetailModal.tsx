@@ -3,6 +3,7 @@ import { Project } from '../types';
 import { X, MapPin, Layers, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight, FileText, Bookmark, Phone, MessageCircle, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -108,8 +109,16 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 </span>
               )}
               <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-950/70 backdrop-blur-md text-white text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 border border-white/30">
-                <div className="w-3.5 h-3.5 rounded-full overflow-hidden bg-slate-950 flex-shrink-0 relative">
-                  <img src="/icdd.jpeg" alt="Logo ICDD" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <div className="w-3.5 h-3.5 rounded-full overflow-hidden bg-white dark:bg-slate-900 flex-shrink-0 relative">
+                  <img 
+                    src={icddOfficialLogo} 
+                    alt="Logo ICDD" 
+                    className="w-full h-full object-cover scale-[1.32]" 
+                    referrerPolicy="no-referrer" 
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                    }}
+                  />
                 </div>
                 <span>Réalisation ICDD</span>
               </span>

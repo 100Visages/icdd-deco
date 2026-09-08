@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface ContactViewProps {
   openQuoteModal: () => void;
@@ -71,15 +72,15 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
         <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
           <div className="space-y-2.5">
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/80 dark:bg-amber-500/20 text-slate-950 dark:text-amber-200 text-xs font-bold border border-amber-300 shadow-sm">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-950 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                <span className="text-[8px] text-amber-400 flex items-center justify-center h-full">IC</span>
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
+                <span className="text-[8px] text-amber-500 flex items-center justify-center h-full">IC</span>
                 <img 
-                  src="/icdd.jpeg" 
+                  src={icddOfficialLogo} 
                   alt="Logo ICDD" 
-                  className="absolute inset-0 w-full h-full object-cover" 
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = 'none';
+                    (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
                   }}
                 />
               </div>

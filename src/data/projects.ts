@@ -1,4 +1,17 @@
 import { Project, DecorOffer } from '../types';
+import icddLuxuryInterior from '../assets/images/icdd_luxury_interior_1786542633755.jpg';
+import villaRiviera from '../assets/images/villa_riviera_1786542646750.jpg';
+import haussmannReborn from '../assets/images/haussmann_reborn_1786542659834.jpg';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
+import icdddPhoto from '../assets/images/icddd.jpeg';
+
+export const ICDD_ASSETS = {
+  logo: icddOfficialLogo,
+  luxuryInterior: icddLuxuryInterior,
+  villaRiviera: villaRiviera,
+  haussmannReborn: haussmannReborn,
+  decorPhoto: icdddPhoto,
+};
 
 export const ICDD_OFFERS_CONFIG: Record<DecorOffer, { basePrice: number; description: string; badge: string; minWallM2: number }> = {
   'Décoration simple': {
@@ -47,10 +60,11 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 800,
     description: "Finitions sur-mesure d'exception pour un grand salon avec effets de matières artistiques et niches lumineuses.",
     fullDescription: "Réalisation emblématique de la collection Top Modèle d'ICDD. Nos artisans peintres et décorateurs ont créé un jeu de textures murales uniques alliant enduit à la chaux poli, effets de feuilles dorées subtiles et préparation murale au millimètre près.",
-    coverImage: '/src/assets/images/icdd_luxury_interior_1786542633755.jpg',
+    coverImage: icddLuxuryInterior,
     galleryImages: [
-      '/src/assets/images/icdd_luxury_interior_1786542633755.jpg',
-      '/src/assets/images/villa_riviera_1786542646750.jpg',
+      icddLuxuryInterior,
+      villaRiviera,
+      icdddPhoto,
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80'
     ],
@@ -81,9 +95,10 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 700,
     description: "Ambiance chaleureuse et lumineuse avec patines dorées, bandeaux de peinture métallisée et finitions velours.",
     fullDescription: "Pour cette suite parentale, ICDD a déployé sa formule Décoration Gold. Les murs se parent d'un jeu de lumière raffiné grâce à des peintures à reflets métalliques doux et des boiseries murales peintes dans des tons chauds.",
-    coverImage: '/src/assets/images/haussmann_reborn_1786542659834.jpg',
+    coverImage: haussmannReborn,
     galleryImages: [
-      '/src/assets/images/haussmann_reborn_1786542659834.jpg',
+      haussmannReborn,
+      icdddPhoto,
       'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=80',
       'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80'
     ],

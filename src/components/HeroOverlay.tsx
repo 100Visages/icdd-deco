@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Project, NavTab } from '../types';
 import { ArrowUpRight, Heart, Bookmark, Share2, MapPin, Sparkles, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface HeroOverlayProps {
   featuredProject: Project;
@@ -54,15 +55,15 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         
         {/* Welcome Badge with Official ICDD Logo */}
         <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-400/90 dark:bg-amber-500/30 backdrop-blur-md border border-amber-300 text-slate-950 dark:text-amber-200 text-[11px] sm:text-xs font-bold tracking-wide shadow-md">
-          <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-950 border border-amber-600/40 shadow-sm flex-shrink-0 relative">
-            <span className="text-[8px] text-amber-400 flex items-center justify-center h-full">IC</span>
+          <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-600/40 shadow-sm flex-shrink-0 relative">
+            <span className="text-[8px] text-amber-500 flex items-center justify-center h-full">IC</span>
             <img 
-              src="/icdd.jpeg" 
+              src={icddOfficialLogo} 
               alt="Logo ICDD" 
-              className="absolute inset-0 w-full h-full object-cover" 
+              className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
               referrerPolicy="no-referrer"
               onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
+                (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
               }}
             />
           </div>

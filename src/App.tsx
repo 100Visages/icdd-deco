@@ -58,7 +58,7 @@ export default function App() {
       >
         
         {/* Main Background Image (Luxury ICDD Interior Photography) */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-slate-950">
           <img
             src={ICDD_PROJECTS[0].coverImage}
             alt="ICDD Interior Design"
@@ -66,6 +66,9 @@ export default function App() {
               activeTab !== 'accueil' ? 'scale-105 blur-md opacity-40' : 'scale-100 opacity-90'
             }`}
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = '/images/icdd_luxury_interior_1786542633755.jpg';
+            }}
           />
           {/* Subtle Vignetting & Ambient Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-slate-950/40" />

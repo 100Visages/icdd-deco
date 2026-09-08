@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface QuoteEstimatorModalProps {
   isOpen: boolean;
@@ -194,15 +195,15 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
             {/* Modal Header with ICDD Identity */}
             <div className="mb-5 sm:mb-6 space-y-1.5 sm:space-y-2 pr-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/30 text-amber-950 dark:text-amber-300 text-xs font-bold border border-amber-300">
-                <div className="w-4 h-4 rounded-full overflow-hidden bg-slate-950 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
-                  <span className="text-[7px] text-amber-400 flex items-center justify-center h-full">IC</span>
+                <div className="w-4 h-4 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-amber-500/50 shadow-sm flex-shrink-0 relative">
+                  <span className="text-[7px] text-amber-500 flex items-center justify-center h-full">IC</span>
                   <img 
-                    src="/icdd.jpeg" 
+                    src={icddOfficialLogo} 
                     alt="Logo ICDD" 
-                    className="absolute inset-0 w-full h-full object-cover" 
+                    className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
                     referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
+                      (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
                     }}
                   />
                 </div>

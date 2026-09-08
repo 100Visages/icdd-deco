@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, LayoutGrid, User, Mail } from 'lucide-react';
 import { NavTab } from '../types';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface SidebarNavProps {
   activeTab: NavTab;
@@ -44,17 +45,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
           {/* Brand Monogram Icon at top of Sidebar */}
           <div 
             onClick={() => setActiveTab('accueil')}
-            className="w-11 h-11 rounded-full bg-slate-950 text-white flex items-center justify-center font-black tracking-tighter text-xs shadow-md cursor-pointer hover:scale-105 transition-transform border border-amber-400/40 mb-2 group relative overflow-hidden"
+            className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black tracking-tighter text-xs shadow-md cursor-pointer hover:scale-105 transition-transform border border-amber-400/60 mb-2 group relative overflow-hidden"
             title="ICDD – Décoration & Peinture"
           >
-            <span className="text-[10px] font-black uppercase text-amber-400">ICDD</span>
+            <span className="text-[10px] font-black uppercase text-amber-500">ICDD</span>
             <img 
-              src="/icdd.jpeg" 
+              src={icddOfficialLogo} 
               alt="Logo ICDD" 
-              className="absolute inset-0 w-full h-full object-cover" 
+              className="absolute inset-0 w-full h-full object-cover scale-[1.32] transition-transform" 
               referrerPolicy="no-referrer"
               onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
+                (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
               }}
             />
             <span className="absolute left-16 bg-slate-900/95 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-white/10 z-50">
