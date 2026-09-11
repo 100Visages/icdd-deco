@@ -90,7 +90,7 @@ export default function App() {
         />
 
         {/* Main Dynamic View Content */}
-        <div className="relative z-20 flex-1 min-h-0 w-full overflow-hidden flex flex-col md:pl-20">
+        <div className="relative z-20 flex-1 min-h-0 w-full overflow-hidden flex flex-col">
           
           {activeTab === 'accueil' && (
             <HeroOverlay
