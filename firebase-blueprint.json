@@ -32,36 +32,40 @@
           "description": "Additional project details or notes",
           "maxLength": 2000
         },
-        "propertyType": {
+        "selectedOffer": {
           "type": "string",
-          "enum": ["Appartement", "Maison / Villa", "Espace Commercial", "Penthouse"],
-          "description": "Type of real estate property"
-        },
-        "surfaceArea": {
-          "type": "number",
-          "description": "Area in square meters"
-        },
-        "projectScope": {
-          "type": "string",
-          "enum": ["Rénovation Complète", "Design & Furnishing", "Aménagement de Pièce", "Consultation 3D"],
-          "description": "Scope of work requested"
-        },
-        "preferredStyle": {
-          "type": "string",
-          "description": "Desired architectural design style",
+          "description": "Selected ICDD interior decor offer",
           "maxLength": 100
         },
-        "materials": {
+        "wallArea": {
+          "type": "number",
+          "description": "Wall or room area in square meters"
+        },
+        "roomType": {
+          "type": "string",
+          "description": "Type of room or space",
+          "maxLength": 100
+        },
+        "materialsIncluded": {
           "type": "array",
           "description": "Selected luxury materials"
         },
         "estimatedBudgetMin": {
           "type": "number",
-          "description": "Estimated minimum budget in Euros"
+          "description": "Estimated minimum budget in USD"
         },
         "estimatedBudgetMax": {
           "type": "number",
-          "description": "Estimated maximum budget in Euros"
+          "description": "Estimated maximum budget in USD"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency used for estimation",
+          "maxLength": 20
+        },
+        "laborIncluded": {
+          "type": "boolean",
+          "description": "Whether labor is included"
         },
         "status": {
           "type": "string",
@@ -78,9 +82,9 @@
         "userId",
         "clientName",
         "clientEmail",
-        "propertyType",
-        "surfaceArea",
-        "projectScope",
+        "selectedOffer",
+        "wallArea",
+        "roomType",
         "status",
         "createdAt"
       ]

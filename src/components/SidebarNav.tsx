@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, LayoutGrid, User, Mail } from 'lucide-react';
+import { Home, Sparkles, Compass, ShoppingBag, Phone } from 'lucide-react';
 import { NavTab } from '../types';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
@@ -14,39 +14,45 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
       id: 'accueil' as NavTab,
       label: 'Accueil',
       icon: Home,
-      description: 'Page d’accueil principale'
+      description: 'Présentation & Vision'
     },
     {
-      id: 'portfolio' as NavTab,
-      label: 'Portfolio',
-      icon: LayoutGrid,
-      description: 'Projets & Réalisations ICDD'
+      id: 'realisations' as NavTab,
+      label: 'Réalisations',
+      icon: Sparkles,
+      description: 'Appartements, Déco & Staff'
     },
     {
-      id: 'agence' as NavTab,
-      label: 'Agence',
-      icon: User,
-      description: 'L’agence & l’équipe'
+      id: 'services' as NavTab,
+      label: 'Services',
+      icon: Compass,
+      description: 'Nos 6 Domaines d’Expertise'
+    },
+    {
+      id: 'shop' as NavTab,
+      label: 'Shop',
+      icon: ShoppingBag,
+      description: 'Matériaux, Peintures, Cuisines'
     },
     {
       id: 'contact' as NavTab,
       label: 'Contact',
-      icon: Mail,
-      description: 'Devis & Rendez-vous'
+      icon: Phone,
+      description: 'Devis & Coordonnées'
     }
   ];
 
   return (
     <>
       {/* Desktop Sidebar: Floating Glass Pill Container on Left */}
-      <aside id="sidebar-navigation" className="absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center">
-        <div className="flex flex-col items-center gap-4 p-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-full border border-white/60 dark:border-white/20 shadow-2xl shadow-black/10 transition-all duration-300">
+      <aside id="sidebar-navigation" className="absolute left-3 lg:left-5 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center">
+        <div className="flex flex-col items-center gap-3.5 p-2.5 bg-white/90 backdrop-blur-2xl rounded-full border border-slate-200/80 shadow-xl shadow-slate-300/40 transition-all duration-300">
           
           {/* Brand Monogram Icon at top of Sidebar */}
           <div 
             onClick={() => setActiveTab('accueil')}
-            className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black tracking-tighter text-xs shadow-md cursor-pointer hover:scale-105 transition-transform border border-[#00D7FF]/80 mb-2 group relative overflow-hidden"
-            title="ICDD – Décoration & Peinture"
+            className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center font-black tracking-tighter text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform border border-sky-400/80 mb-1 group relative overflow-hidden"
+            title="ICDD – Accueil"
           >
             <span className="text-[10px] font-black uppercase text-[#005EA6]">ICDD</span>
             <img 
@@ -58,12 +64,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
                 (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
               }}
             />
-            <span className="absolute left-16 bg-slate-900/95 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-white/10 z-50">
-              ICDD Décoration & Peinture
+            <span className="absolute left-14 bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-slate-800 z-50">
+              ICDD – Interior & Construction
             </span>
           </div>
 
-          {/* Navigation Buttons (4 required icons) */}
+          {/* Navigation Buttons (5 required icons) */}
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -73,19 +79,19 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
                 key={item.id}
                 id={`nav-btn-${item.id}`}
                 onClick={() => setActiveTab(item.id)}
-                className={`group relative p-3.5 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                className={`group relative p-3 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer ${
                   isActive
-                    ? 'bg-[#005EA6] text-white shadow-lg shadow-[#005EA6]/40 scale-105 border border-[#00D7FF]/50'
-                    : 'text-slate-700 hover:text-[#005EA6] hover:bg-white/60 dark:text-slate-200 dark:hover:bg-slate-800/50'
+                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/30 scale-105 border border-sky-400/50'
+                    : 'text-slate-600 hover:text-[#005EA6] hover:bg-slate-100'
                 }`}
                 aria-label={item.label}
               >
-                <Icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <Icon className="w-4 h-4 transition-transform group-hover:scale-110" />
 
                 {/* Tooltip on hover */}
-                <div className="absolute left-16 bg-slate-900/90 text-white text-xs font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-white/10 z-50 flex items-center gap-2">
-                  <span>{item.label}</span>
-                  <span className="text-[10px] text-slate-400 font-normal">({item.description})</span>
+                <div className="absolute left-14 bg-slate-900 text-white text-xs font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl border border-slate-800 z-50 flex items-center gap-2">
+                  <span className="font-bold">{item.label}</span>
+                  <span className="text-[10px] text-slate-300 font-normal">({item.description})</span>
                 </div>
 
                 {/* Active Dot indicator */}
@@ -98,13 +104,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
         </div>
       </aside>
 
-      {/* Mobile Floating Bottom Navigation: Glass Pill Dock */}
+      {/* Mobile Floating Bottom Navigation: Glass Pill Dock for all 5 tabs */}
       <nav 
         id="mobile-bottom-navigation" 
-        className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-[390px]"
+        className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-[420px]"
         aria-label="Navigation mobile"
       >
-        <div className="flex items-center justify-between p-1.5 bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl rounded-full border border-white/80 dark:border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.25)]">
+        <div className="flex items-center justify-between p-1 bg-white/95 backdrop-blur-2xl rounded-full border border-slate-200/90 shadow-xl shadow-slate-300/50">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -114,14 +120,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
                 key={item.id}
                 id={`mobile-nav-btn-${item.id}`}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex-1 flex flex-col items-center justify-center py-2 px-2 rounded-full transition-all duration-300 cursor-pointer min-h-[44px] ${
+                className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-300 cursor-pointer min-h-[44px] ${
                   isActive
-                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/30 scale-[1.03] border border-[#00D7FF]/40'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-[#005EA6] active:bg-slate-100/50'
+                    ? 'bg-[#005EA6] text-white shadow-sm scale-[1.02] border border-sky-400/40'
+                    : 'text-slate-600 hover:text-[#005EA6] active:bg-slate-100/70'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#00D7FF]' : 'text-current'}`} />
-                <span className="text-[10px] font-bold tracking-tight mt-0.5 leading-tight">
+                <Icon className={`w-4 h-4 ${isActive ? 'text-sky-200' : 'text-current'}`} />
+                <span className="text-[9px] font-bold tracking-tight mt-0.5 leading-tight truncate max-w-[58px]">
                   {item.label}
                 </span>
               </button>
@@ -132,4 +138,3 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
     </>
   );
 };
-

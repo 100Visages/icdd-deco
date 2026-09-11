@@ -29,22 +29,23 @@ service cloud.firestore {
     // Validation for Quotes / Consultation requests
     function isValidQuote(data) {
       return (
-        data.keys().hasAll(['userId', 'clientName', 'clientEmail', 'propertyType', 'surfaceArea', 'projectScope', 'status', 'createdAt']) &&
+        data.keys().hasAll(['userId', 'clientName', 'clientEmail', 'selectedOffer', 'wallArea', 'roomType', 'status', 'createdAt']) &&
         data.userId is string && data.userId.size() <= 128 &&
         (!isSignedIn() ? data.userId == 'guest' : (data.userId == request.auth.uid || data.userId == 'guest')) &&
         data.clientName is string && data.clientName.size() >= 2 && data.clientName.size() <= 100 &&
         data.clientEmail is string && data.clientEmail.size() >= 5 && data.clientEmail.size() <= 150 &&
-        data.propertyType in ['Appartement', 'Maison / Villa', 'Espace Commercial', 'Penthouse'] &&
-        data.surfaceArea is number && data.surfaceArea > 0 && data.surfaceArea <= 50000 &&
-        data.projectScope in ['Rénovation Complète', 'Design & Furnishing', 'Aménagement de Pièce', 'Consultation 3D'] &&
+        data.selectedOffer is string && data.selectedOffer.size() <= 100 &&
+        data.wallArea is number && data.wallArea > 0 && data.wallArea <= 50000 &&
+        data.roomType is string && data.roomType.size() <= 100 &&
         data.status in ['pending', 'in_review', 'contacted'] &&
         data.createdAt == request.time &&
         (!('clientPhone' in data) || (data.clientPhone is string && data.clientPhone.size() <= 50)) &&
         (!('clientMessage' in data) || (data.clientMessage is string && data.clientMessage.size() <= 2000)) &&
-        (!('preferredStyle' in data) || (data.preferredStyle is string && data.preferredStyle.size() <= 100)) &&
-        (!('materials' in data) || (data.materials is list && data.materials.size() <= 20)) &&
+        (!('materialsIncluded' in data) || (data.materialsIncluded is list && data.materialsIncluded.size() <= 30)) &&
         (!('estimatedBudgetMin' in data) || (data.estimatedBudgetMin is number && data.estimatedBudgetMin >= 0)) &&
-        (!('estimatedBudgetMax' in data) || (data.estimatedBudgetMax is number && data.estimatedBudgetMax >= 0))
+        (!('estimatedBudgetMax' in data) || (data.estimatedBudgetMax is number && data.estimatedBudgetMax >= 0)) &&
+        (!('currency' in data) || (data.currency is string && data.currency.size() <= 20)) &&
+        (!('laborIncluded' in data) || (data.laborIncluded is bool))
       );
     }
 
@@ -81,6 +82,11 @@ service cloud.firestore {
       allow list: if isSignedIn() && (resource.data.userId == request.auth.uid);
       allow create: if isValidId(quoteId) && isValidQuote(incoming());
       allow update, delete: if false;
+    }
+
+    // Connectivity test collection
+    match /test/{docId} {
+      allow get: if true;
     }
 
     // Collection: /messages/{messageId}

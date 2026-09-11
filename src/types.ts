@@ -1,4 +1,8 @@
-export type NavTab = 'accueil' | 'portfolio' | 'agence' | 'contact';
+export type NavTab = 'accueil' | 'realisations' | 'services' | 'shop' | 'contact';
+
+export type RealisationCategory = 'Tous' | 'Appartements' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
+
+export type ShopCategory = 'Tous' | 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux';
 
 export type DecorOffer = 
   | 'Décoration simple' 
@@ -14,6 +18,7 @@ export interface Project {
   location: string;
   area: number; // m² mural ou espace
   year: number;
+  mainCategory: 'Appartements' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
   category: DecorOffer;
   style: 'Moderne & Épuré' | 'Classique Élégant' | 'Luxe Contemporain' | 'Gold Prestige' | 'Haute Couture';
   budgetRange: '250 $ - 350 $' | '350 $ - 500 $' | '500 $ - 700 $' | '≥ 700 $';
@@ -22,6 +27,7 @@ export interface Project {
   fullDescription: string;
   coverImage: string;
   galleryImages: string[];
+  services: string[]; // e.g. ['Décoration', 'Staff', 'Peinture', 'Éclairage', 'Mobilier']
   specs: {
     duration: string;
     wallSurface: string;
@@ -31,6 +37,32 @@ export interface Project {
   };
   features: string[];
   featured?: boolean;
+}
+
+export interface ServiceItem {
+  id: string;
+  title: string;
+  shortDesc: string;
+  fullDesc: string;
+  iconName: string;
+  tag: string;
+  image: string;
+  points: string[];
+}
+
+export interface ShopProduct {
+  id: string;
+  name: string;
+  category: 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux';
+  shortDesc: string;
+  description: string;
+  priceDisplay: string;
+  priceValue?: number;
+  availability: 'Disponible' | 'En stock à Kinshasa' | 'Sur commande / Sur mesure';
+  image: string;
+  badge?: string;
+  specs?: string[];
+  whatsappMessage: string;
 }
 
 export interface QuoteFormData {
@@ -54,4 +86,5 @@ export interface FilterState {
   budget: string;
   searchQuery: string;
 }
+
 

@@ -174,18 +174,18 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 bg-slate-950/70 backdrop-blur-xl animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 bg-slate-900/60 backdrop-blur-md animate-fade-in">
       
       {/* Modal Glass Panel */}
       <div 
-        className="relative w-full max-w-3xl max-h-[92vh] bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-2xl overflow-y-auto custom-scrollbar p-5 sm:p-10 flex flex-col"
+        className="relative w-full max-w-3xl max-h-[92vh] bg-white rounded-[24px] sm:rounded-[36px] border border-slate-200 shadow-2xl overflow-y-auto custom-scrollbar p-5 sm:p-10 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10 border border-slate-200"
         >
           <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
@@ -194,8 +194,8 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
           <>
             {/* Modal Header with ICDD Identity */}
             <div className="mb-5 sm:mb-6 space-y-1.5 sm:space-y-2 pr-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#005EA6]/15 text-[#005EA6] dark:text-[#00D7FF] text-xs font-bold border border-[#00D7FF]/40">
-                <div className="w-4 h-4 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/60 shadow-sm flex-shrink-0 relative">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/60">
+                <div className="w-4 h-4 rounded-full overflow-hidden bg-white border border-sky-400/60 shadow-sm flex-shrink-0 relative">
                   <span className="text-[7px] text-[#005EA6] flex items-center justify-center h-full">IC</span>
                   <img 
                     src={icddOfficialLogo} 
@@ -210,22 +210,22 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 <span>ICDD • Estimateur de Matériaux de Décoration</span>
               </div>
 
-              <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Estimer vos Travaux de Décoration & Peinture
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+              <p className="text-xs sm:text-sm text-slate-600">
                 Sélectionnez votre offre et ajustez la dimension de votre espace mural pour une estimation instantanée.
               </p>
             </div>
 
             {/* Step Progress Pills */}
-            <div className="flex items-center gap-2 mb-5 sm:mb-7 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto custom-scrollbar">
+            <div className="flex items-center gap-2 mb-5 sm:mb-7 border-b border-slate-100 pb-3 overflow-x-auto custom-scrollbar">
               <button
                 onClick={() => setStep(1)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 1
-                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-sky-400/40'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 1. Offre & Surface Murale
@@ -234,8 +234,8 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 onClick={() => setStep(2)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 2
-                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-sky-400/40'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 2. Finitions & Pièce
@@ -244,8 +244,8 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 onClick={() => setStep(3)}
                 className={`whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   step === 3
-                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    ? 'bg-[#005EA6] text-white shadow-md border border-sky-400/40'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 3. Coordonnées & Envoi
@@ -272,16 +272,16 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                           onClick={() => handleOfferChange(offer)}
                           className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between ${
                             isSelected
-                              ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-lg'
-                              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                              ? 'bg-[#005EA6] text-white border-sky-400 shadow-md'
+                              : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100'
                           }`}
                         >
                           <div>
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-black">{offer}</span>
-                              {isSelected && <CheckCircle2 className="w-4 h-4 text-[#00D7FF]" />}
+                              {isSelected && <CheckCircle2 className="w-4 h-4 text-sky-200" />}
                             </div>
-                            <div className={`text-sm font-black mt-1 ${isSelected ? 'text-[#00D7FF]' : 'text-[#005EA6] dark:text-[#00D7FF]'}`}>
+                            <div className={`text-sm font-black mt-1 ${isSelected ? 'text-sky-200' : 'text-[#005EA6]'}`}>
                               {item.badge}
                             </div>
                           </div>
@@ -295,15 +295,15 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 </div>
 
                 {/* Wall Area Slider */}
-                <div className="bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+                <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
                   <div className="flex justify-between items-center">
                     <div>
-                      <label className="text-xs font-bold text-slate-900 dark:text-white block">
+                      <label className="text-xs font-bold text-slate-900 block">
                         ✨ Dimension de votre espace mural
                       </label>
                       <span className="text-[11px] text-slate-500">Surface totale des murs à peindre / décorer</span>
                     </div>
-                    <span className="text-2xl font-black text-[#005EA6] dark:text-[#00D7FF]">
+                    <span className="text-2xl font-black text-[#005EA6]">
                       {formData.wallArea} m²
                     </span>
                   </div>
@@ -314,7 +314,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     step="5"
                     value={formData.wallArea}
                     onChange={(e) => handleAreaChange(Number(e.target.value))}
-                    className="w-full accent-[#005EA6] cursor-pointer h-2 bg-slate-200 dark:bg-slate-700 rounded-lg"
+                    className="w-full accent-[#005EA6] cursor-pointer h-2 bg-slate-200 rounded-lg"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
                     <span>15 m² (Petite chambre)</span>
@@ -324,12 +324,12 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 </div>
 
                 {/* Live Estimate Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#005EA6]/10 border border-[#00D7FF]/35 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/80 border border-sky-200/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-[#005EA6] dark:text-[#00D7FF] block">
+                    <span className="text-[10px] uppercase font-bold text-[#005EA6] block">
                       Fourchette Estimative des Matériaux
                     </span>
-                    <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900">
                       {formData.estimatedBudgetMin} $ – {formData.estimatedBudgetMax} $
                     </span>
                     <span className="text-[10px] text-slate-500 block mt-0.5">
@@ -338,15 +338,15 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </div>
                   <button
                     onClick={() => setStep(2)}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-[#00D7FF]/40 shadow-md transition-colors cursor-pointer text-center"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-sky-400/40 shadow-sm transition-colors cursor-pointer text-center"
                   >
                     Étape suivante &rarr;
                   </button>
                 </div>
 
                 {/* Official Disclaimer Note */}
-                <div className="bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 p-3 rounded-xl flex items-start gap-2.5 text-xs text-slate-800 dark:text-slate-100">
-                  <ShieldCheck className="w-4 h-4 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
+                <div className="bg-sky-50 border border-sky-200/60 p-3 rounded-xl flex items-start gap-2.5 text-xs text-slate-800">
+                  <ShieldCheck className="w-4 h-4 text-[#005EA6] flex-shrink-0 mt-0.5" />
                   <span>
                     <strong>📝 Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
                   </span>
@@ -372,8 +372,8 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                         onClick={() => setFormData(prev => ({ ...prev, roomType: r }))}
                         className={`p-3 rounded-2xl text-xs font-bold border transition-all text-center cursor-pointer ${
                           formData.roomType === r
-                            ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-md font-extrabold'
-                            : 'bg-slate-50 dark:bg-slate-800/60 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                            ? 'bg-[#005EA6] text-white border-sky-400 shadow-sm font-extrabold'
+                            : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100'
                         }`}
                       >
                         {r}
@@ -397,12 +397,12 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                           onClick={() => handleFinishToggle(finish)}
                           className={`p-3 rounded-xl text-xs font-medium border text-left transition-all flex items-center justify-between cursor-pointer ${
                             isSelected
-                              ? 'bg-slate-900 text-white border-slate-900 shadow-md'
-                              : 'bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                              ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                              : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                           }`}
                         >
                           <span className="truncate">{finish}</span>
-                          {isSelected && <Check className="w-3.5 h-3.5 text-[#00D7FF] flex-shrink-0 ml-2" />}
+                          {isSelected && <Check className="w-3.5 h-3.5 text-sky-400 flex-shrink-0 ml-2" />}
                         </button>
                       );
                     })}
@@ -418,7 +418,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                   </button>
                   <button
                     onClick={() => setStep(3)}
-                    className="px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-[#00D7FF]/30 shadow-md transition-colors cursor-pointer"
+                    className="px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] border border-sky-400/30 shadow-sm transition-colors cursor-pointer"
                   >
                     Suivant (Vos coordonnées) &rarr;
                   </button>
@@ -433,7 +433,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
                       Nom & Prénom *
                     </label>
                     <input
@@ -442,12 +442,12 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="M. / Mme"
                       value={formData.clientName}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientName: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 text-xs font-medium border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6] focus:bg-white"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
                       Adresse Email *
                     </label>
                     <input
@@ -456,14 +456,14 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="votre.email@exemple.com"
                       value={formData.clientEmail}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientEmail: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 text-xs font-medium border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6] focus:bg-white"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
                       Téléphone (ex: +243 ...) *
                     </label>
                     <input
@@ -472,25 +472,25 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                       placeholder="+243 ..."
                       value={formData.clientPhone}
                       onChange={(e) => setFormData(prev => ({ ...prev, clientPhone: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 text-xs font-medium border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6] focus:bg-white"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    <label className="text-xs font-bold text-slate-700 block mb-1">
                       Disponibilité souhaitée (Lundi au Samedi)
                     </label>
                     <input
                       type="date"
                       value={formData.preferredDate || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, preferredDate: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 text-xs font-medium border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6] focus:bg-white"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  <label className="text-xs font-bold text-slate-700 block mb-1">
                     Précisions sur vos murs (commune, état actuel des murs...)
                   </label>
                   <textarea
@@ -498,15 +498,15 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     placeholder="Ex: Murs du salon avec quelques trous à reboucher, nous sommes à Gombe..."
                     value={formData.clientMessage}
                     onChange={(e) => setFormData(prev => ({ ...prev, clientMessage: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 text-slate-900 text-xs font-medium border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6] focus:bg-white"
                   />
                 </div>
 
                 {/* Recap Box */}
-                <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                  <span className="font-bold block text-slate-900 dark:text-white">Récapitulatif de l'estimation :</span>
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1">
+                  <span className="font-bold block text-slate-900">Récapitulatif de l'estimation :</span>
                   <p><strong>{formData.selectedOffer}</strong> pour {formData.wallArea} m² de surface murale ({formData.roomType})</p>
-                  <p className="text-[#005EA6] dark:text-[#00D7FF] font-extrabold text-sm">
+                  <p className="text-[#005EA6] font-extrabold text-sm">
                     Matériaux estimés : {formData.estimatedBudgetMin} $ – {formData.estimatedBudgetMax} $
                   </p>
                   <p className="text-[10px] text-slate-500">
@@ -516,7 +516,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 
                 {/* Submit Error Alert if any */}
                 {submitError && (
-                  <div className="p-3 rounded-xl bg-red-100 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     <span>{submitError}</span>
                   </div>
@@ -536,7 +536,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     <button
                       type="button"
                       onClick={sendDirectWhatsApp}
-                      className="flex-1 sm:flex-none px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95"
+                      className="flex-1 sm:flex-none px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-transform active:scale-95"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>WhatsApp Direct</span>
@@ -545,7 +545,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 sm:flex-none px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 sm:flex-none px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-md border border-sky-400/40 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <>
@@ -554,7 +554,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
                         </>
                       ) : (
                         <>
-                          <Send className="w-4 h-4 text-[#00D7FF]" />
+                          <Send className="w-4 h-4 text-sky-200" />
                           <span>Valider & Envoyer</span>
                         </>
                       )}
@@ -571,23 +571,23 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
             <div className="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xl">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+            <h3 className="text-2xl font-black text-slate-900">
               Demande Reçue avec Succès par ICDD !
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
               Merci {formData.clientName}. Notre équipe étudie les dimensions de vos murs ({formData.wallArea} m²) et vous contactera au {formData.clientPhone} du lundi au samedi.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
               <a
                 href="tel:+243897504570"
-                className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-[#005EA6] border border-white/10 flex items-center justify-center gap-1.5 transition-colors"
+                className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-[#005EA6] border border-slate-800 flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-[#00D7FF]" />
+                <Phone className="w-3.5 h-3.5 text-sky-300" />
                 <span>Appeler le +243 897504570</span>
               </a>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-bold border border-[#00D7FF]/40 shadow-md transition-colors cursor-pointer"
+                className="px-6 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-bold border border-sky-400/40 shadow-sm transition-colors cursor-pointer"
               >
                 Fermer
               </button>

@@ -1,41 +1,278 @@
-import React from 'react';
-import { FilterState, NavTab } from '../types';
-import { ChevronDown, FileText, FolderKanban, LogIn, LogOut, User as UserIcon, Bookmark } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavTab } from '../types';
+import { 
+  PhoneCall, 
+  MessageCircle, 
+  LogIn, 
+  User as UserIcon, 
+  Bookmark, 
+  Menu, 
+  X, 
+  Home, 
+  Sparkles, 
+  Compass, 
+  ShoppingBag, 
+  Phone,
+  ArrowRight,
+  ShieldCheck,
+  MapPin
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface TopBarProps {
-  filters: FilterState;
-  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
+  activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   openQuoteModal: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
-  filters,
-  setFilters,
+  activeTab,
   setActiveTab,
   openQuoteModal,
 }) => {
-  const { user, loading, signIn, signOut, favorites } = useAuth();
+  const { user, loading, signIn, favorites } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const categoryOptions = ['Tous', 'Décoration simple', 'Décoration classique', 'Décoration luxueuse', 'Décoration Gold', 'Décoration Top Modèle'];
-  const styleOptions = ['Tous', 'Moderne & Épuré', 'Classique Élégant', 'Luxe Contemporain', 'Gold Prestige', 'Haute Couture'];
-  const budgetOptions = ['Tous', '250 $ - 350 $', '350 $ - 500 $', '500 $ - 700 $', '≥ 700 $'];
+  const navLinks: { id: NavTab; label: string; icon: React.ElementType; desc: string }[] = [
+    { id: 'accueil', label: 'Accueil', icon: Home, desc: 'Présentation & Vision' },
+    { id: 'realisations', label: 'Réalisations', icon: Sparkles, desc: 'Cuisines, Portes, Appartements' },
+    { id: 'services', label: 'Services', icon: Compass, desc: 'Nos expertises sur mesure' },
+    { id: 'shop', label: 'Shop', icon: ShoppingBag, desc: 'Matériaux, Cuisines & Portes' },
+    { id: 'contact', label: 'Contact', icon: Phone, desc: 'Kinshasa & Devis gratuit' },
+  ];
+
+  const handleMobileNavClick = (tab: NavTab) => {
+    setActiveTab(tab);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
-    <header id="top-navigation-bar" className="w-full z-30 pt-2.5 sm:pt-4 px-3 sm:px-6 md:px-8 flex-shrink-0">
+    <header id="top-navigation-bar" className="w-full z-30 pt-2 sm:pt-4 px-3 sm:px-6 md:px-8 flex-shrink-0">
       
-      {/* Mobile Top Header (Sleek Luxury Brand Bar) */}
-      <div className="md:hidden flex items-center justify-between gap-2 px-1">
+      {/* MOBILE TOP HEADER */}
+      <div className="md:hidden relative">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 bg-white/95 backdrop-blur-2xl rounded-2xl border border-slate-200/80 shadow-md">
+          
+          {/* Brand Monogram & Name */}
+          <div 
+            onClick={() => {
+              setActiveTab('accueil');
+              setIsMobileMenuOpen(false);
+            }}
+            className="flex items-center gap-2.5 cursor-pointer group"
+          >
+            <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center font-black text-xs shadow-sm border-2 border-sky-400 tracking-tight overflow-hidden relative flex-shrink-0">
+              <span className="text-[10px] text-[#005EA6]">IC</span>
+              <img 
+                src={icddOfficialLogo} 
+                alt="Logo ICDD" 
+                className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                }}
+              />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-xs tracking-wider text-slate-900 uppercase leading-none">
+                  ICDD
+                </span>
+                <span className="px-1.5 py-0.5 rounded-full bg-sky-50 text-[#005EA6] text-[8px] font-black uppercase tracking-tight border border-sky-200/60">
+                  Kinshasa
+                </span>
+              </div>
+              <span className="text-[9px] font-medium text-slate-500 tracking-tight leading-tight mt-0.5">
+                Interior & Design
+              </span>
+            </div>
+          </div>
+
+          {/* Right Actions on Mobile */}
+          <div className="flex items-center gap-1.5">
+            {/* Direct WhatsApp Action */}
+            <a
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20prestations%20d%27am%C3%A9nagement."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm active:scale-95 transition-transform flex items-center justify-center"
+              title="WhatsApp ICDD (+243 897504570)"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+            </a>
+
+            {/* Quick Devis CTA Button */}
+            <button
+              id="mobile-btn-devis"
+              onClick={() => {
+                openQuoteModal();
+                setIsMobileMenuOpen(false);
+              }}
+              className="px-3 py-1.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-extrabold text-[11px] shadow-sm border border-sky-400/40 flex items-center gap-1 active:scale-95 transition-transform cursor-pointer"
+            >
+              <PhoneCall className="w-3 h-3 text-sky-200" />
+              <span>Devis</span>
+            </button>
+
+            {/* Mobile Menu Toggle Button (Hamburger / Close) */}
+            <button
+              id="mobile-menu-toggle-btn"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-full bg-slate-100 text-slate-800 hover:bg-slate-200 active:scale-95 transition-all shadow-sm border border-slate-200 cursor-pointer"
+              aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-4 h-4 text-rose-500" />
+              ) : (
+                <Menu className="w-4 h-4 text-[#005EA6]" />
+              )}
+            </button>
+          </div>
+
+        </div>
+
+        {/* MOBILE MENU DROPDOWN DRAWER */}
+        {isMobileMenuOpen && (
+          <div 
+            id="mobile-menu-drawer"
+            className="absolute top-full left-0 right-0 mt-2 z-50 bg-white/98 backdrop-blur-2xl rounded-2xl border border-slate-200 shadow-2xl p-4 space-y-4 animate-in fade-in slide-in-from-top-4 duration-200"
+          >
+            {/* Header info in drawer */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[11px] font-bold text-slate-700">
+                  ICDD Design – Kinshasa
+                </span>
+              </div>
+              <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                <MapPin className="w-3 h-3 text-[#005EA6]" />
+                <span>Gombe / Macampagne</span>
+              </div>
+            </div>
+
+            {/* Navigation items */}
+            <nav className="space-y-1.5" aria-label="Menu mobile déroulant">
+              {navLinks.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleMobileNavClick(tab.id)}
+                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-all text-left cursor-pointer ${
+                      isActive
+                        ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/25 border border-sky-400/40'
+                        : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20 text-sky-200' : 'bg-slate-100 text-[#005EA6]'}`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold leading-none">{tab.label}</div>
+                        <div className={`text-[10px] mt-1 ${isActive ? 'text-white/80' : 'text-slate-500'}`}>
+                          {tab.desc}
+                        </div>
+                      </div>
+                    </div>
+                    <ArrowRight className={`w-4 h-4 transition-transform ${isActive ? 'translate-x-0.5' : 'text-slate-400'}`} />
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Quick Actions inside drawer */}
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <button
+                onClick={() => {
+                  openQuoteModal();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white font-extrabold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-transform border border-sky-400/40"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-sky-200" />
+                <span>Calculer & Demander un Devis Gratuit</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="tel:+243897504570"
+                  className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-slate-200"
+                >
+                  <Phone className="w-3 h-3 text-[#005EA6]" />
+                  <span>Appeler</span>
+                </a>
+                <a
+                  href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-sm"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+
+              {/* User Account Bar in Drawer */}
+              <div className="pt-2 flex items-center justify-between px-1">
+                {user ? (
+                  <div className="flex items-center gap-2">
+                    {user.photoURL ? (
+                      <img
+                        src={user.photoURL}
+                        alt={user.displayName || 'Utilisateur'}
+                        className="w-6 h-6 rounded-full object-cover border border-sky-400"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold">
+                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon className="w-3 h-3" />}
+                      </div>
+                    )}
+                    <span className="text-xs font-medium text-slate-700">
+                      {user.displayName || 'Connecté'}
+                    </span>
+                    {favorites.length > 0 && (
+                      <span className="text-[10px] font-bold text-[#005EA6] flex items-center gap-0.5 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">
+                        <Bookmark className="w-2.5 h-2.5 fill-current" />
+                        {favorites.length} projet{favorites.length > 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      signIn();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-xs font-bold text-[#005EA6] flex items-center gap-1.5 py-1"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Se connecter avec Google</span>
+                  </button>
+                )}
+                <span className="text-[10px] text-slate-400 font-medium">v2.5</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* DESKTOP TOP HEADER (The 5 main tabs requested by user) */}
+      <div className="hidden md:flex max-w-7xl mx-auto items-center justify-between gap-4">
         
-        {/* Brand Monogram & Name */}
+        {/* Left: Brand Identity */}
         <div 
           onClick={() => setActiveTab('accueil')}
-          className="flex items-center gap-2 cursor-pointer group"
+          className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-sm cursor-pointer hover:scale-105 transition-transform group"
+          title="ICDD – Interior & Construction / Design"
         >
-          <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black text-xs shadow-md border border-amber-400/60 tracking-tight group-hover:scale-105 transition-transform overflow-hidden relative">
-            <span className="text-[10px] text-amber-500">IC</span>
+          <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center font-black text-xs shadow-sm border border-sky-400 tracking-tight overflow-hidden relative flex-shrink-0">
+            <span className="text-[10px] text-[#005EA6]">IC</span>
             <img 
               src={icddOfficialLogo} 
               alt="Logo ICDD" 
@@ -47,47 +284,73 @@ export const TopBar: React.FC<TopBarProps> = ({
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-black text-xs tracking-wider text-slate-900 dark:text-white uppercase leading-none">
-              ICDD 🦺✨
+            <span className="font-black text-sm tracking-wider text-slate-900 uppercase leading-none">
+              ICDD
             </span>
-            <span className="text-[9px] font-semibold text-slate-700 dark:text-slate-300 tracking-tight leading-tight">
-              Décoration & Peinture
+            <span className="text-[10px] font-medium text-slate-500 tracking-tight leading-tight">
+              Interior & Construction / Design
             </span>
           </div>
         </div>
 
-        {/* Right Actions on Mobile: WhatsApp Direct, Devis & User Auth */}
-        <div className="flex items-center gap-1.5">
+        {/* Center: The 5 Main Tabs (Accueil | Réalisations | Services | Shop | Contact) */}
+        <nav 
+          aria-label="Navigation principale" 
+          className="flex items-center gap-1 p-1.5 bg-white/95 backdrop-blur-2xl rounded-full border border-slate-200/80 shadow-sm"
+        >
+          {navLinks.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                id={`top-tab-${tab.id}`}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 lg:px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/25 border border-sky-400/40 scale-[1.02]'
+                    : 'text-slate-700 hover:text-[#005EA6] hover:bg-slate-50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Right: Prominent "Demander un devis" + WhatsApp + Auth */}
+        <div className="flex items-center gap-2.5">
+          
+          {/* Direct WhatsApp button */}
           <a
-            href="https://wa.me/243897504570?text=Bonjour%20ICDD%20%F0%9F%A7%BA%E2%9C%A8%20Je%20souhaite%20un%20renseignement%20sur%20vos%20offres%20de%20d%C3%A9coration."
+            href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20prestations%20d%27am%C3%A9nagement."
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-emerald-600 text-white shadow-md active:scale-95 transition-transform"
-            title="WhatsApp ICDD (+243 897504570)"
+            className="p-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all hover:scale-105 active:scale-95"
+            title="Échanger sur WhatsApp (+243 897504570)"
           >
-            <span className="text-xs">💬</span>
+            <MessageCircle className="w-4 h-4" />
           </a>
 
-          {/* Quick Devis Button */}
+          {/* Prominent Button requested by user: 📞 Demander un devis */}
           <button
-            id="mobile-btn-devis"
+            id="btn-demander-devis"
             onClick={openQuoteModal}
-            className="px-3 py-1.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-extrabold text-xs shadow-md border border-[#00D7FF]/40 flex items-center gap-1 active:scale-95 transition-transform cursor-pointer"
+            className="px-5 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-extrabold text-xs shadow-md hover:scale-105 active:scale-95 transition-all duration-300 border border-sky-400/40 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
-            <FileText className="w-3.5 h-3.5 text-[#00D7FF]" />
-            <span>Devis</span>
+            <PhoneCall className="w-3.5 h-3.5 text-sky-200" />
+            <span>Demander un devis</span>
           </button>
 
-          {/* User Auth or Sign In */}
+          {/* User Profile / Google Auth */}
           {loading ? (
-            <div className="w-8 h-8 rounded-full bg-white/60 dark:bg-slate-800/60 animate-pulse border border-white/80" />
+            <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse border border-slate-200" />
           ) : user ? (
-            <div className="flex items-center gap-1.5 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl p-1 rounded-full border border-white/80 dark:border-white/20 shadow-md">
+            <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-full border border-slate-200/80 shadow-sm">
               {user.photoURL ? (
                 <img
                   src={user.photoURL}
                   alt={user.displayName || 'Utilisateur'}
-                  className="w-6 h-6 rounded-full object-cover border border-[#00D7FF]"
+                  className="w-6 h-6 rounded-full object-cover border border-sky-400"
                   referrerPolicy="no-referrer"
                 />
               ) : (
@@ -96,8 +359,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </div>
               )}
               {favorites.length > 0 && (
-                <span className="text-[10px] font-bold text-[#005EA6] dark:text-[#00D7FF] pr-1.5 flex items-center gap-0.5">
-                  <Bookmark className="w-2.5 h-2.5 fill-current" />
+                <span className="text-[10px] font-bold text-[#005EA6] pr-1.5 flex items-center gap-0.5">
+                  <Bookmark className="w-3 h-3 fill-current" />
                   {favorites.length}
                 </span>
               )}
@@ -105,201 +368,17 @@ export const TopBar: React.FC<TopBarProps> = ({
           ) : (
             <button
               onClick={signIn}
-              className="p-2 rounded-full bg-[#005EA6] text-white shadow-md active:scale-95 transition-transform cursor-pointer border border-[#00D7FF]/40"
-              title="Connexion avec Google"
+              className="p-2 rounded-full bg-white text-slate-700 hover:text-[#005EA6] shadow-sm active:scale-95 transition-transform cursor-pointer border border-slate-200"
+              title="Connexion"
             >
-              <LogIn className="w-3.5 h-3.5" />
+              <LogIn className="w-4 h-4" />
             </button>
           )}
+
         </div>
 
       </div>
 
-      {/* Desktop Top Header Bar (Full Layout with Filters) */}
-      <div className="hidden md:flex max-w-7xl mx-auto items-center justify-between gap-4">
-        
-        {/* Left: Brand Identity with Logo + Action Button */}
-        <div className="flex items-center gap-3">
-          <div 
-            onClick={() => setActiveTab('accueil')}
-            className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border border-white/80 dark:border-white/20 shadow-md cursor-pointer hover:scale-105 transition-transform group"
-            title="ICDD – Accueil"
-          >
-            <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-center font-black text-xs shadow-sm border border-[#00D7FF]/80 tracking-tight overflow-hidden relative flex-shrink-0">
-              <span className="text-[10px] text-[#005EA6]">IC</span>
-              <img 
-                src={icddOfficialLogo} 
-                alt="Logo ICDD" 
-                className="absolute inset-0 w-full h-full object-cover scale-[1.32] transition-transform" 
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
-                }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-black text-xs tracking-wider text-slate-900 dark:text-white uppercase leading-none">
-                ICDD 🦺✨
-              </span>
-              <span className="text-[9px] font-semibold text-slate-600 dark:text-slate-400 tracking-tight leading-tight">
-                Décoration & Peinture
-              </span>
-            </div>
-          </div>
-
-          {/* Left Action Button: "Demander un Devis" */}
-          <button
-            id="btn-demander-devis"
-            onClick={openQuoteModal}
-            className="w-auto px-5 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs shadow-xl shadow-[#005EA6]/20 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border border-[#00D7FF]/50 flex items-center justify-center gap-2 group cursor-pointer"
-          >
-            <div className="w-6 h-6 rounded-full bg-white/15 text-white flex items-center justify-center group-hover:rotate-12 transition-transform">
-              <FileText className="w-3 h-3 text-[#00D7FF]" />
-            </div>
-            <span>Devis Matériaux</span>
-            <span className="text-[9px] uppercase tracking-wider font-black bg-[#00D7FF] text-[#005EA6] px-2 py-0.5 rounded-full inline-block shadow-sm">
-              Rapide
-            </span>
-          </button>
-        </div>
-
-        {/* Center Filters Dropdowns (Frosted Glass Container) */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 px-4 py-2.5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl rounded-full border border-white/60 dark:border-white/20 shadow-lg">
-          
-          {/* Category Dropdown */}
-          <div className="relative group">
-            <label className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400 block px-2 -mb-0.5">
-              Catégorie
-            </label>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-white/60 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
-              <select
-                value={filters.category}
-                onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                className="bg-transparent text-slate-900 dark:text-white font-medium text-xs sm:text-sm focus:outline-none cursor-pointer pr-4 appearance-none"
-              >
-                {categoryOptions.map(cat => (
-                  <option key={cat} value={cat} className="bg-slate-900 text-white">
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500 pointer-events-none -ml-4" />
-            </div>
-          </div>
-
-          <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 block" />
-
-          {/* Style Dropdown */}
-          <div className="relative group">
-            <label className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400 block px-2 -mb-0.5">
-              Style
-            </label>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-white/60 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
-              <select
-                value={filters.style}
-                onChange={(e) => setFilters(prev => ({ ...prev, style: e.target.value }))}
-                className="bg-transparent text-slate-900 dark:text-white font-medium text-xs sm:text-sm focus:outline-none cursor-pointer pr-4 appearance-none"
-              >
-                {styleOptions.map(st => (
-                  <option key={st} value={st} className="bg-slate-900 text-white">
-                    {st}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500 pointer-events-none -ml-4" />
-            </div>
-          </div>
-
-          <div className="w-px h-6 bg-slate-300/60 dark:bg-slate-700/60 block" />
-
-          {/* Budget Dropdown */}
-          <div className="relative group">
-            <label className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400 block px-2 -mb-0.5">
-              Budget
-            </label>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full hover:bg-white/60 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
-              <select
-                value={filters.budget}
-                onChange={(e) => setFilters(prev => ({ ...prev, budget: e.target.value }))}
-                className="bg-transparent text-slate-900 dark:text-white font-medium text-xs sm:text-sm focus:outline-none cursor-pointer pr-4 appearance-none"
-              >
-                {budgetOptions.map(bg => (
-                  <option key={bg} value={bg} className="bg-slate-900 text-white">
-                    {bg}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500 pointer-events-none -ml-4" />
-            </div>
-          </div>
-        </div>
-
-        {/* Right Actions: Projets Récents & Firebase Authentication Profile */}
-        <div className="flex items-center gap-3 justify-end">
-          <button
-            id="btn-projets-recents"
-            onClick={() => setActiveTab('portfolio')}
-            className="px-5 py-3 rounded-full bg-white/80 hover:bg-white backdrop-blur-xl text-slate-900 font-semibold text-sm shadow-xl shadow-slate-900/5 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 border border-white/80 flex items-center justify-center gap-2 group cursor-pointer"
-          >
-            <span>Portfolio</span>
-            <div className="w-6 h-6 rounded-full bg-[#005EA6] text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-[#00D7FF] group-hover:text-[#005EA6] transition-all shadow-sm">
-              <FolderKanban className="w-3 h-3" />
-            </div>
-          </button>
-
-          {/* Firebase Authentication Button / Profile Pill */}
-          {loading ? (
-            <div className="w-10 h-10 rounded-full bg-white/60 dark:bg-slate-800/60 animate-pulse border border-white/80" />
-          ) : user ? (
-            <div className="flex items-center gap-2 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl pl-2 pr-3 py-1.5 rounded-full border border-white/80 dark:border-white/20 shadow-lg">
-              {user.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  alt={user.displayName || 'Utilisateur'}
-                  className="w-7 h-7 rounded-full object-cover border border-[#00D7FF]"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold">
-                  {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserIcon className="w-3.5 h-3.5" />}
-                </div>
-              )}
-
-              <div className="flex flex-col text-left">
-                <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight max-w-[110px] truncate">
-                  {user.displayName || user.email?.split('@')[0]}
-                </span>
-                {favorites.length > 0 && (
-                  <span className="text-[10px] text-[#005EA6] dark:text-[#00D7FF] font-semibold flex items-center gap-0.5">
-                    <Bookmark className="w-2.5 h-2.5 fill-current" />
-                    {favorites.length} favori(s)
-                  </span>
-                )}
-              </div>
-
-              <button
-                onClick={signOut}
-                title="Se déconnecter"
-                className="ml-1 p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 hover:text-red-500 transition-colors cursor-pointer"
-                aria-label="Se déconnecter"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={signIn}
-              className="px-5 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs shadow-xl border border-[#00D7FF]/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
-              title="Connexion avec Google"
-            >
-              <LogIn className="w-3.5 h-3.5 text-[#00D7FF]" />
-              <span>Connexion</span>
-            </button>
-          )}
-        </div>
-
-      </div>
     </header>
   );
 };
-

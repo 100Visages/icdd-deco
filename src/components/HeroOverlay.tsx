@@ -1,268 +1,970 @@
-import React, { useState } from 'react';
-import { Project, NavTab } from '../types';
-import { ArrowUpRight, Heart, Bookmark, Share2, MapPin, Sparkles, Phone, MessageCircle, Calendar, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { ICDD_OFFERS_CONFIG } from '../data/projects';
+import React, { useState, useRef } from 'react';
+import { Project, NavTab, RealisationCategory } from '../types';
+import { 
+  ArrowRight, 
+  Sparkles, 
+  Phone, 
+  MessageCircle, 
+  Building2, 
+  Paintbrush, 
+  Layers, 
+  DoorClosed, 
+  ChefHat, 
+  ShoppingBag, 
+  Compass, 
+  CheckCircle2, 
+  MapPin,
+  ChevronDown,
+  SlidersHorizontal,
+  Home,
+  BedDouble,
+  Briefcase
+} from 'lucide-react';
+import { ICDD_PROJECTS, ICDD_ASSETS } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface HeroOverlayProps {
   featuredProject: Project;
+  projects?: Project[];
   onOpenProject: (project: Project) => void;
   openQuoteModal: () => void;
   setActiveTab: (tab: NavTab) => void;
+  onSelectCategory?: (category: RealisationCategory) => void;
 }
 
 export const HeroOverlay: React.FC<HeroOverlayProps> = ({
-  featuredProject,
+  projects = ICDD_PROJECTS,
   onOpenProject,
   openQuoteModal,
   setActiveTab,
+  onSelectCategory,
 }) => {
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(148);
-  const [bookmarked, setBookmarked] = useState(false);
-  const [copied, setCopied] = useState(false);
+  // Filters for "Trouve ton goût"
+  const [selectedSpace, setSelectedSpace] = useState<string>('Salon');
+  const [selectedStyle, setSelectedStyle] = useState<string>('Moderne');
+  const [selectedProject, setSelectedProjectType] = useState<string>('Appartement');
+  const [tasteDiscovered, setTasteDiscovered] = useState<boolean>(false);
 
-  const toggleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (liked) {
-      setLikesCount(prev => prev - 1);
-      setLiked(false);
-    } else {
-      setLikesCount(prev => prev + 1);
-      setLiked(true);
+  const realisationsRef = useRef<HTMLDivElement>(null);
+
+  const handleExploreCategory = (cat: RealisationCategory) => {
+    if (onSelectCategory) {
+      onSelectCategory(cat);
+    }
+    setActiveTab('realisations');
+  };
+
+  const handleDiscoverTaste = () => {
+    setTasteDiscovered(true);
+
+    // Map selected space to realization category
+    let targetCategory: RealisationCategory = 'Tous';
+    if (selectedSpace === 'Salon' || selectedSpace === 'Chambre') {
+      targetCategory = 'Décoration';
+    } else if (selectedSpace === 'Cuisine') {
+      targetCategory = 'Cuisines';
+    } else if (selectedSpace === 'Staff') {
+      targetCategory = 'Staff';
+    } else if (selectedSpace === 'Portes') {
+      targetCategory = 'Portes';
+    } else if (selectedProject === 'Appartement') {
+      targetCategory = 'Appartements';
+    }
+
+    if (onSelectCategory) {
+      onSelectCategory(targetCategory);
+    }
+
+    // Smooth scroll down to realisations section or navigate
+    if (realisationsRef.current) {
+      realisationsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  const toggleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setBookmarked(!bookmarked);
-  };
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const offersList = Object.entries(ICDD_OFFERS_CONFIG);
-
   return (
-    <div className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar flex flex-col justify-between p-3.5 sm:p-6 md:p-8 lg:p-10 xl:p-12 pointer-events-auto">
-      
-      {/* Hero Title & Official Presentation */}
-      <div className="max-w-3xl lg:max-w-5xl pt-1 sm:pt-4 space-y-3 sm:space-y-4">
-        
-        {/* Welcome Badge with Official ICDD Logo */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#005EA6] text-white backdrop-blur-md border border-[#00D7FF]/60 text-[11px] sm:text-xs font-bold tracking-wide shadow-md shadow-[#005EA6]/25">
-          <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/80 shadow-sm flex-shrink-0 relative">
-            <span className="text-[8px] text-[#00D7FF] flex items-center justify-center h-full">IC</span>
-            <img 
-              src={icddOfficialLogo} 
-              alt="Logo ICDD" 
-              className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
+    <div id="accueil-view-container" className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar p-3 sm:p-6 md:p-10 pointer-events-auto">
+      <div className="max-w-6xl mx-auto space-y-12 sm:space-y-16 md:space-y-20 pb-28 sm:pb-24">
+
+        {/* ========================================================================= */}
+        {/* 1. HERO SECTION (Transformé pour ICDD DECO – Grande photo d'un vrai salon) */}
+        {/* ========================================================================= */}
+        <section className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden bg-white/95 text-slate-800 shadow-xl border border-slate-200/80 backdrop-blur-xl">
+          
+          {/* Header Bar inside Hero: Branding & Catchphrase */}
+          <div className="pt-8 sm:pt-12 px-6 sm:px-12 text-center space-y-3 z-10 relative">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 border border-sky-200/80 text-[11px] font-bold text-[#005EA6] backdrop-blur-md shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#00D7FF] animate-pulse" />
+              <span>Architecture & Décoration d'Intérieur • Kinshasa, RDC</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-light tracking-tight text-slate-900 uppercase">
+              ICDD <span className="font-extrabold text-[#005EA6]">DECO</span>
+            </h1>
+
+            <p className="text-base sm:text-2xl md:text-3xl text-slate-700 font-light tracking-wide italic">
+              « L'art de transformer vos espaces »
+            </p>
+
+            <div className="flex items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-slate-500 font-medium pt-1">
+              <span>Décoration</span>
+              <span>•</span>
+              <span>Aménagement</span>
+              <span>•</span>
+              <span>Staff & Faux-Plafonds</span>
+              <span>•</span>
+              <span>Design Intérieur</span>
+            </div>
+          </div>
+
+          {/* Large Architectural Photo of a real Living Room / Salon made by ICDD */}
+          <div className="relative mt-6 sm:mt-8 mx-3 sm:mx-6 mb-3 sm:mb-6 rounded-[22px] sm:rounded-[28px] overflow-hidden h-[340px] sm:h-[460px] md:h-[540px] bg-slate-100 shadow-inner group border border-slate-200/60">
+            <img
+              src="/bright_luxury_living.jpg"
+              alt="Salon contemporain lumineux et prestigieux par ICDD à Kinshasa"
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-1000"
               referrerPolicy="no-referrer"
               onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                (e.currentTarget as HTMLImageElement).src = '/projects/real_project_4.jpg';
               }}
             />
-          </div>
-          <span className="text-sm leading-none">🦺✨</span>
-          <span>Bonjour chers clients, bienvenue chez ICDD</span>
-        </div>
-        
-        {/* Main H1 Title */}
-        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight drop-shadow-md leading-[1.12] sm:leading-[1.08]">
-          ICDD – Excellence en Décoration & Peinture Intérieure
-        </h1>
-        
-        {/* Official Description */}
-        <p className="text-xs sm:text-base md:text-lg text-slate-800 dark:text-slate-100 max-w-3xl font-medium leading-relaxed drop-shadow bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-white/60 shadow-sm">
-          Nous transformons vos espaces avec élégance, modernité et créativité grâce à des finitions professionnelles adaptées à votre style.
-        </p>
+            {/* Subtle Gradient Overlays for readable text */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-transparent to-transparent pointer-events-none" />
 
-        {/* Real Offers Horizontal Pricing Grid */}
-        <div className="pt-1">
-          <div className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 mb-2">
-            <span>💰 Nos Offres de Décoration</span>
-            <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium lowercase">(varient selon la dimension de votre espace mural)</span>
+            {/* Bottom floating badge on the hero photo */}
+            <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-10">
+              <div className="space-y-1 text-white">
+                <span className="inline-block px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-[#005EA6] border border-white/60 shadow-sm">
+                  Réalisation Réelle • Kinshasa
+                </span>
+                <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-white drop-shadow-md">
+                  Salon Contemporain, Faux-Plafonds en Staff & Gorges LED
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-200 max-w-lg drop-shadow">
+                  Harmonie des enduits fins, éclairage indirect soigné et agencements sur mesure.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setActiveTab('realisations')}
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-white text-slate-900 hover:bg-slate-100 text-xs sm:text-sm font-bold shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center gap-2"
+                >
+                  <span>Explorer nos projets</span>
+                  <ArrowRight className="w-4 h-4 text-[#005EA6]" />
+                </button>
+                <button
+                  onClick={openQuoteModal}
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white border border-[#00D7FF]/50 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap"
+                >
+                  Devis gratuit
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5">
-            {offersList.map(([name, conf]) => (
-              <div 
-                key={name}
-                onClick={openQuoteModal}
-                className="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-white/80 dark:border-white/20 shadow-sm hover:shadow-md hover:border-[#00D7FF] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
-              >
-                <div className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-[#005EA6] dark:group-hover:text-[#00D7FF]">
-                  {name}
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 2. SECTION "TROUVE TON GOÛT" (Inspiré de "Find your best ville")         */}
+        {/* ========================================================================= */}
+        <section id="trouve-ton-gout" className="relative">
+          <div className="bg-white/95 backdrop-blur-xl p-6 sm:p-8 rounded-[28px] sm:rounded-[34px] border border-slate-200/90 shadow-xl space-y-5">
+            
+            <div className="space-y-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#005EA6]">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#00D7FF]" />
+                <span>Sélection Personnalisée</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Trouve ton goût
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Quel espace souhaitez-vous transformer ?
+              </p>
+            </div>
+
+            {/* Selectors Bar matching the mock-up layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 items-end pt-2">
+              
+              {/* Selector 1: Type d'espace */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                  Type d'espace
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedSpace}
+                    onChange={(e) => setSelectedSpace(e.target.value)}
+                    className="w-full appearance-none bg-slate-50 border border-slate-300 hover:border-slate-400 text-slate-900 text-xs sm:text-sm font-semibold rounded-full px-4 py-3 pr-10 focus:outline-none focus:border-[#005EA6] focus:ring-2 focus:ring-[#00D7FF]/30 transition-all cursor-pointer shadow-sm"
+                  >
+                    <option value="Salon">Salon</option>
+                    <option value="Cuisine">Cuisine</option>
+                    <option value="Staff">Staff & Plafonds</option>
+                    <option value="Portes">Portes & Menuiserie</option>
+                    <option value="Chambre">Chambre & Dressing</option>
+                    <option value="Bureau">Bureau & Espace Pro</option>
+                  </select>
+                  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                 </div>
-                <div className="text-xs sm:text-sm font-black text-[#005EA6] dark:text-[#00D7FF] mt-0.5">
-                  {conf.badge}
+              </div>
+
+              {/* Selector 2: Style */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                  Style
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedStyle}
+                    onChange={(e) => setSelectedStyle(e.target.value)}
+                    className="w-full appearance-none bg-slate-50 border border-slate-300 hover:border-slate-400 text-slate-900 text-xs sm:text-sm font-semibold rounded-full px-4 py-3 pr-10 focus:outline-none focus:border-[#005EA6] focus:ring-2 focus:ring-[#00D7FF]/30 transition-all cursor-pointer shadow-sm"
+                  >
+                    <option value="Moderne">Moderne & Épuré</option>
+                    <option value="Classique">Classique Élégant</option>
+                    <option value="Luxe">Luxe Contemporain</option>
+                    <option value="Gold">Gold Prestige</option>
+                  </select>
+                  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Selector 3: Projet */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+                  Projet
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedProject}
+                    onChange={(e) => setSelectedProjectType(e.target.value)}
+                    className="w-full appearance-none bg-slate-50 border border-slate-300 hover:border-slate-400 text-slate-900 text-xs sm:text-sm font-semibold rounded-full px-4 py-3 pr-10 focus:outline-none focus:border-[#005EA6] focus:ring-2 focus:ring-[#00D7FF]/30 transition-all cursor-pointer shadow-sm"
+                  >
+                    <option value="Appartement">Appartement</option>
+                    <option value="Villa">Villa / Résidence</option>
+                    <option value="Espace Pro">Espace Professionnel</option>
+                  </select>
+                  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Button: Découvrir (like "Find Now" in the mock-up) */}
+              <div className="pt-2 sm:pt-0">
+                <button
+                  onClick={handleDiscoverTaste}
+                  className="w-full px-6 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 border border-[#00D7FF]/40"
+                >
+                  <span>Découvrir</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
+                </button>
+              </div>
+
+            </div>
+
+            {/* Interactive Feedback Banner when user clicks "Découvrir" */}
+            {tasteDiscovered && (
+              <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200 text-slate-700 text-xs flex flex-col sm:flex-row items-center justify-between gap-3 animate-fadeIn">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#005EA6] flex-shrink-0" />
+                  <span>
+                    Sélection active : <strong className="text-slate-900">{selectedSpace}</strong> en style <strong className="text-slate-900">{selectedStyle}</strong> pour <strong className="text-slate-900">{selectedProject}</strong>.
+                  </span>
+                </div>
+                <button
+                  onClick={() => setActiveTab('realisations')}
+                  className="text-xs font-bold text-[#005EA6] hover:underline cursor-pointer whitespace-nowrap"
+                >
+                  Voir tous les chantiers correspondants →
+                </button>
+              </div>
+            )}
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 3. NOS RÉALISATIONS (Grille 6 cartes inspirée des 6 villas de la maquette) */}
+        {/* ========================================================================= */}
+        <section ref={realisationsRef} className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="space-y-1">
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#005EA6] block">
+                Portfolio Réalisations ICDD
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Nos réalisations
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Découvrez quelques-uns de nos projets conçus et exécutés à Kinshasa.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setActiveTab('realisations')}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#005EA6] hover:text-[#004f8c] hover:underline cursor-pointer whitespace-nowrap"
+            >
+              <span>Voir toutes les réalisations</span>
+              <ArrowRight className="w-4 h-4 text-[#00D7FF]" />
+            </button>
+          </div>
+
+          {/* Grid of 6 Categories matching the mock-up's 6 cards in 2 rows of 3 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            
+            {/* Card 1: SALONS */}
+            <div 
+              onClick={() => handleExploreCategory('Décoration')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.project4}
+                  alt="Salons contemporains et royaux par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Salon & Séjour
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Salons</h3>
+                    <p className="text-[11px] text-slate-200">Aménagements royaux & contemporains</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Dès 350 $
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Stuc vénitien, éclairage & confort</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 2: CUISINES */}
+            <div 
+              onClick={() => handleExploreCategory('Cuisines')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.cuisine1}
+                  alt="Cuisines modernes par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Cuisine & Îlot
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Cuisines</h3>
+                    <p className="text-[11px] text-slate-200">Sur mesure, îlots & plans quartz</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Dès 500 $
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Rangements toute hauteur & LED</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 3: STAFF & PLAFONDS */}
+            <div 
+              onClick={() => handleExploreCategory('Staff')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.project1}
+                  alt="Staff et plafonds par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Staff & Plafonds
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Staff</h3>
+                    <p className="text-[11px] text-slate-200">Gorges LED & corniches sculptées</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Dès 250 $
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Maîtres staffeurs & plâtre fibré</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 4: PORTES */}
+            <div 
+              onClick={() => handleExploreCategory('Portes')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.porte1}
+                  alt="Portes intérieures réalisées par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Menuiserie Intérieure
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Portes</h3>
+                    <p className="text-[11px] text-slate-200">Blocs-portes isophoniques modernes</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Dès 290 $
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Vantaux pleins, serrures magnétiques</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 5: CHAMBRES */}
+            <div 
+              onClick={() => handleExploreCategory('Décoration')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.project7}
+                  alt="Chambres et suites parentales par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Chambre & Nuit
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Chambres</h3>
+                    <p className="text-[11px] text-slate-200">Suites parentales & atmosphères douces</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Dès 450 $
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Harmonies feutrées & finitions Gold</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 6: BUREAUX & ESPACES PROS */}
+            <div 
+              onClick={() => handleExploreCategory('Appartements')}
+              className="group bg-white rounded-[24px] border border-slate-200 hover:border-sky-300 shadow-md hover:shadow-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-all duration-300 flex flex-col"
+            >
+              <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100">
+                <img
+                  src={ICDD_ASSETS.project3}
+                  alt="Bureaux et espaces professionnels par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-white/60 shadow-sm">
+                  Espace Pro & Bureau
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight">Bureaux</h3>
+                    <p className="text-[11px] text-slate-200">Agencements de travail & réceptions</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 bg-white/95 px-2.5 py-1 rounded-lg shadow-sm">
+                    Sur devis
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 flex items-center justify-between text-xs text-slate-600 font-medium bg-slate-50/50">
+                <span>Reliefs muraux, acoustique & prestige</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#005EA6] group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Centered button "Voir toutes les réalisations" */}
+          <div className="text-center pt-2">
+            <button
+              onClick={() => setActiveTab('realisations')}
+              className="px-8 py-3 rounded-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs sm:text-sm font-bold shadow-sm transition-all hover:scale-105 cursor-pointer"
+            >
+              Voir toutes les réalisations →
+            </button>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 4. DÉCOUVREZ NOTRE SAVOIR-FAIRE (Inspiré de "Information about our villes") */}
+        {/* ========================================================================= */}
+        <section className="space-y-10 sm:space-y-14 pt-4 border-t border-slate-200">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#005EA6] block">
+              Architectural & Craftsmanship
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Découvrez notre savoir-faire
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Une maîtrise complète de l'espace intérieur où chaque matière, chaque ligne de plâtre et chaque source de lumière dialoguent harmonieusement.
+            </p>
+          </div>
+
+          <div className="space-y-12 sm:space-y-16">
+
+            {/* Block 1: SALON (Image on Left, Text on Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
+              <div className="rounded-[26px] overflow-hidden bg-slate-100 shadow-xl border border-slate-200 h-64 sm:h-80 md:h-96 relative group">
+                <img
+                  src={ICDD_ASSETS.project4}
+                  alt="Salon contemporain réalisé par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-xs font-bold text-white bg-slate-900/80 px-3 py-1 rounded-full backdrop-blur-md">
+                  Chantier Réel • Gombe
+                </div>
+              </div>
+
+              <div className="space-y-5 text-slate-700">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#005EA6] block">
+                    Pièce de Vie Signature
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Salon contemporain
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    Un espace pensé autour de l'élégance, du confort et de l'harmonie des matériaux. Nos architectes d'intérieur orchestrent les volumes, l'éclairage indirect et les textures pour créer un lieu de vie chaleureux et prestigieux.
+                  </p>
+                </div>
+
+                {/* Specs / metrics like mock-up */}
+                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Finitions</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Stuc & Velours</span>
+                  </div>
+                  <div className="border-x border-slate-200">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Éclairage</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#005EA6]">Gorges LED</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Style</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Moderne Épuré</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Décoration
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Staff
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Éclairage
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Block 2: CUISINE (Text on Left, Image on Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
+              
+              <div className="space-y-5 text-slate-700 order-2 lg:order-1">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#005EA6] block">
+                    Cœur de Maison
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Cuisine sur mesure
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    Des espaces fonctionnels et conviviaux conçus pour s'intégrer harmonieusement à votre intérieur. Îlots centraux, façades épurées anti-traces, gorges LED et rangements ergonomiques personnalisés.
+                  </p>
+                </div>
+
+                {/* Specs / metrics */}
+                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Conception</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Sur Mesure</span>
+                  </div>
+                  <div className="border-x border-slate-200">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Matériaux</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#005EA6]">Hydrofuge HD</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Confort</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Freins Amortis</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Îlot Central
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Rangements
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Plan Quartz
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-[26px] overflow-hidden bg-slate-100 shadow-xl border border-slate-200 h-64 sm:h-80 md:h-96 relative group order-1 lg:order-2">
+                <img
+                  src={ICDD_ASSETS.cuisine1}
+                  alt="Cuisine moderne sur mesure réalisée par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-xs font-bold text-white bg-slate-900/80 px-3 py-1 rounded-full backdrop-blur-md">
+                  Chantier Réel • Kinshasa
+                </div>
+              </div>
+
+            </div>
+
+            {/* Block 3: STAFF & PLAFONDS (Image on Left, Text on Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
+              <div className="rounded-[26px] overflow-hidden bg-slate-100 shadow-xl border border-slate-200 h-64 sm:h-80 md:h-96 relative group">
+                <img
+                  src={ICDD_ASSETS.project1}
+                  alt="Staff et plafonds sculptés par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-xs font-bold text-white bg-slate-900/80 px-3 py-1 rounded-full backdrop-blur-md">
+                  Ateliers Staff • Kinshasa
+                </div>
+              </div>
+
+              <div className="space-y-5 text-slate-700">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#005EA6] block">
+                    Art du Plâtre & Volume
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Staff & plafonds sculptés
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    L'art du plâtre façonné à la main par nos maîtres staffeurs. Faux-plafonds suspendus, corniches sculptées et gorges lumineuses LED dissimulées qui apportent profondeur et majesté aux volumes.
+                  </p>
+                </div>
+
+                {/* Specs */}
+                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Précision</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Moulage Manuel</span>
+                  </div>
+                  <div className="border-x border-slate-200">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Lumière</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#005EA6]">Gorges LED</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Aspect</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Blanc Soyeux</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Gorges LED
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Corniches
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Rosaces
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Block 4: PORTES & MENUISERIE (Text on Left, Image on Right) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
+              
+              <div className="space-y-5 text-slate-700 order-2 lg:order-1">
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#005EA6] block">
+                    Ouvertures & Menuiserie
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Portes intérieures & finitions
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                    Véritables blocs-portes contemporains fabriqués dans nos ateliers de Kinshasa : vantaux pleins acoustiques, huisseries affleurantes, rainurages design et serrures magnétiques silencieuses.
+                  </p>
+                </div>
+
+                {/* Specs */}
+                <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Acoustique</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Âme Pleine</span>
+                  </div>
+                  <div className="border-x border-slate-200">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Paumelles</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#005EA6]">Invisibles 3D</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Fermeture</span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900">Magnétique</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Blocs-portes
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Rainurages
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                    Sur mesure
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-[26px] overflow-hidden bg-slate-100 shadow-xl border border-slate-200 h-64 sm:h-80 md:h-96 relative group order-1 lg:order-2">
+                <img
+                  src={ICDD_ASSETS.porte1}
+                  alt="Porte intérieure contemporaine réalisée par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-xs font-bold text-white bg-slate-900/80 px-3 py-1 rounded-full backdrop-blur-md">
+                  Pose Chantier • Macampagne
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 5. NOS SERVICES (Ce que ICDD fait pour ses clients)                       */}
+        {/* ========================================================================= */}
+        <section className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="space-y-1">
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#005EA6] block">
+                Expertise & Métiers
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Nos services
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Ce que ICDD conçoit et réalise pour sublimer votre cadre de vie à Kinshasa.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setActiveTab('services')}
+              className="px-5 py-2.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-bold transition-all shadow cursor-pointer whitespace-nowrap"
+            >
+              Découvrir nos services
+            </button>
+          </div>
+
+          {/* 4 Core Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {[
+              {
+                title: 'Architecture & Design',
+                desc: 'Plans 2D/3D, restructuration des volumes, agencements personnalisés et décloisonnement.',
+                icon: Compass,
+              },
+              {
+                title: 'Décoration & Peinture',
+                desc: 'Enduits stucs marbrés, peintures veloutées dépolluantes, patines et harmonies chromatiques.',
+                icon: Paintbrush,
+              },
+              {
+                title: 'Staff & Faux-Plafonds',
+                desc: 'Faux-plafonds suspendus, corniches sculptées et gorges d’éclairage LED dissimulées.',
+                icon: Layers,
+              },
+              {
+                title: 'Cuisines & Menuiserie',
+                desc: 'Cuisines contemporaines avec îlot, blocs-portes isophoniques et menuiserie sur mesure.',
+                icon: ChefHat,
+              },
+            ].map((srv, idx) => {
+              const IconComp = srv.icon;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setActiveTab('services')}
+                  className="p-5 rounded-2xl bg-slate-50 hover:bg-white border border-slate-200/80 hover:border-sky-300 transition-all hover:scale-[1.02] cursor-pointer space-y-2.5 shadow-sm group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-[#005EA6] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                    <IconComp className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#005EA6] transition-colors">
+                    {srv.title}
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                    {srv.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 6. SHOP (Matériaux / produits disponibles à la vente – Distinction nette)  */}
+        {/* ========================================================================= */}
+        <section className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                <ShoppingBag className="w-3 h-3 text-emerald-600" />
+                <span>Matériaux & Produits Disponibles</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Le Shop ICDD
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Achetez directement vos peintures haut de gamme, blocs-portes, éléments de cuisine et corniches.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setActiveTab('shop')}
+              className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow cursor-pointer whitespace-nowrap"
+            >
+              Voir tout le Shop
+            </button>
+          </div>
+
+          {/* 4 Shop Products Preview Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4">
+            {[
+              {
+                title: 'Peintures',
+                desc: 'Velours, mates, stucs minéraux & patines',
+                badge: 'Dès 65 $',
+                image: ICDD_ASSETS.project6
+              },
+              {
+                title: 'Portes',
+                desc: 'Blocs-portes contemporains acoustiques',
+                badge: 'Dès 290 $',
+                image: ICDD_ASSETS.porte1
+              },
+              {
+                title: 'Cuisines',
+                desc: 'Plans quartz, façades & caissons',
+                badge: 'Sur devis',
+                image: ICDD_ASSETS.cuisine1
+              },
+              {
+                title: 'Matériaux & Staff',
+                desc: 'Corniches d’art & rosaces pour LED',
+                badge: 'Dès 35 $',
+                image: ICDD_ASSETS.project1
+              }
+            ].map((prod, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActiveTab('shop')}
+                className="group relative rounded-2xl overflow-hidden border border-slate-200 hover:border-emerald-500/50 shadow-md cursor-pointer hover:scale-105 transition-all duration-300 h-44 sm:h-52 flex flex-col justify-end p-3.5 text-white"
+              >
+                <img
+                  src={prod.image}
+                  alt={prod.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
+
+                <div className="relative z-10 space-y-1">
+                  <span className="inline-block px-2 py-0.5 rounded bg-emerald-600/90 text-[10px] font-black text-white">
+                    {prod.badge}
+                  </span>
+                  <h4 className="text-sm font-extrabold tracking-tight group-hover:text-emerald-300 transition-colors">
+                    {prod.title}
+                  </h4>
+                  <p className="text-[11px] text-slate-200 line-clamp-2 leading-snug">
+                    {prod.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Important Pricing Disclaimer Note */}
-        <div className="bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 p-2.5 sm:p-3 rounded-xl backdrop-blur-md text-[11px] sm:text-xs text-slate-800 dark:text-slate-100 leading-snug flex items-start gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
-          <span>
-            <strong>Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
-          </span>
-        </div>
-
-      </div>
-
-      {/* Bottom Row: Action Panels */}
-      <div className="w-full flex flex-col lg:flex-row items-stretch lg:items-end justify-between gap-4 sm:gap-6 pt-5 sm:pt-6 mt-auto pb-24 sm:pb-20 lg:pb-2">
-        
-        {/* Left Panel: Direct Contact & Devis Express */}
-        <div className="w-full lg:w-[400px] xl:w-[440px] bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/15 flex flex-col justify-between gap-3">
-          
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#005EA6] dark:text-[#00D7FF] bg-[#005EA6]/10 dark:bg-[#005EA6]/30 px-2.5 py-0.5 rounded-full border border-[#00D7FF]/30">
-                Contact & Devis Direct
-              </span>
-              <span className="text-[10px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full">
-                <Calendar className="w-3 h-3" />
-                Lundi au Samedi
-              </span>
-            </div>
-
-            <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Prendre Contact avec ICDD
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-              Appelez-nous directement ou calculez votre estimation sur-mesure pour votre espace mural.
+        {/* ========================================================================= */}
+        {/* 7. CONTACT / DEMANDE DE DEVIS (Parlons de votre projet)                   */}
+        {/* ========================================================================= */}
+        <section className="bg-gradient-to-br from-white via-sky-50/50 to-blue-50/40 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-sky-100 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center md:text-left max-w-xl">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#005EA6] block">
+              Démarrer Votre Projet
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Parlons de votre projet
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+              Vous avez un projet de rénovation, de salon, de cuisine ou de villa à Kinshasa ? Contactez nos maîtres artisans pour un devis gratuit et personnalisé.
             </p>
           </div>
 
-          {/* Contact Action Buttons */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
             <a
-              href="tel:+243897504570"
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-slate-900 text-white hover:bg-[#005EA6] text-xs font-bold transition-all active:scale-95 shadow-md border border-white/10"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#00D7FF]" />
-              <span>+243 897504570</span>
-            </a>
-            <a
-              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20des%20informations%20sur%20vos%20offres%20de%20d%C3%A9coration%20et%20peinture%20int%C3%A9rieure."
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20d%27am%C3%A9nagement."
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-transform active:scale-95 shadow-md"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>WhatsApp</span>
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Direct</span>
             </a>
-          </div>
 
-          <button
-            onClick={openQuoteModal}
-            className="w-full py-2.5 px-4 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs transition-all active:scale-95 shadow-xl shadow-[#005EA6]/30 border border-[#00D7FF]/40 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#00D7FF]" />
-            <span>Calculer mon Devis Matériaux</span>
-          </button>
-        </div>
-
-        {/* Right Panel: Featured Project Showcase */}
-        <div 
-          onClick={() => onOpenProject(featuredProject)}
-          className="w-full lg:w-[460px] xl:w-[520px] bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/80 dark:border-white/20 shadow-2xl shadow-black/20 transition-all duration-300 hover:scale-[1.01] cursor-pointer group relative active:scale-[0.99]"
-        >
-          {/* Card Header with Location & Action Arrow */}
-          <div className="flex items-start justify-between gap-3 mb-2">
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#005EA6] dark:text-[#00D7FF] mb-0.5">
-                <MapPin className="w-3.5 h-3.5 text-[#00D7FF]" />
-                <span>{featuredProject.location}</span>
-                <span className="font-bold text-[#005EA6] dark:text-[#00D7FF]">• {featuredProject.category}</span>
-              </div>
-              <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight group-hover:text-[#005EA6] dark:group-hover:text-[#00D7FF] transition-colors">
-                {featuredProject.title}
-              </h3>
-            </div>
-
-            {/* Top Right Action Arrow */}
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-[#005EA6] group-hover:text-[#00D7FF] group-hover:rotate-45 transition-all duration-300 shadow-lg flex-shrink-0">
-              <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-          </div>
-
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium mb-3 line-clamp-2 leading-relaxed">
-            {featuredProject.description}
-          </p>
-
-          {/* Project Specifications Tag Bar */}
-          <div className="flex flex-wrap items-center gap-1.5 mb-3.5">
-            <span className="text-[10px] sm:text-xs font-semibold bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-slate-200 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
-              Murs: {featuredProject.specs.wallSurface}
-            </span>
-            <span className="text-[10px] sm:text-xs font-bold bg-[#005EA6]/10 dark:bg-[#005EA6]/30 text-[#005EA6] dark:text-[#00D7FF] px-2.5 py-0.5 rounded-full border border-[#00D7FF]/40">
-              À partir de {featuredProject.startingPrice} $
-            </span>
-          </div>
-
-          {/* Bottom Card Bar */}
-          <div className="pt-2.5 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={toggleLike}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
-                  liked
-                    ? 'bg-rose-500 text-white shadow-md'
-                    : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-white'
-                }`}
-                title="Aimer"
-              >
-                <Heart className={`w-3.5 h-3.5 ${liked ? 'fill-current' : ''}`} />
-                <span>{likesCount}</span>
-              </button>
-
-              <button
-                onClick={toggleBookmark}
-                className={`p-1.5 rounded-full text-xs transition-all ${
-                  bookmarked
-                    ? 'bg-[#005EA6] text-white shadow-md border border-[#00D7FF]/40'
-                    : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-white'
-                }`}
-                title="Enregistrer"
-              >
-                <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? 'fill-current' : ''}`} />
-              </button>
-
-              <button
-                onClick={handleShare}
-                className="p-1.5 rounded-full text-xs bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-white transition-all relative"
-                title="Partager"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                {copied && (
-                  <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-2 py-0.5 rounded shadow">
-                    Copié!
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* ICDD Logo Badge */}
-            <div 
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-950 text-white flex flex-col items-center justify-center font-black tracking-widest text-xs shadow-xl border-2 border-[#00D7FF] group-hover:scale-105 transition-all"
-              title="ICDD Décoration & Peinture Intérieure"
+            <button
+              onClick={openQuoteModal}
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 border border-[#00D7FF]/40"
             >
-              <span className="text-[10px] leading-none text-white font-black">ICDD</span>
-              <span className="text-[6px] text-[#FF77FF] font-bold uppercase mt-0.5">DÉCOR</span>
-            </div>
+              <Phone className="w-4 h-4 text-[#00D7FF]" />
+              <span>Demander un devis</span>
+            </button>
           </div>
-
-        </div>
+        </section>
 
       </div>
-
     </div>
   );
 };

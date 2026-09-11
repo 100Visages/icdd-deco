@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, Sparkles, Calendar, FileText, Loader2, AlertCircle, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, Sparkles, FileText, Loader2, MessageCircle, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { ICDD_OFFERS_CONFIG } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface ContactViewProps {
@@ -20,7 +19,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
     name: user?.displayName || '',
     email: user?.email || '',
     phone: '',
-    subject: 'Décoration Top Modèle',
+    subject: 'Architecture intérieure & Décoration',
     message: ''
   });
 
@@ -65,15 +64,14 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
   };
 
   return (
-    <div className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-10 pb-28 sm:pb-20">
+    <div id="contact-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
+      <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-28 sm:pb-20">
         
-        {/* Header with Welcome Announcement */}
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-10 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
-          <div className="space-y-2.5">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#005EA6]/15 text-[#005EA6] dark:text-[#00D7FF] text-xs font-bold border border-[#00D7FF]/40 shadow-sm">
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-white dark:bg-slate-900 border border-[#00D7FF]/60 shadow-sm flex-shrink-0 relative">
-                <span className="text-[8px] text-[#005EA6] flex items-center justify-center h-full">IC</span>
+        {/* Simple & Elegant Header */}
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3 max-w-xl">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
                   alt="Logo ICDD" 
@@ -84,212 +82,209 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                   }}
                 />
               </div>
-              <span className="text-sm leading-none">🦺✨</span>
-              <span>Bonjour chers clients, bienvenue chez ICDD</span>
+              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
+              <span className="text-slate-400">•</span>
+              <span>Contact & Devis</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-              🎨 ICDD – Excellence en Décoration et Peinture Intérieure
+            
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Contactez ICDD
             </h2>
-            <p className="text-xs sm:text-base text-slate-700 dark:text-slate-200 max-w-2xl leading-relaxed">
-              Nous transformons vos espaces avec élégance, modernité et créativité grâce à des finitions professionnelles adaptées à votre style.
+            <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
+              Vous avez un projet ? Parlez-nous de votre projet et obtenez un accompagnement adapté et sur mesure.
             </p>
           </div>
 
-          <button
-            onClick={openQuoteModal}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={openQuoteModal}
+              className="px-6 sm:px-8 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#005EA6]/20 border border-sky-400/40 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            >
+              <FileText className="w-4 h-4 text-sky-200" />
+              <span>Demander un devis</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Contact Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          {/* 1. Phone */}
+          <a
+            href="tel:+243897504570"
+            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
           >
-            <FileText className="w-4 h-4 text-[#00D7FF]" />
-            <span>Calculer mon Devis Matériaux</span>
-          </button>
-        </div>
-
-        {/* 💰 Nos Offres Section */}
-        <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-5 sm:p-8 rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <div>
-              <h3 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <span>💰 Nos offres de décoration</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-                ✨ Les prix varient selon la dimension de votre espace mural.
-              </p>
-            </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold w-fit">
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Disponible du lundi au samedi</span>
-            </div>
-          </div>
-
-          {/* 5 Offers Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-            {Object.entries(ICDD_OFFERS_CONFIG).map(([title, item]) => (
-              <div 
-                key={title} 
-                onClick={openQuoteModal}
-                className="bg-white/90 dark:bg-slate-800/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-[#00D7FF] dark:hover:border-[#00D7FF] transition-all hover:scale-[1.02] cursor-pointer shadow-sm group flex flex-col justify-between"
-              >
-                <div>
-                  <div className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-[#005EA6] dark:group-hover:text-[#00D7FF] transition-colors">
-                    {title}
-                  </div>
-                  <div className="text-lg font-black text-[#005EA6] dark:text-[#00D7FF] mt-1 mb-2">
-                    {item.badge}
-                  </div>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700 text-[10px] font-bold text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-between">
-                  <span>Sélectionner</span>
-                  <span>→</span>
-                </div>
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
+                <Phone className="w-5 h-5" />
               </div>
-            ))}
+              <div>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Téléphone</span>
+                <span className="text-sm sm:text-base font-black text-slate-900 group-hover:text-[#005EA6] transition-colors">
+                  +243 897504570
+                </span>
+              </div>
+            </div>
+            <span className="text-[11px] text-slate-500 mt-2 font-medium">Appel direct & conseils</span>
+          </a>
+
+          {/* 2. WhatsApp */}
+          <a
+            href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20d%27am%C3%A9nagement."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-emerald-500 hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+                <MessageCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">WhatsApp Direct</span>
+                <span className="text-sm sm:text-base font-black text-emerald-600">
+                  +243 897504570
+                </span>
+              </div>
+            </div>
+            <span className="text-[11px] text-slate-500 mt-2 font-medium">Réponse rapide & devis</span>
+          </a>
+
+          {/* 3. Email */}
+          <a
+            href="mailto:contact@icdd-design.com"
+            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Email Officiel</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-900 truncate block">
+                  contact@icdd-design.com
+                </span>
+              </div>
+            </div>
+            <span className="text-[11px] text-slate-500 mt-2 font-medium">Pour plans & dossiers</span>
+          </a>
+
+          {/* 4. Adresse */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Localisation</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-900 block">
+                  Gombe, Kinshasa, RDC
+                </span>
+              </div>
+            </div>
+            <span className="text-[11px] text-slate-500 mt-2 font-medium">Intervention Kinshasa & environs</span>
           </div>
 
-          {/* Important Notice Banner */}
-          <div className="bg-[#005EA6]/10 dark:bg-[#005EA6]/25 border border-[#00D7FF]/35 p-4 rounded-2xl flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-[#005EA6] dark:text-[#00D7FF] flex-shrink-0 mt-0.5" />
-            <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
-              <strong>📝 Important :</strong> Les tarifs indiqués concernent uniquement les matériaux de décoration. La main-d'œuvre, les meubles et les accessoires ne sont pas inclus. Un devis détaillé sera établi selon les besoins de votre projet.
-            </div>
-          </div>
         </div>
 
-        {/* Content Grid: Left Contact Info / Right Form */}
+        {/* Main Interactive Form & Info Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           
-          {/* Left Column (2 Cols): Official Contact Details */}
+          {/* Left Details (2 cols) */}
           <div className="lg:col-span-2 space-y-6">
-            
-            <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl p-6 rounded-[28px] border border-white/80 dark:border-white/20 shadow-lg space-y-5">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-3">
-                Coordonnées Officielles ICDD
+            <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
+              <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+                Horaires & Engagement
               </h3>
 
-              {/* Direct Phone / Call */}
-              <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5" />
+              <div className="flex items-start gap-3.5 text-xs text-slate-700">
+                <div className="w-9 h-9 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center flex-shrink-0 border border-sky-100">
+                  <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <strong className="block text-slate-900 dark:text-white font-bold text-sm">Téléphone & Appel Direct :</strong>
-                  <a href="tel:+243897504570" className="text-[#005EA6] dark:text-[#00D7FF] font-black text-base hover:underline">
-                    +243 897504570
-                  </a>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Appel direct pour prise en charge rapide de vos projets.</p>
+                  <strong className="block text-slate-900 font-bold text-sm">Disponibilité :</strong>
+                  <span>Du lundi au samedi : 08h00 – 18h00</span>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Visites techniques et métrés sur site à Kinshasa.</p>
                 </div>
               </div>
 
-              {/* WhatsApp Direct */}
-              <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
-                  <MessageCircle className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-900 dark:text-white font-bold text-sm">Discuter sur WhatsApp :</strong>
-                  <a 
-                    href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20des%20informations%20sur%20vos%20offres%20de%20d%C3%A9coration%20et%20peinture%20int%C3%A9rieure."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
-                  >
-                    <span>Ouvrir WhatsApp (+243 897504570)</span>
-                  </a>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Envoyez les photos ou dimensions de vos murs en direct.</p>
+              <div className="p-4 rounded-2xl bg-sky-50/80 border border-sky-200/60 flex items-start gap-3">
+                <ShieldCheck className="w-4 h-4 text-[#005EA6] flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-slate-800 leading-relaxed">
+                  <strong>Engagement ICDD :</strong> Devis clair, respect scrupuleux du cahier des charges et des délais annoncés.
                 </div>
               </div>
-
-              {/* Working Hours */}
-              <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-900 dark:text-white font-bold text-sm">Jours de Disponibilité :</strong>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Disponible du lundi au samedi</span>
-                  <p className="text-[11px] text-slate-500 mt-0.5">08:00 – 18:00 (Interventions et chantiers sur-mesure)</p>
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="flex items-start gap-3.5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="w-10 h-10 rounded-full bg-[#005EA6]/10 text-[#005EA6] dark:text-[#00D7FF] flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <strong className="block text-slate-900 dark:text-white font-bold text-sm">Zone d'intervention :</strong>
-                  <span>Kinshasa & environs (Gombe, Ngaliema, Limete, Bandalungwa...)</span>
-                </div>
-              </div>
-
             </div>
 
-            {/* Quick Call Action Card */}
-            <div className="bg-slate-900 text-white p-6 rounded-[28px] border border-white/20 shadow-lg space-y-3 relative overflow-hidden">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#00D7FF] uppercase tracking-wider">Assistance Décoration</span>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Lundi au Samedi</span>
-              </div>
-              <h4 className="text-lg font-bold">Un conseil sur vos peintures ?</h4>
-              <p className="text-xs text-slate-300 font-normal leading-relaxed">
-                Contactez nos artisans décorateurs par téléphone ou sur WhatsApp pour un échange direct et la programmation d'une visite de vos locaux.
+            <div className="p-6 rounded-[28px] bg-gradient-to-br from-[#005EA6] to-[#0077c8] text-white shadow-lg space-y-3">
+              <span className="text-xs uppercase font-extrabold tracking-wider text-sky-200 block">
+                Estimation Express
+              </span>
+              <h4 className="text-lg font-black">Besoin d’un chiffrage précis ?</h4>
+              <p className="text-xs text-white/90 leading-relaxed font-normal">
+                Utilisez notre outil d'estimation guidée pour configurer votre projet (surface, pièces, finitions et staff) en 2 minutes.
               </p>
-              <div className="pt-2 flex gap-2">
-                <a
-                  href="tel:+243897504570"
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-[#005EA6] hover:bg-[#004f8c] text-white text-xs font-black text-center transition-all shadow-md border border-[#00D7FF]/30"
-                >
-                  Appeler +243 897504570
-                </a>
-              </div>
+              <button
+                onClick={openQuoteModal}
+                className="w-full mt-2 py-3 rounded-full bg-white text-[#005EA6] font-black text-xs uppercase tracking-wider hover:bg-sky-50 transition-all cursor-pointer shadow-md"
+              >
+                Lancer le simulateur de devis
+              </button>
             </div>
-
           </div>
 
-          {/* Right Column (3 Cols): Interactive Form */}
-          <div className="lg:col-span-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-8 rounded-[24px] sm:rounded-[36px] border border-white/80 dark:border-white/20 shadow-xl">
-            {!submitted ? (
+          {/* Right Column: Contact Message Form (3 cols) */}
+          <div className="lg:col-span-3 bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm">
+            <h3 className="text-lg font-black text-slate-900 mb-1">
+              Envoyez-nous un message
+            </h3>
+            <p className="text-xs text-slate-500 mb-6">
+              Nos architectes d’intérieur vous répondront sous 24 heures.
+            </p>
+
+            {submitted ? (
+              <div className="p-8 text-center space-y-4 bg-emerald-50 rounded-2xl border border-emerald-200">
+                <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-md">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <h4 className="text-lg font-bold text-emerald-900">
+                  Message bien reçu !
+                </h4>
+                <p className="text-xs text-emerald-800 max-w-sm mx-auto">
+                  Merci pour votre confiance. L'équipe ICDD étudie votre demande et vous recontacte très rapidement.
+                </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="px-5 py-2 rounded-full bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors cursor-pointer shadow-sm"
+                >
+                  Envoyer un autre message
+                </button>
+              </div>
+            ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  Demander un Devis ou Poser une Question
-                </h3>
+                {errorMessage && (
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                    {errorMessage}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Votre Nom & Prénom *
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Votre Nom complet *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="M. / Mme"
+                      placeholder="Ex: Christian Mukendi"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Email de contact *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="votre.email@exemple.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Numéro de Téléphone *
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Numéro WhatsApp / Téléphone *
                     </label>
                     <input
                       type="tel"
@@ -297,103 +292,75 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="+243 ..."
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Adresse Email (optionnel)
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="exemple@domaine.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                      Offre ou Objet souhaité
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Sujet de votre demande
                     </label>
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] cursor-pointer"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
                     >
-                      <option value="Décoration simple (dès 250 $)">Décoration simple (dès 250 $)</option>
-                      <option value="Décoration classique (dès 350 $)">Décoration classique (dès 350 $)</option>
-                      <option value="Décoration luxueuse (dès 500 $)">Décoration luxueuse (dès 500 $)</option>
-                      <option value="Décoration Gold (dès 700 $)">Décoration Gold (dès 700 $)</option>
-                      <option value="Décoration Top Modèle (dès 800 $)">Décoration Top Modèle (dès 800 $)</option>
-                      <option value="Autre demande / Visite sur site">Autre demande / Visite sur site</option>
+                      <option value="Aménagement d'appartement complet">Aménagement d'appartement complet</option>
+                      <option value="Décoration & finitions murales">Décoration & finitions murales</option>
+                      <option value="Staff, plafonds & gorges LED">Staff, plafonds & gorges LED</option>
+                      <option value="Achat de matériaux (Shop ICDD)">Achat de matériaux (Shop ICDD)</option>
+                      <option value="Autre demande">Autre demande</option>
                     </select>
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                    Votre Message ou Description de vos murs *
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700 block">
+                    Votre Message ou Détails de votre projet *
                   </label>
                   <textarea
-                    rows={5}
                     required
-                    placeholder="Précisez la dimension approximative de vos murs, votre commune, le type de pièce (salon, chambre, bureau) et vos attentes particulières..."
+                    rows={4}
+                    placeholder="Décrivez votre projet (lieu à Kinshasa, superficie approximative, style souhaité)..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00D7FF]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white resize-none"
                   />
                 </div>
 
-                {errorMessage && (
-                  <div className="p-3 rounded-xl bg-red-100 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
-
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="text-[11px] text-slate-500">
-                    * ICDD s'engage à vous répondre sous 24h.
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/40 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Envoi en cours...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 text-[#00D7FF]" />
-                        <span>Envoyer la Demande</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Envoi en cours...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Envoyer mon message</span>
+                    </>
+                  )}
+                </button>
               </form>
-            ) : (
-              <div className="text-center py-12 space-y-4">
-                <div className="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto shadow-xl">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white">
-                  Message Envoyé avec Succès !
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 max-w-sm mx-auto">
-                  Merci {formData.name}. L'équipe ICDD a bien reçu votre demande et vous contactera au {formData.phone || formData.email}.
-                </p>
-                <div className="pt-2 flex justify-center gap-3">
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="px-6 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-200"
-                  >
-                    Envoyer un autre message
-                  </button>
-                  <a
-                    href="https://wa.me/243897504570"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-2 rounded-full bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 flex items-center gap-1.5"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Contacter sur WhatsApp</span>
-                  </a>
-                </div>
-              </div>
             )}
           </div>
 

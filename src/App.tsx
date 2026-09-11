@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { NavTab, FilterState, Project } from './types';
+import { NavTab, Project, RealisationCategory } from './types';
 import { ICDD_PROJECTS } from './data/projects';
 import { SidebarNav } from './components/SidebarNav';
 import { TopBar } from './components/TopBar';
 import { HeroOverlay } from './components/HeroOverlay';
-import { PortfolioView } from './components/PortfolioView';
-import { AgencyView } from './components/AgencyView';
+import { RealisationsView } from './components/RealisationsView';
+import { ServicesView } from './components/ServicesView';
+import { ShopView } from './components/ShopView';
 import { ContactView } from './components/ContactView';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { QuoteEstimatorModal } from './components/QuoteEstimatorModal';
+import luminousBg from './assets/images/luminous_luxury_interior_1789130395358.jpg';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('accueil');
-
-  const [filters, setFilters] = useState<FilterState>({
-    category: 'Tous',
-    style: 'Tous',
-    budget: 'Tous',
-    searchQuery: '',
-  });
+  const [selectedRealisationCategory, setSelectedRealisationCategory] = useState<RealisationCategory>('Tous');
 
   // Featured project (e.g. Villa Riviera by default)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -48,31 +44,36 @@ export default function App() {
     setIsQuoteModalOpen(false);
   };
 
+  const handleSelectCategoryFromHome = (cat: RealisationCategory) => {
+    setSelectedRealisationCategory(cat);
+    setActiveTab('realisations');
+  };
+
   return (
-    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center p-0 sm:p-2 lg:p-3 xl:p-4 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
+    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex items-center justify-center p-0 sm:p-2 lg:p-3 xl:p-4 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
       
-      {/* Outer Pill-Shaped Glass Frame matching reference image structure */}
+      {/* Outer Pill-Shaped Glass Frame */}
       <main 
         id="pill-shaped-container"
-        className="relative w-full h-full max-w-none rounded-none sm:rounded-[28px] lg:rounded-[36px] xl:rounded-[44px] border-0 sm:border-[3px] border-white/80 dark:border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col bg-slate-950 transition-all duration-500"
+        className="relative w-full h-full max-w-none rounded-none sm:rounded-[28px] lg:rounded-[36px] xl:rounded-[44px] border-0 sm:border-[2.5px] border-white/95 shadow-[0_20px_50px_-10px_rgba(0,40,90,0.08)] overflow-hidden flex flex-col bg-white/95 transition-all duration-500"
       >
         
-        {/* Main Background Image (Luxury ICDD Interior Photography) */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-slate-950">
+        {/* Main Background Image (Luminous Sunlit Luxury ICDD Interior Architecture) */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-white">
           <img
-            src={ICDD_PROJECTS[0].coverImage}
-            alt="ICDD Interior Design"
+            src={luminousBg}
+            alt="ICDD Luminous Interior Architecture"
             className={`w-full h-full object-cover transition-all duration-700 ${
-              activeTab !== 'accueil' ? 'scale-105 blur-md opacity-40' : 'scale-100 opacity-90'
+              activeTab !== 'accueil' ? 'scale-105 blur-sm opacity-25' : 'scale-100 opacity-70'
             }`}
             referrerPolicy="no-referrer"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = '/projects/real_project_4.jpg';
+              (e.currentTarget as HTMLImageElement).src = '/bright_luxury_living.jpg';
             }}
           />
-          {/* Subtle Vignetting & Ambient Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-slate-950/40" />
-          <div className="absolute inset-0 bg-radial-gradient from-transparent via-slate-950/30 to-slate-950/70" />
+          {/* Luminous Warm Daylighting Overlays - Airy, Radiant, High-End Architectural Ambiance */}
+          <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/50 to-white/15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/60" />
         </div>
 
         {/* Sidebar Navigation (Left Vertical Pill on Desktop, Floating Bottom Dock on Mobile) */}
@@ -81,10 +82,9 @@ export default function App() {
           setActiveTab={setActiveTab}
         />
 
-        {/* Top Header Bar inside Pill Container */}
+        {/* Top Header Bar inside Pill Container (5 Tabs: Accueil, Réalisations, Services, Shop, Contact) */}
         <TopBar
-          filters={filters}
-          setFilters={setFilters}
+          activeTab={activeTab}
           setActiveTab={setActiveTab}
           openQuoteModal={() => handleOpenQuoteModal()}
         />
@@ -95,26 +95,35 @@ export default function App() {
           {activeTab === 'accueil' && (
             <HeroOverlay
               featuredProject={featuredProject}
-              onOpenProject={handleOpenProject}
-              openQuoteModal={() => handleOpenQuoteModal()}
-              setActiveTab={setActiveTab}
-            />
-          )}
-
-          {activeTab === 'portfolio' && (
-            <PortfolioView
               projects={ICDD_PROJECTS}
-              filters={filters}
-              setFilters={setFilters}
+              onOpenProject={handleOpenProject}
+              openQuoteModal={() => handleOpenQuoteModal()}
+              setActiveTab={setActiveTab}
+              onSelectCategory={handleSelectCategoryFromHome}
+            />
+          )}
+
+          {activeTab === 'realisations' && (
+            <RealisationsView
+              projects={ICDD_PROJECTS}
+              selectedCategory={selectedRealisationCategory}
+              onSelectCategory={setSelectedRealisationCategory}
               onOpenProject={handleOpenProject}
               openQuoteModal={() => handleOpenQuoteModal()}
             />
           )}
 
-          {activeTab === 'agence' && (
-            <AgencyView
+          {activeTab === 'services' && (
+            <ServicesView
               openQuoteModal={() => handleOpenQuoteModal()}
-              setActiveTab={setActiveTab}
+              onSelectCategory={handleSelectCategoryFromHome}
+              onExploreRealisations={() => setActiveTab('realisations')}
+            />
+          )}
+
+          {activeTab === 'shop' && (
+            <ShopView
+              openQuoteModal={() => handleOpenQuoteModal()}
             />
           )}
 
