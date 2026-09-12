@@ -5,9 +5,6 @@ import icddOfficialLogo from '../assets/images/icdd.jpeg';
 import realProject1 from '../assets/projects/real_project_1.jpg';
 import realProject2 from '../assets/projects/real_project_2.jpg';
 import realProject3 from '../assets/projects/real_project_3.jpg';
-import realProject4 from '../assets/projects/real_project_4.jpg';
-import realProject5 from '../assets/projects/real_project_5.jpg';
-import realProject6 from '../assets/projects/real_project_6.jpg';
 import realProject7 from '../assets/projects/real_project_7.jpg';
 
 // Photos réelles de cuisines modernes réalisées par ICDD
@@ -20,21 +17,172 @@ import porteModerne1 from '../assets/projects/porte_moderne_1.jpeg';
 import porteModerne2 from '../assets/projects/porte_moderne_2.jpeg';
 import porteModerne3 from '../assets/projects/porte_moderne_3.jpeg';
 
+// Photos réelles de décorations de bureaux réalisées par ICDD
+import bureauDeco1 from '../assets/projects/bureau_deco_1.jpg';
+import bureauDeco2 from '../assets/projects/bureau_deco_2.jpg';
+import bureauDeco3 from '../assets/projects/bureau_deco_3.jpg';
+import bureauDeco4 from '../assets/projects/bureau_deco_4.jpg';
+import bureauDeco5 from '../assets/projects/bureau_deco_5.jpg';
+import bureauDeco6 from '../assets/projects/bureau_deco_6.jpg';
+
+// Photos réelles de décoration de chambres ajoutées par ICDD
+import chambreDeco1 from '../assets/projects/chambre_deco_1.jpg';
+import chambreDeco2 from '../assets/projects/chambre_deco_2.jpg';
+import chambreDeco3 from '../assets/projects/chambre_deco_3.jpg';
+import chambreDeco4 from '../assets/projects/chambre_deco_4.jpg';
+import chambreDeco5 from '../assets/projects/chambre_deco_5.jpg';
+import chambreDeco6 from '../assets/projects/chambre_deco_6.jpg';
+import chambreDeco7 from '../assets/projects/chambre_deco_7.jpg';
+import chambreDeco8 from '../assets/projects/chambre_deco_8.jpg';
+import chambreDeco9 from '../assets/projects/chambre_deco_9.jpg';
+import chambreDeco10 from '../assets/projects/chambre_deco_10.jpg';
+import chambreDeco11 from '../assets/projects/chambre_deco_11.jpg';
+import chambreDeco12 from '../assets/projects/chambre_deco_12.jpg';
+
+// Nouvelles photos réelles ajoutées par le client pour ICDD Décoration & Aménagement
+import icddRealisation1 from '../assets/realisations/icdd_realisation_1.jpg';
+import icddRealisation2 from '../assets/realisations/icdd_realisation_2.jpg';
+import icddRealisation3 from '../assets/realisations/icdd_realisation_3.jpg';
+import icddRealisation4 from '../assets/realisations/icdd_realisation_4.jpg';
+import icddRealisation5 from '../assets/realisations/icdd_realisation_5.jpg';
+import icddRealisation6 from '../assets/realisations/icdd_realisation_6.jpg';
+import icddRealisation7 from '../assets/realisations/icdd_realisation_7.jpg';
+import icddRealisation8 from '../assets/realisations/icdd_realisation_8.jpg';
+import icddRealisation9 from '../assets/realisations/icdd_realisation_9.jpg';
+import icddRealisation10 from '../assets/realisations/icdd_realisation_10.jpg';
+import icddRealisation11 from '../assets/realisations/icdd_realisation_11.jpg';
+import icddRealisation12 from '../assets/realisations/icdd_realisation_12.jpg';
+import icddRealisation13 from '../assets/realisations/icdd_realisation_13.jpg';
+import icddRealisation14 from '../assets/realisations/icdd_realisation_14.jpg';
+import icddRealisation15 from '../assets/realisations/icdd_realisation_15.jpg';
+import icddRealisation16 from '../assets/realisations/icdd_realisation_16.jpg';
+import icddRealisation17 from '../assets/realisations/icdd_realisation_17.jpg';
+import icddRealisation18 from '../assets/realisations/icdd_realisation_18.jpg';
+import icddRealisation19 from '../assets/realisations/icdd_realisation_19.jpg';
+import icddRealisation20 from '../assets/realisations/icdd_realisation_20.jpg';
+import icddRealisation21 from '../assets/realisations/icdd_realisation_21.jpg';
+import icddRealisation22 from '../assets/realisations/icdd_realisation_22.jpg';
+import icddRealisation23 from '../assets/realisations/icdd_realisation_23.jpg';
+import icddRealisation24 from '../assets/realisations/icdd_realisation_24.jpg';
+import icddRealisation25 from '../assets/realisations/icdd_realisation_25.jpg';
+import icddRealisation26 from '../assets/realisations/icdd_realisation_26.jpg';
+import icddRealisation27 from '../assets/realisations/icdd_realisation_27.jpg';
+import icddRealisation28 from '../assets/realisations/icdd_realisation_28.jpg';
+import icddRealisation29 from '../assets/realisations/icdd_realisation_29.jpg';
+import icddRealisation30 from '../assets/realisations/icdd_realisation_30.jpg';
+import icddRealisation31 from '../assets/realisations/icdd_realisation_31.jpg';
+import icddRealisation32 from '../assets/realisations/icdd_realisation_32.jpg';
+import icddRealisation33 from '../assets/realisations/icdd_realisation_33.jpg';
+import icddRealisation34 from '../assets/realisations/icdd_realisation_34.jpg';
+import icddRealisation35 from '../assets/realisations/icdd_realisation_35.jpg';
+
+export const ICDD_REALISATIONS = [
+  icddRealisation1,
+  icddRealisation2,
+  icddRealisation3,
+  icddRealisation4,
+  icddRealisation5,
+  icddRealisation6,
+  icddRealisation7,
+  icddRealisation8,
+  icddRealisation9,
+  icddRealisation10,
+  icddRealisation11,
+  icddRealisation12,
+  icddRealisation13,
+  icddRealisation14,
+  icddRealisation15,
+  icddRealisation16,
+  icddRealisation17,
+  icddRealisation18,
+  icddRealisation19,
+  icddRealisation20,
+  icddRealisation21,
+  icddRealisation22,
+  icddRealisation23,
+  icddRealisation24,
+  icddRealisation25,
+  icddRealisation26,
+  icddRealisation27,
+  icddRealisation28,
+  icddRealisation29,
+  icddRealisation30,
+  icddRealisation31,
+  icddRealisation32,
+  icddRealisation33,
+  icddRealisation34,
+  icddRealisation35,
+];
+
 export const ICDD_ASSETS = {
   logo: icddOfficialLogo,
   project1: realProject1,
   project2: realProject2,
   project3: realProject3,
-  project4: realProject4,
-  project5: realProject5,
-  project6: realProject6,
+  project4: icddRealisation4,
+  project5: icddRealisation5,
+  project6: icddRealisation6,
   project7: realProject7,
+  realisations: ICDD_REALISATIONS,
+  r1: icddRealisation1,
+  r2: icddRealisation2,
+  r3: icddRealisation3,
+  r4: icddRealisation4,
+  r5: icddRealisation5,
+  r6: icddRealisation6,
+  r7: icddRealisation7,
+  r8: icddRealisation8,
+  r9: icddRealisation9,
+  r10: icddRealisation10,
+  r11: icddRealisation11,
+  r12: icddRealisation12,
+  r13: icddRealisation13,
+  r14: icddRealisation14,
+  r15: icddRealisation15,
+  r16: icddRealisation16,
+  r17: icddRealisation17,
+  r18: icddRealisation18,
+  r19: icddRealisation19,
+  r20: icddRealisation20,
+  r21: icddRealisation21,
+  r22: icddRealisation22,
+  r23: icddRealisation23,
+  r24: icddRealisation24,
+  r25: icddRealisation25,
+  r26: icddRealisation26,
+  r27: icddRealisation27,
+  r28: icddRealisation28,
+  r29: icddRealisation29,
+  r30: icddRealisation30,
+  r31: icddRealisation31,
+  r32: icddRealisation32,
+  r33: icddRealisation33,
+  r34: icddRealisation34,
+  r35: icddRealisation35,
   cuisine1: cuisineModerne1,
   cuisine2: cuisineModerne2,
   cuisine3: cuisineModerne3,
   porte1: porteModerne1,
   porte2: porteModerne2,
   porte3: porteModerne3,
+  bureau1: bureauDeco1,
+  bureau2: bureauDeco2,
+  bureau3: bureauDeco3,
+  bureau4: bureauDeco4,
+  bureau5: bureauDeco5,
+  bureau6: bureauDeco6,
+  chambre1: chambreDeco1,
+  chambre2: chambreDeco2,
+  chambre3: chambreDeco3,
+  chambre4: chambreDeco4,
+  chambre5: chambreDeco5,
+  chambre6: chambreDeco6,
+  chambre7: chambreDeco7,
+  chambre8: chambreDeco8,
+  chambre9: chambreDeco9,
+  chambre10: chambreDeco10,
+  chambre11: chambreDeco11,
+  chambre12: chambreDeco12,
 };
 
 export const ICDD_OFFERS_CONFIG: Record<DecorOffer, { basePrice: number; description: string; badge: string; minWallM2: number }> = {
@@ -86,12 +234,12 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 850,
     description: 'Transformation intégrale d’un appartement résidentiel avec décloisonnement, faux-plafonds en staff, gorges lumineuses et agencements sur mesure.',
     fullDescription: 'Projet emblématique d’aménagement intérieur complet réalisé par ICDD. Nos équipes d’architectes d’intérieur, maîtres staffeurs et peintres décorateurs ont orchestré la métamorphose de cet appartement : restructuration des volumes, intégration d’un éclairage indirect raffiné, pose de menuiseries sur mesure et création d’un salon de réception chaleureux.',
-    coverImage: realProject4,
+    coverImage: realProject2,
     galleryImages: [
-      realProject4,
+      realProject2,
       realProject1,
       realProject7,
-      realProject6
+      realProject3
     ],
     services: [
       'Architecture intérieure & Plans 3D',
@@ -134,8 +282,8 @@ export const ICDD_PROJECTS: Project[] = [
     galleryImages: [
       realProject7,
       realProject1,
-      realProject4,
-      realProject6
+      realProject2,
+      realProject3
     ],
     services: [
       'Aménagement complet',
@@ -175,9 +323,9 @@ export const ICDD_PROJECTS: Project[] = [
     coverImage: realProject3,
     galleryImages: [
       realProject3,
-      realProject4,
-      realProject5,
-      realProject2
+      realProject2,
+      realProject1,
+      realProject7
     ],
     services: [
       'Conception d’espace',
@@ -369,7 +517,316 @@ export const ICDD_PROJECTS: Project[] = [
     featured: false
   },
 
-  // --- 4. DÉCORATION ---
+  // --- 4. BUREAUX & ESPACES PROFESSIONNELS (Réalisations Déco Authentiques ICDD) ---
+  {
+    id: 'bureau-direction-moderne-kinshasa',
+    title: 'Décoration Bureau de Direction – Kinshasa Gombe',
+    subtitle: 'Habillage mural contemporain, éclairage feutré et acoustique de prestige',
+    location: 'Kinshasa, Gombe',
+    area: 55,
+    year: 2026,
+    mainCategory: 'Bureaux',
+    category: 'Décoration Top Modèle',
+    style: 'Luxe Contemporain',
+    budgetRange: '≥ 700 $',
+    startingPrice: 850,
+    description: 'Véritable réalisation de décoration pour bureau de direction : habillage mural design, travail des textures, ambiance feutrée propice à la concentration et aux réceptions d’affaires.',
+    fullDescription: 'Projet réel d’aménagement et de décoration de bureau d’affaires exécuté par les équipes ICDD à Kinshasa. Nos architectes d’intérieur et artisans peintres ont façonné un espace de travail alliant prestance institutionnelle, confort acoustique et pureté visuelle : habillage mural géométrique contemporain, palette chromatique apaisante favorisant la réflexion, éclairage indirect soigné et intégration d’éléments de menuiserie sur mesure.',
+    coverImage: bureauDeco1,
+    galleryImages: [
+      bureauDeco1,
+      bureauDeco2,
+      bureauDeco3,
+      bureauDeco4,
+      bureauDeco5,
+      bureauDeco6
+    ],
+    services: [
+      'Décoration murale bureau',
+      'Architecture & Agencement pro',
+      'Éclairage architectural LED',
+      'Isolation acoustique murale',
+      'Finitions Haute Précision'
+    ],
+    specs: {
+      duration: '1 à 2 Semaines',
+      wallSurface: '55 m² de surfaces murales aménagées',
+      finishType: 'Habillage Mural Contemporain & Peinture Velours',
+      materials: ['Enduits texturés haut de gamme', 'Peintures écologiques dépolluantes', 'Boiseries et panneaux muraux nobles', 'Profilés laqués'],
+      lighting: 'Gorges lumineuses LED 3000K et spots d’accentuation'
+    },
+    features: [
+      'Chantier authentique photographié in situ après réalisation par ICDD',
+      'Atmosphère prestigieuse favorisant la productivité et les réceptions',
+      'Harmonie esthétique sur mesure adaptée à l’image corporative',
+      'Matériaux durables haute résistance'
+    ],
+    featured: true
+  },
+  {
+    id: 'bureau-collaboratif-open-space-kinshasa',
+    title: 'Décoration Bureau & Espace Collaboratif – Kinshasa',
+    subtitle: 'Design épuré, claustras bois, peintures veloutées et clarté naturelle',
+    location: 'Kinshasa, Ngaliema',
+    area: 75,
+    year: 2026,
+    mainCategory: 'Bureaux',
+    category: 'Décoration luxueuse',
+    style: 'Moderne & Épuré',
+    budgetRange: '500 $ - 700 $',
+    startingPrice: 650,
+    description: 'Décoration murale et agencement d’un espace de travail professionnel : mariage de textures modernes, confort visuel et élégance fonctionnelle.',
+    fullDescription: 'Autre réalisation réelle signée ICDD pour un bureau professionnel à Kinshasa. Nos équipes ont orchestré la mise en peinture des cloisons avec des camaïeux neutres chauds, l’intégration de panneaux acoustiques décoratifs et la mise en lumière des postes de travail pour un confort visuel optimal tout au long de la journée.',
+    coverImage: bureauDeco2,
+    galleryImages: [
+      bureauDeco2,
+      bureauDeco3,
+      bureauDeco4,
+      bureauDeco5,
+      bureauDeco6,
+      bureauDeco1
+    ],
+    services: [
+      'Décoration espace de travail',
+      'Panneaux muraux & claustras',
+      'Peinture mate soyeuse',
+      'Confort visuel & LED'
+    ],
+    specs: {
+      duration: '5 à 8 Jours',
+      wallSurface: '75 m² de surfaces murales',
+      finishType: 'Finition Mate Soyeuse & Murs d’Accent',
+      materials: ['Peintures mates lavables haute résistance', 'Enduits lissés au diamant', 'Profils décoratifs'],
+      lighting: 'Éclairage indirect uniforme sans éblouissement'
+    },
+    features: [
+      'Véritable projet de décoration pour bureau réalisé par ICDD',
+      'Clarté lumineuse accrue et sensation d’espace maximisée',
+      'Revêtements muraux faciles d’entretien et très résistants'
+    ],
+    featured: true
+  },
+  {
+    id: 'salle-reunion-cabinet-direction',
+    title: 'Décoration Salle de Réunion & Cabinet Exécutif – Kinshasa',
+    subtitle: 'Panneaux décoratifs d’accent, staff soigné et finitions de prestige',
+    location: 'Kinshasa, Limete',
+    area: 45,
+    year: 2026,
+    mainCategory: 'Bureaux',
+    category: 'Décoration Gold',
+    style: 'Gold Prestige',
+    budgetRange: '≥ 700 $',
+    startingPrice: 750,
+    description: 'Aménagement décoratif d’une salle de réunion et de décision : mur d’accent soigné, retombées de staff et éclairage d’ambiance haut de gamme.',
+    fullDescription: 'Pour cette salle de réunion stratégique, ICDD a réalisé une composition murale graphique combinant enduits d’art, baguettes d’encadrement fines et retombée de plafond avec rubans LED dissimulés pour des présentations et des échanges dans un cadre de grand standing.',
+    coverImage: bureauDeco3,
+    galleryImages: [
+      bureauDeco3,
+      bureauDeco4,
+      bureauDeco5,
+      bureauDeco6,
+      bureauDeco1,
+      bureauDeco2
+    ],
+    services: [
+      'Décoration salle de réunion',
+      'Mur de présentation & vidéoprojection',
+      'Staff & retombées lumineuses',
+      'Peinture haute résistance'
+    ],
+    specs: {
+      duration: '4 à 6 Jours',
+      wallSurface: '45 m² de surfaces murales',
+      finishType: 'Finition Gold & Cadres Muraux Géométriques',
+      materials: ['Panneaux décoratifs', 'Peinture satinée anti-reflets', 'Cimaises contemporaines'],
+      lighting: 'Gradation lumineuse adaptée aux visioconférences'
+    },
+    features: [
+      'Ambiance de travail prestigieuse et chaleureuse',
+      'Atténuation des résonances acoustiques',
+      'Finitions d’artisanat d’art signées ICDD'
+    ],
+    featured: false
+  },
+
+  // --- 5. CHAMBRES & SUITES PARENTALES (Réalisations Déco Authentiques ICDD) ---
+  {
+    id: 'chambre-suite-royale-gombe',
+    title: 'Décoration Suite Parentale Royale – Kinshasa Gombe',
+    subtitle: 'Tête de lit sculptée, panneaux muraux veloutés et éclairage feutré',
+    location: 'Kinshasa, Gombe',
+    area: 48,
+    year: 2026,
+    mainCategory: 'Chambres',
+    category: 'Décoration Top Modèle',
+    style: 'Haute Couture',
+    budgetRange: '≥ 700 $',
+    startingPrice: 750,
+    description: 'Véritable réalisation de décoration de chambre parentale de grand standing : travail des reliefs muraux, tête de lit sur mesure et palette chromatique apaisante.',
+    fullDescription: 'Projet d’exception réalisé par ICDD pour une suite parentale de maître à Kinshasa Gombe. Nos maîtres peintres et décorateurs ont conçu une ambiance feutrée et enveloppante : habillage mural avec panneaux acoustiques décoratifs, finitions velours mates très douces au toucher, éclairage indirect en gorge lumineuse et harmonie parfaite avec le mobilier.',
+    coverImage: chambreDeco1,
+    galleryImages: [
+      chambreDeco1,
+      chambreDeco2,
+      chambreDeco3,
+      chambreDeco4,
+      chambreDeco5,
+      chambreDeco6
+    ],
+    services: [
+      'Décoration chambre parentale',
+      'Habillage mural de tête de lit',
+      'Staff & gorges lumineuses',
+      'Peintures dépolluantes velours',
+      'Harmonie textile & teintes'
+    ],
+    specs: {
+      duration: '5 à 8 Jours',
+      wallSurface: '48 m² de surfaces murales',
+      finishType: 'Finition Top Modèle & Tête de Lit Sculptée',
+      materials: ['Panneaux décoratifs rembourrés', 'Peintures écologiques veloutées', 'Profils laqués or mat'],
+      lighting: 'Gorges lumineuses LED 2700K chaleureuses et liseuses intégrées'
+    },
+    features: [
+      'Chantier réel photographié après exécution par ICDD',
+      'Atmosphère intimiste et reposante haut de gamme',
+      'Matériaux sains sans odeur certifiés pour chambre',
+      'Isolation acoustique soignée pour un sommeil préservé'
+    ],
+    featured: true
+  },
+  {
+    id: 'chambre-cosy-moderne-ngaliema',
+    title: 'Décoration Chambre Moderne & Cosy – Kinshasa Ngaliema',
+    subtitle: 'Camaïeux doux, boiseries décoratives et clarté naturelle apaisante',
+    location: 'Kinshasa, Ngaliema',
+    area: 38,
+    year: 2026,
+    mainCategory: 'Chambres',
+    category: 'Décoration luxueuse',
+    style: 'Moderne & Épuré',
+    budgetRange: '500 $ - 700 $',
+    startingPrice: 520,
+    description: 'Aménagement décoratif d’une chambre moderne : teintes neutres chaleureuses, boiseries contemporaines et finitions soignées.',
+    fullDescription: 'Autre projet authentique réalisé par les artisans ICDD à Kinshasa. Pour cette chambre moderne, l’accent a été mis sur la sérénité et le confort visuel : enduits fins lissés, mur d’accent graphique, intégration discrète des rangements et mise en valeur de la lumière du jour.',
+    coverImage: chambreDeco5,
+    galleryImages: [
+      chambreDeco5,
+      chambreDeco6,
+      chambreDeco7,
+      chambreDeco8,
+      chambreDeco9,
+      chambreDeco10
+    ],
+    services: [
+      'Décoration chambre moderne',
+      'Mur d’accent graphique',
+      'Peinture mate lavable',
+      'Dressing coordonné'
+    ],
+    specs: {
+      duration: '4 à 6 Jours',
+      wallSurface: '38 m² de surfaces murales',
+      finishType: 'Finition Luxueuse & Mur d’Accent',
+      materials: ['Enduits à la chaux lissés', 'Peintures lessivables haute qualité', 'Baguettes contemporaines'],
+      lighting: 'Éclairage indirect et suspensions de chevet'
+    },
+    features: [
+      'Projet authentique de décoration de chambre ICDD',
+      'Élégance intemporelle et sensation d’espace maximisée',
+      'Entretien facile et finitions durables'
+    ],
+    featured: true
+  },
+  {
+    id: 'chambre-hotes-suite-gold-limete',
+    title: 'Décoration Suite d’Hôtes Gold – Kinshasa Limete',
+    subtitle: 'Moulures raffinées, touches dorées et ambiance hôtelière prestigieuse',
+    location: 'Kinshasa, Limete',
+    area: 42,
+    year: 2026,
+    mainCategory: 'Chambres',
+    category: 'Décoration Gold',
+    style: 'Gold Prestige',
+    budgetRange: '500 $ - 700 $',
+    startingPrice: 620,
+    description: 'Décoration haut de gamme pour chambre d’hôtes de prestige : cadres muraux, staff épuré et finitions satinées soignées.',
+    fullDescription: 'ICDD a transformé cette chambre en une suite de prestige digne des plus beaux hôtels : cadres muraux moulurés, retombée de faux-plafond avec ruban LED discret, peinture satinée haute réflectance et patines dorées subtiles.',
+    coverImage: chambreDeco9,
+    galleryImages: [
+      chambreDeco9,
+      chambreDeco10,
+      chambreDeco11,
+      chambreDeco12,
+      chambreDeco1,
+      chambreDeco3
+    ],
+    services: [
+      'Décoration style hôtelier',
+      'Moulures et cadres muraux',
+      'Staff & corniche lumineuse',
+      'Patines décoratives'
+    ],
+    specs: {
+      duration: '5 à 7 Jours',
+      wallSurface: '42 m² de surfaces murales',
+      finishType: 'Finition Gold & Cadres Moulurés',
+      materials: ['Cimaises de style', 'Peinture soyeuse grand passage', 'Détails dorés métallisés'],
+      lighting: 'Rétroéclairage plafond et appliques murales'
+    },
+    features: [
+      'Ambiance raffinée et chaleureuse',
+      'Qualité de finition artisanale exceptionnelle',
+      'Valorisation esthétique immédiate de la suite'
+    ],
+    featured: false
+  },
+  {
+    id: 'chambre-harmonie-zen-mont-fleury',
+    title: 'Décoration Chambre Zen & Dressing – Kinshasa Mont-Fleury',
+    subtitle: 'Équilibre des volumes, niches lumineuses et enduits soyeux',
+    location: 'Kinshasa, Mont-Fleury',
+    area: 35,
+    year: 2026,
+    mainCategory: 'Chambres',
+    category: 'Décoration classique',
+    style: 'Moderne & Épuré',
+    budgetRange: '350 $ - 500 $',
+    startingPrice: 420,
+    description: 'Décoration sobre et élégante d’une chambre d’appartement avec niches murales décoratives et teintes apaisantes.',
+    fullDescription: 'Réalisation sur mesure pour une chambre contemporaine à Mont-Fleury. Préparation minutieuse des supports, application d’enduits extra-fins et peinture veloutée anti-reflets créant un cocon de tranquillité.',
+    coverImage: chambreDeco11,
+    galleryImages: [
+      chambreDeco11,
+      chambreDeco12,
+      chambreDeco7,
+      chambreDeco8,
+      chambreDeco2,
+      chambreDeco4
+    ],
+    services: [
+      'Décoration chambre contemporaine',
+      'Préparation soignée des murs',
+      'Niches décoratives staff',
+      'Peinture velours'
+    ],
+    specs: {
+      duration: '3 à 5 Jours',
+      wallSurface: '35 m² de surfaces murales',
+      finishType: 'Finition Velours & Niches Décoratives',
+      materials: ['Peintures dépolluantes', 'Enduits extra-fins', 'Plâtre staff haute densité'],
+      lighting: 'Spots basse consommation et liseuses'
+    },
+    features: [
+      'Cocon de calme propice au repos',
+      'Finitions nettes aux angles et raccords impeccables',
+      'Excellent rapport qualité/prix'
+    ],
+    featured: false
+  },
+
+  // --- 6. DÉCORATION ---
   {
     id: 'residence-top-modele',
     title: 'Décoration Salon Royal – Reliefs & Matières',
@@ -384,12 +841,12 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 800,
     description: 'Finitions sur-mesure d’exception pour un grand salon avec effets de matières artistiques et niches lumineuses.',
     fullDescription: 'Réalisation emblématique de la collection Décoration d’ICDD. Nos artisans peintres et décorateurs ont créé un jeu de textures murales uniques alliant enduit à la chaux poli, effets de feuilles dorées subtiles et préparation murale au millimètre près.',
-    coverImage: realProject4,
+    coverImage: realProject3,
     galleryImages: [
-      realProject4,
+      realProject3,
       realProject1,
       realProject7,
-      realProject6
+      realProject2
     ],
     services: [
       'Décoration artistique',
@@ -430,8 +887,8 @@ export const ICDD_PROJECTS: Project[] = [
     galleryImages: [
       realProject1,
       realProject7,
-      realProject6,
-      realProject4
+      realProject3,
+      realProject2
     ],
     services: [
       'Décoration chambre',
@@ -467,9 +924,9 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 500,
     description: 'Transformation d’une salle de séjour avec enduit minéral texturé façon stuc vénitien et palette chromatique chaleureuse.',
     fullDescription: 'La Décoration Luxueuse met en scène un enduit décoratif minéral texturé, apportant de la profondeur et du relief aux murs. Les lignes modernes structurent le salon tout en conservant une grande douceur visuelle.',
-    coverImage: realProject6,
+    coverImage: realProject3,
     galleryImages: [
-      realProject6,
+      realProject3,
       realProject7,
       realProject2,
       realProject1
@@ -513,9 +970,9 @@ export const ICDD_PROJECTS: Project[] = [
     coverImage: realProject1,
     galleryImages: [
       realProject1,
-      realProject4,
+      realProject2,
       realProject7,
-      realProject2
+      realProject3
     ],
     services: [
       'Faux-plafond en staff',
@@ -558,7 +1015,7 @@ export const ICDD_PROJECTS: Project[] = [
       realProject7,
       realProject2,
       realProject3,
-      realProject5
+      realProject1
     ],
     services: [
       'Corniches classiques de staff',
@@ -595,11 +1052,11 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 250,
     description: 'Rafraîchissement complet et peinture impeccable pour un intérieur lumineux à prix maîtrisé.',
     fullDescription: 'Idéal pour redonner vie à une pièce, l’offre Décoration simple assure un rendu net et contemporain. Préparation soignée des murs, rebouchage des imperfections et application de peintures certifiées sans odeur.',
-    coverImage: realProject5,
+    coverImage: realProject2,
     galleryImages: [
-      realProject5,
+      realProject2,
       realProject3,
-      realProject2
+      realProject1
     ],
     services: [
       'Préparation des murs',
@@ -620,6 +1077,135 @@ export const ICDD_PROJECTS: Project[] = [
       'Rapport qualité / prix optimal'
     ],
     featured: false
+  },
+  // --- NOUVEAUX CHANTIERS & RÉALISATIONS RÉELLES ICDD ---
+  {
+    id: 'realisation-salon-prestige-kinshasa',
+    title: 'Salon Réception & Plafond Sculpté LED – Macampagne',
+    subtitle: 'Création d’un faux plafond contemporain en staff avec éclairage scénographique',
+    location: 'Kinshasa, Macampagne',
+    area: 95,
+    year: 2026,
+    mainCategory: 'Appartements',
+    category: 'Décoration Top Modèle',
+    style: 'Haute Couture',
+    budgetRange: '≥ 700 $',
+    startingPrice: 900,
+    description: 'Chantier complet exécuté par ICDD : staffage profilé, gorges lumineuses dissimulées, finitions laquées et harmonie générale.',
+    fullDescription: 'Réalisation emblématique mettant en valeur la maîtrise artisanale d’ICDD. Les plafonds ont été structurés par paliers géométriques avec rétro-éclairage LED chaleureux, combinés à un traitement mural soigné pour une acoustique feutrée.',
+    coverImage: icddRealisation4,
+    galleryImages: [
+      icddRealisation4,
+      icddRealisation1,
+      icddRealisation2,
+      icddRealisation3,
+      icddRealisation7,
+      icddRealisation11
+    ],
+    services: [
+      'Staff architectural',
+      'Gorges LED dissimulées',
+      'Peinture satinée anti-trace',
+      'Habillages muraux design'
+    ],
+    specs: {
+      duration: '2 à 3 Semaines',
+      wallSurface: '95 m² de superficie',
+      finishType: 'Top Modèle & Staff armé',
+      materials: ['Plâtre de staff armé haute résistance', 'Enduit fin lissé au couteau', 'Peinture velours dépolluante'],
+      lighting: 'Rubans LED 24V dissimulés 3000K'
+    },
+    features: [
+      'Gorges lumineuses intégrées sans visibilité directe des LED',
+      'Murs lissés au millimètre près',
+      'Finitions d’angles impeccables',
+      'Chantier livré clé en main et nettoyé'
+    ],
+    featured: true
+  },
+  {
+    id: 'realisation-suite-moderne-kinshasa',
+    title: 'Suite Résidentielle & Décoration Murale – Ngaliema',
+    subtitle: 'Ambiance feutrée avec jeux de lumières indirectes et tête de lit sculptée',
+    location: 'Kinshasa, Ngaliema',
+    area: 55,
+    year: 2026,
+    mainCategory: 'Chambres',
+    category: 'Décoration Gold',
+    style: 'Gold Prestige',
+    budgetRange: '500 $ - 700 $',
+    startingPrice: 650,
+    description: 'Conception et pose de staffs décoratifs pour chambre parentale avec intégration de luminaires architecturaux.',
+    fullDescription: 'Projet d’aménagement intérieur d’une suite parentale : plafond staff avec relief en creux, intégration de spots encastrés anti-éblouissement et revêtement mural haut de gamme pour une atmosphère relaxante.',
+    coverImage: icddRealisation16,
+    galleryImages: [
+      icddRealisation16,
+      icddRealisation12,
+      icddRealisation13,
+      icddRealisation18,
+      icddRealisation21
+    ],
+    services: [
+      'Plafond en staff sur mesure',
+      'Moulures et gorges LED',
+      'Peinture chambre sans COV',
+      'Tête de lit personnalisée'
+    ],
+    specs: {
+      duration: '1 à 2 Semaines',
+      wallSurface: '55 m²',
+      finishType: 'Décoration Gold & Staff fin',
+      materials: ['Staff fibré', 'Peintures écologiques satinées', 'Boiseries travaillées'],
+      lighting: 'Éclairage tamisé scénarisé'
+    },
+    features: [
+      'Isolation acoustique améliorée',
+      'Éclairage chaleureux adapté au repos',
+      'Finition lisse satinée sans imperfection'
+    ],
+    featured: true
+  },
+  {
+    id: 'realisation-staff-haute-precision',
+    title: 'Staff d’Art & Moulures Décoratives – Gombe',
+    subtitle: 'Maîtrise artisanale du plâtre et des reliefs pour espaces d’apparat',
+    location: 'Kinshasa, Gombe',
+    area: 80,
+    year: 2026,
+    mainCategory: 'Staff',
+    category: 'Décoration Top Modèle',
+    style: 'Luxe Contemporain',
+    budgetRange: '≥ 700 $',
+    startingPrice: 850,
+    description: 'Pose experte de corniches travaillées, coffrages suspendus et rosaces artisanales pour villas de standing.',
+    fullDescription: 'Chantier illustrant le savoir-faire de nos maîtres staffeurs à Kinshasa. Du coffrage des poutres à la sculpture des détails, chaque courbe est exécutée selon les règles de l’art pour sublimer la hauteur sous plafond.',
+    coverImage: icddRealisation26,
+    galleryImages: [
+      icddRealisation26,
+      icddRealisation24,
+      icddRealisation28,
+      icddRealisation32,
+      icddRealisation35
+    ],
+    services: [
+      'Staff armé grande portée',
+      'Corniches et cimaises profilées',
+      'Plafond suspendu multi-niveaux',
+      'Finition au blanc pur mat'
+    ],
+    specs: {
+      duration: '2 Semaines',
+      wallSurface: '80 m² de plafonds',
+      finishType: 'Haute Précision Staff',
+      materials: ['Plâtre de staff sélectionné', 'Armatures acier galvanisé', 'Fibre de sisal'],
+      lighting: 'Gorges d’éclairage indirect périphérique'
+    },
+    features: [
+      'Résistance accrue au climat tropical',
+      'Raccords d’angles invisibles',
+      'Garantie décennale sur la structure de staff'
+    ],
+    featured: true
   }
 ];
 

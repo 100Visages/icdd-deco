@@ -64,12 +64,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
   };
 
   return (
-    <div id="contact-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-28 sm:pb-20">
+    <div id="contact-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-8 sm:space-y-10 pb-28 sm:pb-20">
         
         {/* Simple & Elegant Header */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-xl">
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
@@ -87,18 +87,18 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
               <span>Contact & Devis</span>
             </div>
             
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               Contactez ICDD
             </h2>
-            <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-600 leading-relaxed font-normal">
               Vous avez un projet ? Parlez-nous de votre projet et obtenez un accompagnement adapté et sur mesure.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
             <button
               onClick={openQuoteModal}
-              className="px-6 sm:px-8 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#005EA6]/20 border border-sky-400/40 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+              className="px-8 py-4 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#005EA6]/20 border border-sky-400/40 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
             >
               <FileText className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
@@ -107,12 +107,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
         </div>
 
         {/* Quick Contact Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           
           {/* 1. Phone */}
           <a
             href="tel:+243897504570"
-            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
+            className="group bg-white p-5 lg:p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
           >
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
@@ -133,7 +133,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
             href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20d%27am%C3%A9nagement."
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-emerald-500 hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
+            className="group bg-white p-5 lg:p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:border-emerald-500 hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
           >
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
@@ -152,7 +152,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
           {/* 3. Email */}
           <a
             href="mailto:contact@icdd-design.com"
-            className="group bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
+            className="group bg-white p-5 lg:p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:border-[#005EA6] hover:shadow-md hover:scale-[1.02] transition-all flex flex-col justify-between"
           >
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
@@ -169,7 +169,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
           </a>
 
           {/* 4. Adresse */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+          <div className="bg-white p-5 lg:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div className="space-y-3">
               <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center border border-sky-100">
                 <MapPin className="w-5 h-5" />
@@ -187,53 +187,53 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
         </div>
 
         {/* Main Interactive Form & Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           
-          {/* Left Details (2 cols) */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
-              <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+          {/* Left Details (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white p-6 lg:p-8 rounded-[28px] border border-slate-200/80 shadow-sm space-y-5">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">
                 Horaires & Engagement
               </h3>
 
-              <div className="flex items-start gap-3.5 text-xs text-slate-700">
-                <div className="w-9 h-9 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center flex-shrink-0 border border-sky-100">
+              <div className="flex items-start gap-3.5 text-xs sm:text-sm text-slate-700">
+                <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#005EA6] flex items-center justify-center flex-shrink-0 border border-sky-100">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
                   <strong className="block text-slate-900 font-bold text-sm">Disponibilité :</strong>
                   <span>Du lundi au samedi : 08h00 – 18h00</span>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Visites techniques et métrés sur site à Kinshasa.</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Visites techniques et métrés sur site à Kinshasa.</p>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-sky-50/80 border border-sky-200/60 flex items-start gap-3">
-                <ShieldCheck className="w-4 h-4 text-[#005EA6] flex-shrink-0 mt-0.5" />
-                <div className="text-xs text-slate-800 leading-relaxed">
+              <div className="p-4 sm:p-5 rounded-2xl bg-sky-50/80 border border-sky-200/60 flex items-start gap-3.5">
+                <ShieldCheck className="w-5 h-5 text-[#005EA6] flex-shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm text-slate-800 leading-relaxed">
                   <strong>Engagement ICDD :</strong> Devis clair, respect scrupuleux du cahier des charges et des délais annoncés.
                 </div>
               </div>
             </div>
 
-            <div className="p-6 rounded-[28px] bg-gradient-to-br from-[#005EA6] to-[#0077c8] text-white shadow-lg space-y-3">
+            <div className="p-6 lg:p-8 rounded-[28px] bg-gradient-to-br from-[#005EA6] to-[#0077c8] text-white shadow-lg space-y-4">
               <span className="text-xs uppercase font-extrabold tracking-wider text-sky-200 block">
                 Estimation Express
               </span>
-              <h4 className="text-lg font-black">Besoin d’un chiffrage précis ?</h4>
-              <p className="text-xs text-white/90 leading-relaxed font-normal">
+              <h4 className="text-xl font-black">Besoin d’un chiffrage précis ?</h4>
+              <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-normal">
                 Utilisez notre outil d'estimation guidée pour configurer votre projet (surface, pièces, finitions et staff) en 2 minutes.
               </p>
               <button
                 onClick={openQuoteModal}
-                className="w-full mt-2 py-3 rounded-full bg-white text-[#005EA6] font-black text-xs uppercase tracking-wider hover:bg-sky-50 transition-all cursor-pointer shadow-md"
+                className="w-full mt-2 py-3.5 rounded-full bg-white text-[#005EA6] font-black text-xs uppercase tracking-wider hover:bg-sky-50 transition-all cursor-pointer shadow-md"
               >
                 Lancer le simulateur de devis
               </button>
             </div>
           </div>
 
-          {/* Right Column: Contact Message Form (3 cols) */}
-          <div className="lg:col-span-3 bg-white p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm">
+          {/* Right Column: Contact Message Form (7 cols) */}
+          <div className="lg:col-span-7 bg-white p-6 sm:p-8 lg:p-10 rounded-[28px] border border-slate-200/80 shadow-sm">
             <h3 className="text-lg font-black text-slate-900 mb-1">
               Envoyez-nous un message
             </h3>

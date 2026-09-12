@@ -1,6 +1,6 @@
 export type NavTab = 'accueil' | 'realisations' | 'services' | 'shop' | 'contact';
 
-export type RealisationCategory = 'Tous' | 'Appartements' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
+export type RealisationCategory = 'Tous' | 'Appartements' | 'Chambres' | 'Bureaux' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
 
 export type ShopCategory = 'Tous' | 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux';
 
@@ -18,7 +18,7 @@ export interface Project {
   location: string;
   area: number; // m² mural ou espace
   year: number;
-  mainCategory: 'Appartements' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
+  mainCategory: 'Appartements' | 'Chambres' | 'Bureaux' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
   category: DecorOffer;
   style: 'Moderne & Épuré' | 'Classique Élégant' | 'Luxe Contemporain' | 'Gold Prestige' | 'Haute Couture';
   budgetRange: '250 $ - 350 $' | '350 $ - 500 $' | '500 $ - 700 $' | '≥ 700 $';

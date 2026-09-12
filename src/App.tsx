@@ -50,12 +50,12 @@ export default function App() {
   };
 
   return (
-    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex items-center justify-center p-0 sm:p-2 lg:p-3 xl:p-4 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
+    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex items-center justify-center p-0 sm:p-1.5 lg:p-2 xl:p-2.5 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
       
       {/* Outer Pill-Shaped Glass Frame */}
       <main 
         id="pill-shaped-container"
-        className="relative w-full h-full max-w-none rounded-none sm:rounded-[28px] lg:rounded-[36px] xl:rounded-[44px] border-0 sm:border-[2.5px] border-white/95 shadow-[0_20px_50px_-10px_rgba(0,40,90,0.08)] overflow-hidden flex flex-col bg-white/95 transition-all duration-500"
+        className="relative w-full h-full max-w-none rounded-none sm:rounded-[24px] lg:rounded-[32px] xl:rounded-[38px] border-0 sm:border-[2px] border-white/95 shadow-[0_20px_50px_-10px_rgba(0,40,90,0.08)] overflow-hidden flex flex-col bg-white/95 transition-all duration-500"
       >
         
         {/* Main Background Image (Luminous Sunlit Luxury ICDD Interior Architecture) */}

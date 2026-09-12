@@ -24,7 +24,7 @@ export const ICDD_SERVICES: ServiceItem[] = [
     shortDesc: 'Création d’ambiances élégantes et harmonieuses pour maisons, appartements, bureaux et espaces de prestige.',
     fullDesc: 'L’art de composer avec la lumière, les textures et les couleurs. Nous concevons des atmosphères uniques adaptées à votre personnalité : ambiances épurées contemporaines, chaleur des matières nobles, ou raffinement Haute Couture avec patines et dorures.',
     iconName: 'Sparkles',
-    image: ICDD_ASSETS.project4,
+    image: ICDD_ASSETS.project2,
     points: [
       'Création de planches d’ambiance et nuanciers sur mesure',
       'Habillage mural d’exception (stuc, velours minéral, reliefs 3D)',
@@ -54,7 +54,7 @@ export const ICDD_SERVICES: ServiceItem[] = [
     shortDesc: 'Travaux de peinture et finitions soignées pour donner aux espaces leur aspect final parfait.',
     fullDesc: 'Une préparation méticuleuse des supports et des applications sans raccords visibles. Nous maîtrisons l’ensemble des finitions : peintures veloutées dépolluantes, laques satinées, enduits à la chaux polis, stuc vénitien et touches dorées subtiles.',
     iconName: 'Paintbrush',
-    image: ICDD_ASSETS.project6,
+    image: ICDD_ASSETS.project7,
     points: [
       'Préparation et lissage des murs au millimètre près',
       'Peintures velours, satinées, mates lavables écologiques',

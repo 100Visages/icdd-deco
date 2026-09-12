@@ -56,7 +56,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
       
       {/* Modal Glass Container */}
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] bg-white rounded-[24px] sm:rounded-[36px] border border-slate-200 shadow-2xl overflow-y-auto custom-scrollbar flex flex-col"
+        className="relative w-full max-w-5xl xl:max-w-6xl max-h-[92vh] bg-white rounded-[24px] sm:rounded-[36px] border border-slate-200 shadow-2xl overflow-y-auto custom-scrollbar flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         

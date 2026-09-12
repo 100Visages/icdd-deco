@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Project, RealisationCategory } from '../types';
-import { MapPin, ArrowUpRight, Search, Sparkles, Building2, Paintbrush, Layers, Bookmark, SlidersHorizontal, UtensilsCrossed, DoorClosed } from 'lucide-react';
+import { MapPin, ArrowUpRight, Search, Sparkles, Building2, Paintbrush, Layers, Bookmark, SlidersHorizontal, UtensilsCrossed, DoorClosed, Briefcase, BedDouble, Images, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ICDD_REALISATIONS } from '../data/projects';
 
 interface RealisationsViewProps {
   projects: Project[];
@@ -30,6 +31,7 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
     setInternalCategory(cat);
   };
   const [searchQuery, setSearchQuery] = useState('');
+  const [activePhotoModalIndex, setActivePhotoModalIndex] = useState<number | null>(null);
 
   const categories: { id: RealisationCategory; label: string; icon: React.ElementType; count: number }[] = [
     {
@@ -43,6 +45,18 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
       label: '🏠 Appartements',
       icon: Building2,
       count: projects.filter(p => p.mainCategory === 'Appartements').length,
+    },
+    {
+      id: 'Chambres',
+      label: '🛏️ Chambres',
+      icon: BedDouble,
+      count: projects.filter(p => p.mainCategory === 'Chambres').length,
+    },
+    {
+      id: 'Bureaux',
+      label: '💼 Bureaux & Pro',
+      icon: Briefcase,
+      count: projects.filter(p => p.mainCategory === 'Bureaux').length,
     },
     {
       id: 'Cuisines',
@@ -87,26 +101,26 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
   });
 
   return (
-    <div id="realisations-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
+    <div id="realisations-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Header Section */}
-        <div className="bg-white/95 backdrop-blur-2xl p-5 sm:p-8 rounded-[24px] sm:rounded-[32px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-end justify-between gap-5">
-          <div className="space-y-2 max-w-2xl">
+        <div className="bg-white/95 backdrop-blur-2xl p-5 sm:p-8 lg:p-10 rounded-[24px] sm:rounded-[32px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-end justify-between gap-5">
+          <div className="space-y-2 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80">
               <Sparkles className="w-3.5 h-3.5 text-[#005EA6]" />
               <span>Savoir-Faire & Chantiers Réalisés</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               Nos Réalisations
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
               Explorez nos projets réels livrés à Kinshasa : aménagement d’appartements complets, décors muraux et plafonds sculptés en staff.
             </p>
           </div>
 
           {/* Search bar */}
-          <div className="relative w-full md:w-72 flex-shrink-0">
+          <div className="relative w-full md:w-80 lg:w-96 flex-shrink-0">
             <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
@@ -166,8 +180,8 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
           )}
         </div>
 
-        {/* Realizations Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
+        {/* Realizations Grid - optimized for desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-7">
           {filteredProjects.map((project) => (
             <div
               key={project.id}
@@ -182,7 +196,7 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_4.jpg';
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent" />
@@ -190,6 +204,10 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 {/* Main Category Badge */}
                 <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase text-[#005EA6] border border-slate-100 shadow-sm">
                   {project.mainCategory === 'Appartements' && '🏠 Appartement'}
+                  {project.mainCategory === 'Chambres' && '🛏️ Chambre & Suite'}
+                  {project.mainCategory === 'Bureaux' && '💼 Bureau & Pro'}
+                  {project.mainCategory === 'Cuisines' && '🍳 Cuisine'}
+                  {project.mainCategory === 'Portes' && '🚪 Porte & Menuiserie'}
                   {project.mainCategory === 'Décoration' && '🎨 Décoration'}
                   {project.mainCategory === 'Staff' && '✨ Staff & Plafonds'}
                 </div>
@@ -296,6 +314,116 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
             >
               Réinitialiser
             </button>
+          </div>
+        )}
+
+        {/* Section Galerie Complète des 35 Chantiers ICDD Réalisés */}
+        <div className="bg-white/95 backdrop-blur-2xl p-5 sm:p-8 lg:p-10 rounded-[24px] sm:rounded-[32px] border border-slate-200/80 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200/80 mb-2">
+                <Images className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Photothèque Réelle – 35 Photos de Chantiers</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Photos Réelles de nos Chantiers & Décors à Kinshasa
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Consultez l'ensemble des photos authentiques de nos réalisations : faux plafonds en staff armé, corniches, peintures haut de gamme et habillages contemporains.
+              </p>
+            </div>
+            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-3.5 py-1.5 rounded-full self-start sm:self-auto">
+              {ICDD_REALISATIONS.length} clichés haute définition
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3">
+            {ICDD_REALISATIONS.map((imgSrc, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActivePhotoModalIndex(idx)}
+                className="group relative aspect-square rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 cursor-pointer shadow-sm hover:shadow-md hover:scale-[1.03] transition-all duration-300"
+              >
+                <img
+                  src={imgSrc}
+                  alt={`Chantier ICDD ${idx + 1}`}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
+                  }}
+                />
+                <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/40 transition-colors flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 text-slate-900 rounded-full p-2 shadow-lg backdrop-blur-sm">
+                    <Eye className="w-4 h-4 text-[#005EA6]" />
+                  </div>
+                </div>
+                <div className="absolute bottom-1.5 left-2 bg-slate-950/70 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-xs">
+                  #{idx + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Modal Diaporama Grand Format pour les 35 Réalisations */}
+        {activePhotoModalIndex !== null && (
+          <div 
+            className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setActivePhotoModalIndex(null)}
+          >
+            <div 
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Bouton fermer */}
+              <button
+                onClick={() => setActivePhotoModalIndex(null)}
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 p-2.5 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors cursor-pointer"
+                title="Fermer"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Navigation Précédent */}
+              <button
+                onClick={() => setActivePhotoModalIndex((prev) => (prev !== null ? (prev - 1 + ICDD_REALISATIONS.length) % ICDD_REALISATIONS.length : null))}
+                className="absolute left-2 sm:left-4 z-10 p-3 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors cursor-pointer"
+                title="Photo précédente"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              {/* Image en grand */}
+              <div className="w-full flex items-center justify-center overflow-hidden rounded-2xl shadow-2xl max-h-[80vh]">
+                <img
+                  src={ICDD_REALISATIONS[activePhotoModalIndex]}
+                  alt={`Chantier ICDD N°${activePhotoModalIndex + 1}`}
+                  className="max-h-[80vh] w-auto max-w-full object-contain rounded-2xl"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
+                  }}
+                />
+              </div>
+
+              {/* Navigation Suivant */}
+              <button
+                onClick={() => setActivePhotoModalIndex((prev) => (prev !== null ? (prev + 1) % ICDD_REALISATIONS.length : null))}
+                className="absolute right-2 sm:right-4 z-10 p-3 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors cursor-pointer"
+                title="Photo suivante"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* Légende en bas */}
+              <div className="mt-4 text-center text-white">
+                <span className="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase">
+                  Photo {activePhotoModalIndex + 1} sur {ICDD_REALISATIONS.length} — Réalisation ICDD Kinshasa
+                </span>
+              </div>
+            </div>
           </div>
         )}
 

@@ -22,7 +22,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: 'Prix au pot (15L) ou au m²',
     priceValue: 85,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project6,
+    image: ICDD_ASSETS.project7,
     badge: 'Best-Seller Finition',
     specs: ['Conditionnement : Fût 15L / Seau 5L', 'Rendement : ~10 à 12 m²/L', 'Finition : Velours soyeux mat', 'Lessivable classe 1'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander la Peinture Velours Minérale Haute Résistance.'
@@ -35,7 +35,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     description: 'Composé de chaux naturelle et de poudres de marbre sélectionnées. Permet de réaliser des décors muraux spectaculaires avec des reflets subtils et une sensation minérale authentique.',
     priceDisplay: 'Sur devis / au m² posé',
     availability: 'Disponible',
-    image: ICDD_ASSETS.project4,
+    image: ICDD_ASSETS.project3,
     badge: 'Effet Luxe',
     specs: ['Texture : Pâte minérale onctueuse', 'Application : À la spatule inox', 'Aspect : Marbré brillant ou ciré', 'Respirant & naturel'],
     whatsappMessage: 'Bonjour ICDD, je souhaite un devis pour l’Enduit Stuc & Chaux Minérale Effet Marbré.'

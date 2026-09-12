@@ -52,27 +52,27 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
   };
 
   return (
-    <div id="services-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 pb-28 sm:pb-20">
+    <div id="services-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-8 sm:space-y-12 pb-28 sm:pb-20">
 
         {/* Hero Banner Services */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-3 max-w-2xl text-center md:text-left">
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-3 max-w-3xl text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80">
               <Sparkles className="w-3.5 h-3.5 text-[#005EA6]" />
               <span>Nos Domaines d'Expertise</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               Ce que ICDD réalise pour vos espaces
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
               De l'idée originelle aux finitions les plus subtiles, notre agence réunit sous un même toit les corps d'état de l'architecture intérieure, du staffage d'art et de la décoration haut de gamme à Kinshasa.
             </p>
           </div>
 
           <button
             onClick={openQuoteModal}
-            className="px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#005EA6]/25 border border-sky-400/40 transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center gap-2 mx-auto md:mx-0"
+            className="px-7 py-4 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#005EA6]/25 border border-sky-400/40 transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center gap-2 mx-auto md:mx-0 flex-shrink-0"
           >
             <PhoneCall className="w-4 h-4 text-sky-200" />
             <span>Demander un devis</span>
@@ -80,7 +80,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
         </div>
 
         {/* 6 Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
           {ICDD_SERVICES.map((service, index) => {
             const IconComponent = iconMap[service.iconName] || Sparkles;
             return (

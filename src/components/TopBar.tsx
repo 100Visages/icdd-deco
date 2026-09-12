@@ -48,7 +48,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header id="top-navigation-bar" className="w-full z-30 pt-2 sm:pt-4 px-3 sm:px-6 md:px-8 flex-shrink-0">
+    <header id="top-navigation-bar" className="w-full z-30 pt-2 sm:pt-4 px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex-shrink-0">
       
       {/* MOBILE TOP HEADER */}
       <div className="md:hidden relative">
@@ -263,7 +263,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* DESKTOP TOP HEADER (The 5 main tabs requested by user) */}
-      <div className="hidden md:flex max-w-7xl mx-auto items-center justify-between gap-4">
+      <div className="hidden md:flex w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto items-center justify-between gap-6">
         
         {/* Left: Brand Identity */}
         <div 

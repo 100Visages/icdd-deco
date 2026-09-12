@@ -74,37 +74,37 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
   });
 
   return (
-    <div id="shop-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-8 md:p-12 custom-scrollbar">
-      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
+    <div id="shop-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Shop Header Banner */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2.5 max-w-2xl text-center md:text-left">
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2.5 max-w-3xl text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80">
               <ShoppingBag className="w-3.5 h-3.5 text-[#005EA6]" />
               <span>Boutique Matériaux & Solutions ICDD</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
               Matériaux et solutions d’aménagement
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
               Retrouvez les peintures haut de gamme, portes contemporaines, agencements de cuisines et moulures en staff utilisés dans nos réalisations à Kinshasa. Commandez directement par WhatsApp ou demandez conseil à nos artisans.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto flex-shrink-0">
             <a
               href={`https://wa.me/${ICDD_WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour ICDD, je souhaite des conseils pour acheter des matériaux ou des finitions de décoration.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Direct</span>
             </a>
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
               <Phone className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
@@ -144,7 +144,7 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
           </div>
 
           {/* Search */}
-          <div className="relative w-full sm:w-64 flex-shrink-0">
+          <div className="relative w-full sm:w-72 lg:w-80 flex-shrink-0">
             <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
@@ -157,8 +157,8 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
 
         </div>
 
-        {/* Product Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+        {/* Product Cards Grid - 4 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 sm:gap-7">
           {filteredProducts.map((product) => {
             const whatsappUrl = getWhatsAppProductLink(product);
             return (

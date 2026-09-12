@@ -178,7 +178,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
       
       {/* Modal Glass Panel */}
       <div 
-        className="relative w-full max-w-3xl max-h-[92vh] bg-white rounded-[24px] sm:rounded-[36px] border border-slate-200 shadow-2xl overflow-y-auto custom-scrollbar p-5 sm:p-10 flex flex-col"
+        className="relative w-full max-w-4xl max-h-[92vh] bg-white rounded-[24px] sm:rounded-[36px] border border-slate-200 shadow-2xl overflow-y-auto custom-scrollbar p-5 sm:p-10 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         

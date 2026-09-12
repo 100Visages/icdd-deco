@@ -115,7 +115,7 @@ export const ShowcaseCarousel: React.FC<ShowcaseCarouselProps> = ({
           className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
           referrerPolicy="no-referrer"
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = '/projects/real_project_4.jpg';
+            (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
           }}
         />
 
