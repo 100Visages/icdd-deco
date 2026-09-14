@@ -39,7 +39,7 @@ export const ICDD_SERVICES: ServiceItem[] = [
     shortDesc: 'Réalisation de staffs, plafonds décoratifs, moulures, corniches et éléments sculptés sur mesure.',
     fullDesc: 'Spécialité historique et signature d’excellence d’ICDD. Nos maîtres staffeurs conçoivent et posent des faux plafonds suspendus avec gorges lumineuses LED intégrées, corniches d’ornement, rosaces raffinées et cimaises murales pour magnifier chaque pièce.',
     iconName: 'Layers',
-    image: ICDD_ASSETS.project1,
+    image: ICDD_ASSETS.sp2,
     points: [
       'Plafonds décoratifs à niveaux multiples et corniches intégrées',
       'Gorges lumineuses dissimulées pour rétroéclairage LED',

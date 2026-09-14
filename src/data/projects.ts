@@ -76,6 +76,39 @@ import icddRealisation33 from '../assets/realisations/icdd_realisation_33.jpg';
 import icddRealisation34 from '../assets/realisations/icdd_realisation_34.jpg';
 import icddRealisation35 from '../assets/realisations/icdd_realisation_35.jpg';
 
+// Photos réelles de décoration plafond et staff armé ajoutées par le client pour ICDD
+import staffPlafond1 from '../assets/staff/staff_plafond_1.jpg';
+import staffPlafond2 from '../assets/staff/staff_plafond_2.jpg';
+import staffPlafond3 from '../assets/staff/staff_plafond_3.jpg';
+import staffPlafond4 from '../assets/staff/staff_plafond_4.jpg';
+import staffPlafond5 from '../assets/staff/staff_plafond_5.jpg';
+import staffPlafond6 from '../assets/staff/staff_plafond_6.jpg';
+import staffPlafond7 from '../assets/staff/staff_plafond_7.jpg';
+import staffPlafond8 from '../assets/staff/staff_plafond_8.jpg';
+import staffPlafond9 from '../assets/staff/staff_plafond_9.jpg';
+import staffPlafond10 from '../assets/staff/staff_plafond_10.jpg';
+import staffPlafond11 from '../assets/staff/staff_plafond_11.jpg';
+import staffPlafond12 from '../assets/staff/staff_plafond_12.jpg';
+import staffPlafond13 from '../assets/staff/staff_plafond_13.jpg';
+import staffPlafond14 from '../assets/staff/staff_plafond_14.jpg';
+
+export const ICDD_STAFF_PLAFOND_IMAGES = [
+  staffPlafond1,
+  staffPlafond2,
+  staffPlafond3,
+  staffPlafond4,
+  staffPlafond5,
+  staffPlafond6,
+  staffPlafond7,
+  staffPlafond8,
+  staffPlafond9,
+  staffPlafond10,
+  staffPlafond11,
+  staffPlafond12,
+  staffPlafond13,
+  staffPlafond14,
+];
+
 export const ICDD_REALISATIONS = [
   icddRealisation1,
   icddRealisation2,
@@ -183,6 +216,21 @@ export const ICDD_ASSETS = {
   chambre10: chambreDeco10,
   chambre11: chambreDeco11,
   chambre12: chambreDeco12,
+  staffPlafonds: ICDD_STAFF_PLAFOND_IMAGES,
+  sp1: staffPlafond1,
+  sp2: staffPlafond2,
+  sp3: staffPlafond3,
+  sp4: staffPlafond4,
+  sp5: staffPlafond5,
+  sp6: staffPlafond6,
+  sp7: staffPlafond7,
+  sp8: staffPlafond8,
+  sp9: staffPlafond9,
+  sp10: staffPlafond10,
+  sp11: staffPlafond11,
+  sp12: staffPlafond12,
+  sp13: staffPlafond13,
+  sp14: staffPlafond14,
 };
 
 export const ICDD_OFFERS_CONFIG: Record<DecorOffer, { basePrice: number; description: string; badge: string; minWallM2: number }> = {
@@ -967,12 +1015,14 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 650,
     description: 'Réalisation complète de faux plafonds en plâtre staff armé avec intégration de gorges lumineuses pour rubans LED dissimulés.',
     fullDescription: 'La réalisation phare de nos maîtres staffeurs à Kinshasa. Le plafond a été conçu à double niveau avec des corniches courbes profilées spécialement pour diffuser un rétroéclairage homogène sans éblouissement, agrandissant visuellement la pièce.',
-    coverImage: realProject1,
+    coverImage: staffPlafond1,
     galleryImages: [
-      realProject1,
-      realProject2,
-      realProject7,
-      realProject3
+      staffPlafond1,
+      staffPlafond2,
+      staffPlafond3,
+      staffPlafond5,
+      staffPlafond7,
+      staffPlafond9
     ],
     services: [
       'Faux-plafond en staff',
@@ -1010,12 +1060,13 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 450,
     description: 'Pose artisanale de corniches classiques de staff, rosaces de lustre sculptées main et cadres muraux géométriques.',
     fullDescription: 'Pour conférer un style haussmannien ou classique revisité à cet espace, nos staffeurs ont fixé et raccordé des moulures de staff de haute précision. Les raccords invisibles et les finitions au couteau d’artisan garantissent une longévité absolue.',
-    coverImage: realProject7,
+    coverImage: staffPlafond8,
     galleryImages: [
-      realProject7,
-      realProject2,
-      realProject3,
-      realProject1
+      staffPlafond8,
+      staffPlafond6,
+      staffPlafond10,
+      staffPlafond11,
+      staffPlafond14
     ],
     services: [
       'Corniches classiques de staff',
@@ -1179,13 +1230,14 @@ export const ICDD_PROJECTS: Project[] = [
     startingPrice: 850,
     description: 'Pose experte de corniches travaillées, coffrages suspendus et rosaces artisanales pour villas de standing.',
     fullDescription: 'Chantier illustrant le savoir-faire de nos maîtres staffeurs à Kinshasa. Du coffrage des poutres à la sculpture des détails, chaque courbe est exécutée selon les règles de l’art pour sublimer la hauteur sous plafond.',
-    coverImage: icddRealisation26,
+    coverImage: staffPlafond7,
     galleryImages: [
-      icddRealisation26,
-      icddRealisation24,
-      icddRealisation28,
-      icddRealisation32,
-      icddRealisation35
+      staffPlafond7,
+      staffPlafond3,
+      staffPlafond4,
+      staffPlafond12,
+      staffPlafond13,
+      staffPlafond5
     ],
     services: [
       'Staff armé grande portée',
@@ -1204,6 +1256,93 @@ export const ICDD_PROJECTS: Project[] = [
       'Résistance accrue au climat tropical',
       'Raccords d’angles invisibles',
       'Garantie décennale sur la structure de staff'
+    ],
+    featured: true
+  },
+  {
+    id: 'staff-plafond-design-sculptural',
+    title: 'Décoration Plafond & Faux-Plafond Staff Lumineux',
+    subtitle: 'Découpes géométriques, caissons suspendus et éclairage indirect LED',
+    location: 'Kinshasa, Macampagne',
+    area: 90,
+    year: 2026,
+    mainCategory: 'Staff',
+    category: 'Décoration Top Modèle',
+    style: 'Luxe Contemporain',
+    budgetRange: '≥ 700 $',
+    startingPrice: 850,
+    description: 'Conception architecturale et réalisation de plafonds sculptés en staff avec jeux de creux et reliefs contemporains.',
+    fullDescription: 'Projet d’exception mettant en scène la finesse du plâtre armé et des décors plafonniers ICDD. Des caissons décaissés avec rétro-éclairage chaud apportent une sensation de volume exceptionnelle et une atmosphère feutrée dans les pièces de réception.',
+    coverImage: staffPlafond2,
+    galleryImages: [
+      staffPlafond2,
+      staffPlafond1,
+      staffPlafond4,
+      staffPlafond5,
+      staffPlafond9,
+      staffPlafond10
+    ],
+    services: [
+      'Plafond staff géométrique',
+      'Caissons suspendus design',
+      'Gorges rétro-éclairées 3000K',
+      'Enduit fin et lissage parfait'
+    ],
+    specs: {
+      duration: '10 à 14 Jours',
+      wallSurface: '90 m² de plafond sculpté',
+      finishType: 'Staff Relief & Lignes Lumineuses',
+      materials: ['Staff fibré haute densité', 'Profils aluminium dissimulés', 'Peinture velours mate'],
+      lighting: 'Rubans LED 24V anti-éblouissement'
+    },
+    features: [
+      'Jeux d’ombres et de lumières scénographiques',
+      'Structure allégée et ultra-robuste',
+      'Intégration invisible des câblages électriques',
+      'Finition lisse soyeuse prête à peindre'
+    ],
+    featured: true
+  },
+  {
+    id: 'staff-corniches-modernes-gorges',
+    title: 'Corniches Modernes & Décoration Plafonnier Staff',
+    subtitle: 'Structuration des volumes de plafond avec effets d’ombres et de lumières',
+    location: 'Kinshasa, Limete Résidentiel',
+    area: 75,
+    year: 2026,
+    mainCategory: 'Staff',
+    category: 'Décoration Gold',
+    style: 'Gold Prestige',
+    budgetRange: '500 $ - 700 $',
+    startingPrice: 600,
+    description: 'Réalisation sur mesure de corniches contemporaines et motifs plafonniers en staff pour salon et salle à manger.',
+    fullDescription: 'Mariage parfait entre l’art du staff traditionnel et les codes de l’architecture moderne. Nos artisans staffeurs ont posé des corniches linéaires en staff armé, associées à un décroché central accueillant un éclairage d’ambiance doux.',
+    coverImage: staffPlafond10,
+    galleryImages: [
+      staffPlafond10,
+      staffPlafond6,
+      staffPlafond8,
+      staffPlafond11,
+      staffPlafond12,
+      staffPlafond14
+    ],
+    services: [
+      'Corniches modernes profilées',
+      'Décrochés et retombées de staff',
+      'Préparation et ponçage minutieux',
+      'Peinture satinée haute résistance'
+    ],
+    specs: {
+      duration: '7 à 10 Jours',
+      wallSurface: '75 m²',
+      finishType: 'Corniches Modernes & Décrochés',
+      materials: ['Plâtre de moulage supérieur', 'Fibres végétales de renfort', 'Enduits haute finesse'],
+      lighting: 'Spots encastrés et bandeaux lumineux'
+    },
+    features: [
+      'Angles coupés et raccordés au millimètre',
+      'Plafond respirant et régulateur thermique',
+      'Esthétique épurée valorisant l’espace'
     ],
     featured: true
   }
