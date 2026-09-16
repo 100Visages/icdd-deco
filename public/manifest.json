@@ -1,0 +1,27 @@
+{
+  "name": "ICDD Architecture d'Intérieur",
+  "short_name": "ICDD",
+  "description": "ICDD – Excellence en Décoration et Peinture Intérieure. Nous transformons vos espaces avec élégance, modernité et créativité.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#005EA6",
+  "icons": [
+    {
+      "src": "/icdd.jpeg",
+      "sizes": "180x180",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icdd.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/icdd.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

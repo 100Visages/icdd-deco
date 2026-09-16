@@ -18,6 +18,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   onRequestSimilar,
 }) => {
   const { isFavorite, toggleFavorite } = useAuth();
+  const { isLiked, getLikesCount, toggleLike } = useLikes();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -167,12 +168,27 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
               </div>
 
               <h2 className="text-base sm:text-2xl font-bold tracking-tight text-white drop-shadow-md">
-                {project.title}
+                {project.mainCategory} • {project.location}
               </h2>
             </div>
 
-            {/* The Compact "Voir les détails" Button ON THE PHOTO */}
+            {/* Action buttons on the photo including Like counter */}
             <div className="flex items-center gap-2 self-start sm:self-auto">
+              {/* LIKE BUTTON WITH LIVE COUNTER */}
+              <button
+                type="button"
+                onClick={() => toggleLike(project.id)}
+                title={isLiked(project.id) ? "Je n'aime plus" : "J'aime cette réalisation"}
+                className={`py-2 px-3 sm:px-3.5 rounded-xl text-xs font-semibold backdrop-blur-xl border transition-all duration-300 cursor-pointer active:scale-95 shadow-lg flex items-center gap-1.5 ${
+                  isLiked(project.id)
+                    ? 'bg-rose-500 text-white border-rose-400 shadow-rose-500/30'
+                    : 'bg-white/95 hover:bg-white text-slate-900 border-white/90'
+                }`}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isLiked(project.id) ? 'fill-white text-white scale-110' : 'text-rose-500'}`} />
+                <span>{getLikesCount(project.id)}</span>
+              </button>
+
               <button
                 type="button"
                 id="btn-voir-detail-photo"
