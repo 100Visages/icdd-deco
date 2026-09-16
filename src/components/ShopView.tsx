@@ -9,11 +9,14 @@ import {
   Paintbrush, 
   DoorClosed, 
   ChefHat, 
-  Shirt,
   Layers, 
   CheckCircle2, 
   ExternalLink,
-  Phone
+  Phone,
+  Eye,
+  ChevronDown,
+  ChevronUp,
+  X
 } from 'lucide-react';
 
 interface ShopViewProps {
@@ -24,6 +27,15 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
   const [selectedCategory, setSelectedCategory] = useState<ShopCategory>('Tous');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeModalProduct, setActiveModalProduct] = useState<ShopProduct | null>(null);
+  const [openShopDetails, setOpenShopDetails] = useState<Record<string, boolean>>({});
+
+  const toggleProductDetails = (productId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setOpenShopDetails(prev => ({
+      ...prev,
+      [productId]: !prev[productId]
+    }));
+  };
 
   const categories: { id: ShopCategory; label: string; icon: React.ElementType; count: number }[] = [
     {
@@ -34,25 +46,25 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
     },
     {
       id: 'Peintures',
-      label: '🎨 Peintures & Enduits',
+      label: '🎨 Peintures',
       icon: Paintbrush,
       count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Peintures').length,
     },
     {
       id: 'Portes',
-      label: '🚪 Portes Intérieures',
+      label: '🚪 Portes',
       icon: DoorClosed,
       count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Portes').length,
     },
     {
       id: 'Cuisines',
-      label: '🍳 Cuisines Modernes',
+      label: '🍳 Cuisines',
       icon: ChefHat,
       count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Cuisines').length,
     },
     {
       id: 'Matériaux',
-      label: '🏛️ Matériaux & Staff',
+      label: '🏛️ Staff & Moulures',
       icon: Layers,
       count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Matériaux').length,
     },
@@ -74,49 +86,49 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
   });
 
   return (
-    <div id="shop-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
-      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
+    <div id="shop-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+      <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-5 sm:space-y-8 pb-28 sm:pb-20">
         
-        {/* Shop Header Banner */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2.5 max-w-3xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80">
+        {/* Shop Header Banner - Minimalist & Épuré */}
+        <div className="bg-white/95 backdrop-blur-2xl p-5 sm:p-10 rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-5">
+          <div className="space-y-2 max-w-3xl text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-semibold border border-sky-200/80">
               <ShoppingBag className="w-3.5 h-3.5 text-[#005EA6]" />
-              <span>Boutique Matériaux & Solutions ICDD</span>
+              <span>Boutique Matériaux ICDD</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-              Matériaux et solutions d’aménagement
+            <h2 className="text-2xl sm:text-4xl font-light tracking-tight text-slate-900">
+              Matériaux et finitions <span className="font-semibold text-slate-900">haut de gamme</span>
             </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed font-normal">
-              Retrouvez les peintures haut de gamme, portes contemporaines, agencements de cuisines et moulures en staff utilisés dans nos réalisations à Kinshasa. Commandez directement par WhatsApp ou demandez conseil à nos artisans.
+            <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+              Peintures velours, blocs-portes acoustiques, cuisines modernes et staff d’art à Kinshasa. Commandez directement sur WhatsApp.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto flex-shrink-0">
             <a
               href={`https://wa.me/${ICDD_WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour ICDD, je souhaite des conseils pour acheter des matériaux ou des finitions de décoration.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs uppercase tracking-wider shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-3.5 h-3.5" />
               <span>WhatsApp Direct</span>
             </a>
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-slate-900 hover:bg-[#005EA6] text-white font-medium text-xs uppercase tracking-wider shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
-              <Phone className="w-4 h-4 text-sky-200" />
+              <Phone className="w-3.5 h-3.5 text-white/80" />
               <span>Demander un devis</span>
             </button>
           </div>
         </div>
 
         {/* Categories Tabs & Search */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           
           {/* Categories Pill Bar */}
-          <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat.id;
               return (
@@ -124,17 +136,17 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
                   key={cat.id}
                   id={`shop-cat-${cat.id}`}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`whitespace-nowrap px-4 sm:px-5 py-2.5 rounded-full text-xs font-extrabold transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm active:scale-95 ${
+                  className={`whitespace-nowrap px-3.5 py-2 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer active:scale-95 ${
                     isSelected
-                      ? 'bg-[#005EA6] text-white border border-[#00D7FF]/50 shadow-md shadow-[#005EA6]/25'
-                      : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white text-slate-700 border border-slate-200/80 hover:bg-slate-50'
                   }`}
                 >
                   <span>{cat.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                     isSelected 
-                      ? 'bg-[#00D7FF] text-[#005EA6]' 
-                      : 'bg-slate-100 text-slate-600'
+                      ? 'bg-white/20 text-white' 
+                      : 'bg-slate-100 text-slate-500'
                   }`}>
                     {cat.count}
                   </span>
@@ -144,107 +156,133 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
           </div>
 
           {/* Search */}
-          <div className="relative w-full sm:w-72 lg:w-80 flex-shrink-0">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="relative w-full sm:w-64 lg:w-72 flex-shrink-0">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Rechercher un produit..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-full bg-slate-50 text-slate-900 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white border border-slate-200 shadow-sm"
+              className="w-full pl-9 pr-3 py-2 rounded-full bg-slate-50 text-slate-900 text-xs font-light placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:bg-white border border-slate-200/80 shadow-2xs"
             />
           </div>
 
         </div>
 
-        {/* Product Cards Grid - 4 columns on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6 sm:gap-7">
+        {/* Product Cards Grid - Photo-First with Compact 'Voir le détail' on Photo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => {
             const whatsappUrl = getWhatsAppProductLink(product);
+            const isExpanded = !!openShopDetails[product.id];
+
             return (
               <div
                 key={product.id}
-                className="group bg-white rounded-[26px] border border-slate-200/80 shadow-sm hover:shadow-xl hover:scale-[1.015] transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                className="group bg-white rounded-2xl border border-slate-200/70 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden"
               >
-                {/* Product Photo */}
-                <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+                {/* Product Photo with Badges & "Voir le détail" Button */}
+                <div 
+                  onClick={() => toggleProductDetails(product.id)}
+                  className="relative h-56 sm:h-60 w-full overflow-hidden bg-slate-100 cursor-pointer select-none"
+                >
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-                  {/* Badges */}
-                  <div className="absolute top-3.5 left-3.5 flex flex-col gap-1">
-                    <span className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-[#005EA6] border border-slate-100 shadow-sm">
+                  {/* Top Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                    <span className="bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
                       {product.category}
                     </span>
-                    {product.badge && (
-                      <span className="bg-sky-100 text-[#005EA6] px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-wide shadow-sm border border-sky-200">
-                        {product.badge}
-                      </span>
-                    )}
-                  </div>
 
-                  {/* Availability Badge */}
-                  <div className="absolute top-3.5 right-3.5">
-                    <span className="bg-white/95 text-slate-800 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold flex items-center gap-1 border border-slate-200/80 shadow-sm">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    {/* Availability */}
+                    <span className="bg-black/50 text-white backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-light flex items-center gap-1 border border-white/10 shadow-xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                       {product.availability}
                     </span>
                   </div>
 
-                  {/* Price Tag in Photo */}
-                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                    <span className="text-xs sm:text-sm font-extrabold bg-[#005EA6] px-3 py-1 rounded-full border border-sky-400/40 shadow-sm">
-                      {product.priceDisplay}
-                    </span>
+                  {/* Bottom of Photo: Price + Compact "Voir le détail" Button */}
+                  <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
+                    <div>
+                      <span className="text-xs font-semibold bg-white text-slate-900 px-2.5 py-0.8 rounded-lg shadow-xs border border-white/90 block">
+                        {product.priceDisplay}
+                      </span>
+                    </div>
+
+                    {/* Small Button ON THE PHOTO */}
+                    <button
+                      type="button"
+                      onClick={(e) => toggleProductDetails(product.id, e)}
+                      className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 active:scale-95 flex-shrink-0 ${
+                        isExpanded
+                          ? 'bg-[#005EA6] text-white border-sky-400'
+                          : 'bg-white/95 hover:bg-white text-slate-900 border-white/80'
+                      }`}
+                      title={isExpanded ? "Masquer les détails" : "Voir le détail"}
+                    >
+                      <Eye className="w-3 h-3 text-[#005EA6]" />
+                      <span>{isExpanded ? 'Masquer' : 'Voir le détail'}</span>
+                      {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    </button>
                   </div>
                 </div>
 
                 {/* Body Details */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-[#005EA6] transition-colors leading-snug">
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h3 className="text-sm sm:text-base font-normal text-slate-900 group-hover:text-[#005EA6] transition-colors leading-snug">
                       {product.name}
                     </h3>
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-normal">
-                      {product.shortDesc}
-                    </p>
+                    
+                    {/* Expandable details: Hidden by default on mobile unless toggled */}
+                    {isExpanded ? (
+                      <div className="space-y-2.5 pt-2 animate-in fade-in duration-200">
+                        <p className="text-xs text-slate-600 font-light leading-relaxed">
+                          {product.shortDesc}
+                        </p>
+
+                        {/* Specifications Checklist */}
+                        {product.specs && (
+                          <div className="space-y-1 pt-1 border-t border-slate-100">
+                            {product.specs.map((spec, sIdx) => (
+                              <div key={sIdx} className="flex items-center gap-1.5 text-[11px] text-slate-600">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
+                                <span className="font-light">{spec}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-slate-500 font-light line-clamp-1">
+                        {product.shortDesc}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Specifications Preview */}
-                  {product.specs && (
-                    <div className="space-y-1 pt-1">
-                      {product.specs.slice(0, 2).map((spec, sIdx) => (
-                        <div key={sIdx} className="flex items-center gap-2 text-[11px] text-slate-500">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
-                          <span className="truncate">{spec}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* WhatsApp Action Buttons (Simple, Direct, No heavy cart) */}
+                  {/* WhatsApp Action Buttons (Simple, Direct, Clean) */}
                   <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all active:scale-95 cursor-pointer"
+                      className="flex-1 px-3.5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-normal text-xs flex items-center justify-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
                     >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Commander sur WhatsApp</span>
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>Commander</span>
                     </a>
 
                     <button
                       onClick={() => setActiveModalProduct(product)}
-                      title="Voir les détails complets"
-                      className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 cursor-pointer transition-colors"
+                      title="Fiche technique complète"
+                      className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 cursor-pointer transition-colors"
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

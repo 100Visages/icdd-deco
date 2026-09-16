@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Project } from '../types';
-import { X, MapPin, Layers, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight, FileText, Bookmark, MessageCircle, ShieldCheck, Sparkles, Info, Eye } from 'lucide-react';
+import { X, MapPin, Layers, Lightbulb, CheckCircle2, ChevronLeft, ChevronRight, FileText, Bookmark, MessageCircle, ShieldCheck, Sparkles, Info, Eye, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
+import { useLikes } from '../utils/useLikes';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -77,9 +78,9 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 : 'bg-white/90 hover:bg-white text-slate-800 border-white/60'
             }`}
           >
-            <Info className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{showDetails ? 'Masquer les détails' : 'Voir les détails'}</span>
-            <span className="sm:hidden">{showDetails ? 'Masquer' : 'Détails'}</span>
+            <Eye className="w-3.5 h-3.5 text-sky-600" />
+            <span className="hidden sm:inline">{showDetails ? 'Masquer les détails' : 'Voir le détail'}</span>
+            <span className="sm:hidden">{showDetails ? 'Masquer' : 'Voir le détail'}</span>
           </button>
 
           <button
@@ -183,7 +184,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 }`}
               >
                 <Eye className="w-3.5 h-3.5 text-sky-600" />
-                <span>{showDetails ? 'Masquer les détails' : 'Voir les détails'}</span>
+                <span>{showDetails ? 'Masquer les détails' : 'Voir le détail'}</span>
               </button>
 
               <button

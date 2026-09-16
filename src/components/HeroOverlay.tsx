@@ -51,6 +51,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   // Mobile clean view toggles
   const [showMobileHeroDetails, setShowMobileHeroDetails] = useState<boolean>(false);
   const [openDecoDetails, setOpenDecoDetails] = useState<Record<string, boolean>>({});
+  const [openServiceHeroDetails, setOpenServiceHeroDetails] = useState<Record<number, boolean>>({});
 
   const toggleDecoDetails = (id: string) => {
     setOpenDecoDetails((prev) => ({
@@ -59,72 +60,98 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
     }));
   };
 
+  const toggleServiceHeroDetails = (idx: number, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setOpenServiceHeroDetails((prev) => ({
+      ...prev,
+      [idx]: !prev[idx],
+    }));
+  };
+
   const realisationsRef = useRef<HTMLDivElement>(null);
 
-  // Défilement automatique toutes les 2 secondes avec photos réelles de réalisations ICDD - Déco Maison exclusivement
+  // Défilement automatique toutes les 2 secondes avec les photos choisies pour le HeroOverlay
   const heroRealisationSlides = [
     {
-      id: 'salon-contemporain',
-      title: 'Salon Contemporain & Pièce de Vie',
+      id: 'hero-icdd-real-19',
+      title: 'Salon Contemporain & Lignes Épurées',
       subtitle: 'Harmonie des enduits fins, éclairage indirect tamisé et agencement sur mesure.',
       category: 'Déco Maison • Salon',
       location: 'Kinshasa, Gombe',
-      image: ICDD_ASSETS.project2,
+      image: ICDD_ASSETS.r19,
       targetProject: projects.find((p) => p.id === 'appartement-moderne-kinshasa') || projects[0],
     },
     {
-      id: 'suite-parentale-royale',
-      title: 'Suite Parentale & Tête de Lit Sculptée',
-      subtitle: 'Ambiance feutrée, habillage mural avec panneaux veloutés et éclairage d’ambiance.',
-      category: 'Déco Maison • Chambre',
-      location: 'Kinshasa, Gombe',
-      image: ICDD_ASSETS.chambre1,
-      targetProject: projects.find((p) => p.id === 'chambre-suite-royale-gombe') || projects[0],
-    },
-    {
-      id: 'salon-prestige-staff',
-      title: 'Grand Salon de Réception & Décoration Raffinée',
-      subtitle: 'Décoration murale d’exception, gorges lumineuses indirectes et finitions soignées.',
-      category: 'Déco Maison • Séjour',
-      location: 'Kinshasa, Macampagne',
-      image: ICDD_ASSETS.r4,
-      targetProject: projects.find((p) => p.id === 'realisation-salon-prestige-kinshasa') || projects[0],
-    },
-    {
-      id: 'cuisine-moderne-lumineuse',
-      title: 'Cuisine Contemporaine de Maison & Îlot Central',
-      subtitle: 'Mobilier ergonomique, façades épurées et rangements intégrés pour villa.',
-      category: 'Déco Maison • Cuisine',
-      location: 'Kinshasa, Mont-Fleury',
-      image: ICDD_ASSETS.cuisine1,
-      targetProject: projects.find((p) => p.id === 'cuisine-moderne-sur-mesure-kinshasa') || projects[0],
-    },
-    {
-      id: 'chambre-moderne-cosy',
-      title: 'Chambre Moderne Cosy & Mur d’Accent',
-      subtitle: 'Camaïeux neutres chauds, boiseries décoratives et douceur intimiste.',
-      category: 'Déco Maison • Chambre',
-      location: 'Kinshasa, Ngaliema',
-      image: ICDD_ASSETS.chambre2,
-      targetProject: projects.find((p) => p.id === 'chambre-cosy-moderne-ngaliema') || projects[0],
-    },
-    {
-      id: 'sejour-lounge-residentiel',
-      title: 'Séjour Résidentiel & Espace Lounge Villa',
-      subtitle: 'Architecture d’intérieur résidentielle, stuc vénitien et jeux de lumière.',
-      category: 'Déco Maison • Séjour',
-      location: 'Kinshasa, RDC',
-      image: ICDD_ASSETS.project1,
-      targetProject: projects.find((p) => p.id === 'appartement-moderne-kinshasa') || projects[0],
-    },
-    {
-      id: 'suite-parentale-gold',
-      title: 'Suite Résidentielle & Espace Nuit',
-      subtitle: 'Teintes apaisantes, relief décoratif et éclairage chaleureux 2700K.',
-      category: 'Déco Maison • Chambre',
+      id: 'hero-icdd-real-16',
+      title: 'Habillage Mural Tasseaux & Marbre Noir',
+      subtitle: 'Combinaison raffinée de tasseaux de bois nobles, marbre sombre poli et rubans LED intégrés.',
+      category: 'Déco Maison • Habillage Mural',
       location: 'Kinshasa, Ngaliema',
       image: ICDD_ASSETS.r16,
       targetProject: projects.find((p) => p.id === 'realisation-suite-moderne-kinshasa') || projects[0],
+    },
+    {
+      id: 'hero-icdd-real-22',
+      title: 'Espace de Vie & Décoration Contemporaine',
+      subtitle: 'Harmonie des volumes, boiseries décoratives et finitions soignées.',
+      category: 'Déco Maison • Séjour',
+      location: 'Kinshasa, Macampagne',
+      image: ICDD_ASSETS.r22,
+      targetProject: projects.find((p) => p.id === 'appartement-lounge-ngaliema') || projects[0],
+    },
+    {
+      id: 'hero-icdd-real-3',
+      title: 'Salon Royal & Moulures d’Ornement',
+      subtitle: 'Moulures classiques de prestige, patines raffinées et gorges lumineuses.',
+      category: 'Déco Maison • Salon',
+      location: 'Kinshasa, Gombe',
+      image: ICDD_ASSETS.r3,
+      targetProject: projects.find((p) => p.id === 'penthouse-kinshasa') || projects[0],
+    },
+    {
+      id: 'hero-icdd-real-34',
+      title: 'Villa Résidentielle & Grand Séjour Lounge',
+      subtitle: 'Architecture intérieure d’exception, confort acoustique et lumière tamisée.',
+      category: 'Déco Maison • Villa',
+      location: 'Kinshasa, Mont-Fleury',
+      image: ICDD_ASSETS.r34,
+      targetProject: projects.find((p) => p.id === 'realisation-salon-prestige-kinshasa') || projects[0],
+    },
+    {
+      id: 'hero-icdd-real-1',
+      title: 'Appartement Contemporain & Staff Profilé',
+      subtitle: 'Création de volumes, faux-plafonds suspendus et harmonies chromatiques.',
+      category: 'Déco Maison • Appartement',
+      location: 'Kinshasa, Gombe',
+      image: ICDD_ASSETS.r1,
+      targetProject: projects.find((p) => p.id === 'appartement-moderne-kinshasa') || projects[0],
+    },
+    {
+      id: 'hero-real-project-3',
+      title: 'Salon Royal – Reliefs 3D & Dorures',
+      subtitle: 'Enduits structurés artistiques, feuilles de dorure et mise en lumière rasante.',
+      category: 'Déco Maison • Top Modèle',
+      location: 'Kinshasa, Gombe',
+      image: ICDD_ASSETS.project3,
+      targetProject: projects.find((p) => p.id === 'residence-top-modele') || projects[0],
+    },
+    {
+      id: 'hero-real-project-1',
+      title: 'Salon Contemporain – Finition Gold & Boiseries',
+      subtitle: 'Enduits veloutés, mobilier haut standing et boiseries d’exception.',
+      category: 'Déco Maison • Finition Gold',
+      location: 'Kinshasa, Ngaliema',
+      image: ICDD_ASSETS.project1,
+      targetProject: projects.find((p) => p.id === 'suite-gold-prestige') || projects[0],
+    },
+    {
+      id: 'hero-deco-chambre-5',
+      title: 'Chambre Moderne & Mur d’Accent Bois',
+      subtitle: 'Camaïeux doux, textures chaleureuses et éclairage d’ambiance feutré.',
+      category: 'Déco Maison • Chambre',
+      location: 'Kinshasa, Ngaliema',
+      image: ICDD_ASSETS.chambre5,
+      targetProject: projects.find((p) => p.id === 'chambre-cosy-moderne-ngaliema') || projects[0],
     },
   ];
 
@@ -586,7 +613,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.project2}
+                  src={ICDD_ASSETS.r7}
                   alt="Salons contemporains et royaux par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -618,7 +645,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.cuisine1}
+                  src={ICDD_ASSETS.cuisine3}
                   alt="Cuisines modernes par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -650,7 +677,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.sp2}
+                  src={ICDD_ASSETS.sp3}
                   alt="Staff et plafonds par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -685,7 +712,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.porte1}
+                  src={ICDD_ASSETS.porte2}
                   alt="Portes intérieures réalisées par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -717,7 +744,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.chambre1}
+                  src={ICDD_ASSETS.chambre5}
                   alt="Décoration de chambres et suites parentales par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -752,7 +779,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             >
               <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
                 <img
-                  src={ICDD_ASSETS.bureau1}
+                  src={ICDD_ASSETS.bureau2}
                   alt="Décoration de bureaux et espaces professionnels par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -817,7 +844,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               
               <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group">
                 <img
-                  src={ICDD_ASSETS.project2}
+                  src={ICDD_ASSETS.r21}
                   alt="Salon contemporain réalisé par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -1082,7 +1109,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               
               <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group order-1 lg:order-2">
                 <img
-                  src={ICDD_ASSETS.porte1}
+                  src={ICDD_ASSETS.porte3}
                   alt="Porte intérieure contemporaine réalisée par ICDD"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                   referrerPolicy="no-referrer"
@@ -1218,19 +1245,38 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               },
             ].map((srv, idx) => {
               const IconComp = srv.icon;
+              const isExpanded = !!openServiceHeroDetails[idx];
+
               return (
                 <div
                   key={idx}
                   onClick={() => setActiveTab('services')}
-                  className="p-5 sm:p-6 rounded-xl bg-slate-50/60 hover:bg-white border border-slate-200/60 hover:border-slate-300 transition-all cursor-pointer space-y-2.5 shadow-xs group"
+                  className="p-4 sm:p-6 rounded-xl bg-slate-50/60 hover:bg-white border border-slate-200/60 hover:border-slate-300 transition-all cursor-pointer space-y-2 shadow-xs group"
                 >
-                  <div className="w-9 h-9 rounded-lg bg-white border border-slate-200/80 text-slate-800 flex items-center justify-center shadow-xs">
-                    <IconComp className="w-4 h-4" />
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200/80 text-slate-800 flex items-center justify-center shadow-xs">
+                      <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </div>
+
+                    {/* Mobile toggle button */}
+                    <button
+                      type="button"
+                      onClick={(e) => toggleServiceHeroDetails(idx, e)}
+                      className="sm:hidden px-2 py-0.5 rounded-md text-[10px] text-slate-500 bg-white border border-slate-200/80 flex items-center gap-1 active:scale-95"
+                    >
+                      <span>{isExpanded ? 'Moins' : 'Détail'}</span>
+                      <ChevronDown className={`w-2.5 h-2.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                    </button>
                   </div>
+
                   <h4 className="text-sm font-normal text-slate-900 group-hover:text-[#005EA6] transition-colors">
                     {srv.title}
                   </h4>
-                  <p className="text-xs text-slate-500 leading-relaxed font-light">
+
+                  {/* Hidden by default on mobile unless toggled */}
+                  <p className={`text-xs text-slate-500 leading-relaxed font-light ${
+                    isExpanded ? 'block' : 'hidden sm:block'
+                  }`}>
                     {srv.desc}
                   </p>
                 </div>
@@ -1271,7 +1317,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 title: 'Peintures',
                 desc: 'Velours, mates & stucs minéraux',
                 badge: 'Dès 65 $',
-                image: ICDD_ASSETS.project7
+                image: ICDD_ASSETS.r26
               },
               {
                 title: 'Portes',
@@ -1283,7 +1329,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 title: 'Cuisines',
                 desc: 'Plans quartz, façades & caissons',
                 badge: 'Sur devis',
-                image: ICDD_ASSETS.cuisine1
+                image: ICDD_ASSETS.cuisine2
               },
               {
                 title: 'Staff & Corniches',

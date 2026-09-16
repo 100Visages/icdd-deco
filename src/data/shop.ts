@@ -22,7 +22,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: 'Prix au pot (15L) ou au m²',
     priceValue: 85,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project7,
+    image: ICDD_ASSETS.r26,
     badge: 'Best-Seller Finition',
     specs: ['Conditionnement : Fût 15L / Seau 5L', 'Rendement : ~10 à 12 m²/L', 'Finition : Velours soyeux mat', 'Lessivable classe 1'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander la Peinture Velours Minérale Haute Résistance.'
@@ -35,7 +35,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     description: 'Composé de chaux naturelle et de poudres de marbre sélectionnées. Permet de réaliser des décors muraux spectaculaires avec des reflets subtils et une sensation minérale authentique.',
     priceDisplay: 'Sur devis / au m² posé',
     availability: 'Disponible',
-    image: ICDD_ASSETS.project3,
+    image: ICDD_ASSETS.r13,
     badge: 'Effet Luxe',
     specs: ['Texture : Pâte minérale onctueuse', 'Application : À la spatule inox', 'Aspect : Marbré brillant ou ciré', 'Respirant & naturel'],
     whatsappMessage: 'Bonjour ICDD, je souhaite un devis pour l’Enduit Stuc & Chaux Minérale Effet Marbré.'
@@ -49,7 +49,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: '45 $ / flacon artisan',
     priceValue: 45,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project1,
+    image: ICDD_ASSETS.r14,
     badge: 'Gamme Gold',
     specs: ['Finition : Or pâle ou Or royal', 'Utilisation : Moulures, corniches, boiseries', 'Séchage rapide', 'Ne ternit pas dans le temps'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander la Patine Or Nacrée pour moulures.'
@@ -150,7 +150,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: '18 $ / mètre linéaire',
     priceValue: 18,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project1,
+    image: ICDD_ASSETS.sp4,
     badge: 'Spécialité Staff',
     specs: ['Longueur standard : 2 mètres', 'Matériau : Plâtre de staff fibré haute résistance', 'Incombustible M0', 'Prêt à peindre après pose'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander des Corniches de Staff pour gorges LED.'
@@ -164,7 +164,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: '12 $ / mètre linéaire',
     priceValue: 12,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project7,
+    image: ICDD_ASSETS.sp7,
     badge: 'Classique & Chic',
     specs: ['Profils fins ou larges au choix', 'Collage haute adhérence sans vis', 'Peut recevoir toute peinture mate ou satinée', 'Garantie anti-fissure'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander des Cimaises et Moulures murales.'
@@ -178,7 +178,7 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     priceDisplay: 'À partir de 40 $ / pièce',
     priceValue: 40,
     availability: 'En stock à Kinshasa',
-    image: ICDD_ASSETS.project3,
+    image: ICDD_ASSETS.sp8,
     badge: 'Fait Main',
     specs: ['Diamètres disponibles : 45cm, 60cm, 80cm', 'Motifs : Feuilles d’acanthe, lignes modernes ou florales', 'Plâtre staff dense renforcé', 'Fixation sécurisée'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander une Rosace de Plafond en staff.'
