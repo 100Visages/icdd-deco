@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { ICDD_OFFERS_CONFIG } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 import { useLikes } from '../utils/useLikes';
+import { buildProjectWhatsAppMessage, openWhatsAppChat } from '../utils/whatsapp';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -46,13 +47,9 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
     : null;
 
   const handleDirectWhatsApp = () => {
-    const text = encodeURIComponent(
-      `Bonjour ICDD 🦺✨\nJe suis très intéressé(e) par votre réalisation :\n` +
-      `"${project.title}" (${project.category})\n` +
-      `Lieu : ${project.location}\n` +
-      `Pouvez-vous me renseigner pour un projet similaire ?`
-    );
-    window.open(`https://wa.me/243897504570?text=${text}`, '_blank');
+    const activeImage = images[activeImgIndex] || project.coverImage;
+    const msg = buildProjectWhatsAppMessage(project, activeImage);
+    openWhatsAppChat(msg);
   };
 
   return (
@@ -371,16 +368,28 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                   <span>{isFavorite(project.id) ? 'Enregistré' : 'Favori'}</span>
                 </button>
 
-                <button
-                  onClick={() => {
-                    onClose();
-                    onRequestSimilar(project);
-                  }}
-                  className="px-5 py-2 rounded-xl bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs tracking-wide shadow-md transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <FileText className="w-3.5 h-3.5 text-sky-200" />
-                  <span>Demander un devis pour ce modèle</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDirectWhatsApp}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer active:scale-95"
+                    title="Envoyer la photo et échanger sur WhatsApp"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>WhatsApp</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onRequestSimilar(project);
+                    }}
+                    className="px-5 py-2 rounded-xl bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs tracking-wide shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-sky-200" />
+                    <span>Demander un devis pour ce modèle</span>
+                  </button>
+                </div>
               </div>
 
             </div>

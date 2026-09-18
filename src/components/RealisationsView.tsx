@@ -12,15 +12,18 @@ import {
   ChevronRight, 
   Sparkles,
   ArrowRight,
-  Maximize2
+  Maximize2,
+  FileText
 } from 'lucide-react';
-import { ICDD_REALISATION_PHOTOS, RealisationPhotoItem } from '../data/projects';
+import { ICDD_REALISATION_PHOTOS, ICDD_PROJECTS, RealisationPhotoItem } from '../data/projects';
 import { useLikes } from '../utils/useLikes';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
+import { buildRealisationPhotoWhatsAppMessage, openWhatsAppChat } from '../utils/whatsapp';
 
 interface RealisationsViewProps {
   projects?: Project[];
   onOpenProject?: (project: Project) => void;
-  openQuoteModal: () => void;
+  openQuoteModal: (project?: Project) => void;
   selectedCategory?: RealisationCategory;
   onSelectCategory?: (category: RealisationCategory) => void;
   initialCategory?: RealisationCategory;
@@ -80,13 +83,11 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
     });
   }, [allPhotos, selectedCategory, searchQuery]);
 
-  // Handle WhatsApp inquiry directly for a photo
+  // Handle WhatsApp inquiry directly for a photo with photo link included
   const handleWhatsAppInquiry = (photo: RealisationPhotoItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    const text = encodeURIComponent(
-      `Bonjour ICDD 🦺✨\nJe suis intéressé(e) par cette réalisation (${photo.mainCategory} à ${photo.location}).\nPouvez-vous me donner des détails et un devis pour un projet similaire ?`
-    );
-    window.open(`https://wa.me/243897504570?text=${text}`, '_blank');
+    const msg = buildRealisationPhotoWhatsAppMessage(photo);
+    openWhatsAppChat(msg);
   };
 
   // Keyboard navigation for full-screen photo modal
@@ -113,39 +114,58 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Header Section */}
-        <div className="bg-white/90 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-200/70 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium">
-                <Sparkles className="w-3.5 h-3.5 text-[#005EA6]" />
-                Galerie Visuelle ICDD
-              </span>
-              <span className="text-xs text-slate-400 font-light hidden sm:inline">•</span>
-              <span className="text-xs text-slate-500 font-light hidden sm:inline">Kinshasa</span>
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3 max-w-3xl text-center md:text-left">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
+                <img 
+                  src={icddOfficialLogo} 
+                  alt="Logo ICDD" 
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                  }}
+                />
+              </div>
+              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
+              <span className="text-slate-400">•</span>
+              <span>Galerie Visuelle</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight text-slate-900 mt-2">
-              Nos Réalisations <span className="font-semibold text-slate-900">en Images</span>
+
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Nos Réalisations <span className="text-[#005EA6]">en Images</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 font-light mt-1">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
               Explorez toutes nos photos de chantiers finis classées par univers : appartements, chambres, staff, cuisines et décoration.
             </p>
           </div>
 
-          {/* Search bar */}
-          <div className="relative w-full md:w-72 lg:w-80 flex-shrink-0">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Filtrer (ex: Gombe, Staff, Cuisine...)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 text-slate-800 text-xs font-normal placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:bg-white border border-slate-200 transition-all"
-            />
+          <div className="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0">
+            {/* Search bar */}
+            <div className="relative w-full sm:w-72 lg:w-80">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Filtrer (Gombe, Staff, Cuisine...)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-3 rounded-full bg-slate-50 text-slate-900 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/20 focus:bg-white border border-slate-200 transition-all shadow-xs"
+              />
+            </div>
+
+            <button
+              onClick={openQuoteModal}
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/20 border border-sky-400/40 whitespace-nowrap"
+            >
+              <FileText className="w-4 h-4 text-sky-200" />
+              <span>Demander un devis</span>
+            </button>
           </div>
         </div>
 
         {/* Categories Bar */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
+        <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1.5 -mx-1 px-1">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
@@ -153,14 +173,14 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 key={cat.id}
                 id={`cat-btn-${cat.id}`}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`whitespace-nowrap px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-normal transition-all duration-200 flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer active:scale-95 ${
                   isSelected
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/25 border border-sky-400/40 scale-[1.02]'
+                    : 'bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50 hover:text-[#005EA6]'
                 }`}
               >
                 <span>{cat.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
                   isSelected 
                     ? 'bg-white/20 text-white' 
                     : 'bg-slate-100 text-slate-500'
@@ -306,23 +326,39 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
           </div>
         )}
 
-        {/* Minimal Bottom CTA Banner */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
-          <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-base sm:text-lg font-normal">
-              Une réalisation vous inspire pour votre projet ?
+        {/* Bottom CTA Banner */}
+        <div className="p-6 sm:p-10 rounded-[28px] sm:rounded-[36px] bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800 shadow-xl">
+          <div className="space-y-2 text-center md:text-left max-w-xl">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-sky-400 block">
+              Accompagnement Sur Mesure
+            </span>
+            <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+              Une réalisation vous inspire pour votre intérieur ?
             </h3>
-            <p className="text-xs text-slate-400 max-w-xl font-light">
-              Demandez une visite technique ou un devis gratuit pour votre appartement, maison, chambre ou bureau à Kinshasa.
+            <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
+              Demandez une visite technique ou un devis gratuit pour votre appartement, villa, chambre ou bureau à Kinshasa.
             </p>
           </div>
 
-          <button
-            onClick={openQuoteModal}
-            className="px-5 py-2.5 rounded-full bg-white text-slate-900 hover:bg-slate-100 font-medium text-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap"
-          >
-            Demander un devis gratuit
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+            <a
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20j%27ai%20vu%20vos%20r%C3%A9alisations%20et%20je%20souhaite%20un%20devis."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-md flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Direct</span>
+            </a>
+
+            <button
+              onClick={openQuoteModal}
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/30 border border-sky-400/40"
+            >
+              <FileText className="w-4 h-4 text-sky-200" />
+              <span>Demander un devis</span>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -420,8 +456,22 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 <button
                   type="button"
                   onClick={() => {
+                    const active = activePhoto;
                     setActivePhotoIndex(null);
-                    openQuoteModal();
+                    const matchingProject = ICDD_PROJECTS.find(p => p.id === active.projectRef) || ({
+                      id: `decor-${active.id}`,
+                      title: `${active.mainCategory} – ${active.location}`,
+                      subtitle: active.services?.join(' • ') || 'Décoration & Aménagement intérieur',
+                      location: active.location,
+                      category: 'Décoration Top Modèle',
+                      year: '2024',
+                      area: 45,
+                      duration: '3 semaines',
+                      coverImage: active.image,
+                      mainCategory: active.mainCategory,
+                      description: `Réalisation de prestige : ${active.mainCategory} à ${active.location}.`,
+                    } as unknown as Project);
+                    openQuoteModal(matchingProject);
                   }}
                   className="hidden sm:flex px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-medium border border-white/20 items-center gap-1.5 transition-all cursor-pointer"
                 >

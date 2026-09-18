@@ -1,13 +1,12 @@
 import { ShopProduct } from '../types';
 import { ICDD_ASSETS } from './projects';
+import { buildShopProductWhatsAppMessage, ICDD_WHATSAPP_PHONE } from '../utils/whatsapp';
 
-export const ICDD_WHATSAPP_NUMBER = '243897504570';
+export const ICDD_WHATSAPP_NUMBER = ICDD_WHATSAPP_PHONE;
 
 export function getWhatsAppProductLink(product: ShopProduct): string {
   const base = `https://wa.me/${ICDD_WHATSAPP_NUMBER}?text=`;
-  const text = encodeURIComponent(
-    `Bonjour ICDD ✨\nJe suis intéressé(e) par votre produit dans le Shop :\n\n• Produit : ${product.name}\n• Catégorie : ${product.category}\n• Prix indicatif : ${product.priceDisplay}\n• Réf : ${product.id}\n\nPourriez-vous me renseigner sur la disponibilité et les modalités de commande / livraison à Kinshasa ? Merci !`
-  );
+  const text = encodeURIComponent(buildShopProductWhatsAppMessage(product));
   return `${base}${text}`;
 }
 

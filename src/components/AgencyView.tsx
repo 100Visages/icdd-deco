@@ -75,7 +75,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
           </div>
 
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-            🎨 ICDD – L’Art de Sublimer Vos Espaces
+            ICDD – Le bien-être de tous, pour construire un monde meilleur
           </h2>
 
           <p className="text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200 font-normal leading-relaxed max-w-3xl">
@@ -212,10 +212,10 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
 
           <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
             <a
-              href="https://wa.me/243897504570?text=Bonjour%20ICDD%20%F0%9F%A7%BA%E2%9C%A8%20Je%20souhaite%20des%20renseignements%20pour%20la%20d%C3%A9coration%20de%20mes%20murs."
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20des%20renseignements%20pour%20la%20d%C3%A9coration%20de%20mes%20murs."
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-all cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Direct</span>
@@ -223,7 +223,7 @@ export const AgencyView: React.FC<AgencyViewProps> = ({ openQuoteModal, setActiv
 
             <button
               onClick={openQuoteModal}
-              className="px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/50 hover:scale-105 transition-all flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-[#005EA6]/25 border border-[#00D7FF]/50 hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Calculer un Devis</span>
               <ArrowUpRight className="w-4 h-4 text-[#00D7FF]" />

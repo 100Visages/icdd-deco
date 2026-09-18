@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ICDD_SERVICES } from '../data/services';
 import { ServiceItem, RealisationCategory } from '../types';
+import { buildServiceWhatsAppMessage, openWhatsAppChat } from '../utils/whatsapp';
 import { 
   Compass, 
   Sparkles, 
@@ -16,8 +17,10 @@ import {
   Eye,
   ChevronDown,
   ChevronUp,
-  MessageCircle
+  MessageCircle,
+  FileText
 } from 'lucide-react';
+import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface ServicesViewProps {
   onSelectCategory?: (category: RealisationCategory) => void;
@@ -66,36 +69,67 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
     }
   };
 
+  const handleServiceWhatsApp = (service: ServiceItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const msg = buildServiceWhatsAppMessage(service);
+    openWhatsAppChat(msg);
+  };
+
   return (
-    <div id="services-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+    <div id="services-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3.5 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-10 pb-28 sm:pb-20">
 
-        {/* Hero Banner Services - Minimalist & Épuré */}
-        <div className="bg-white/95 backdrop-blur-2xl p-5 sm:p-10 rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-5">
-          <div className="space-y-2 max-w-3xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-xs font-semibold border border-sky-200/80">
-              <Sparkles className="w-3.5 h-3.5 text-[#005EA6]" />
-              <span>Nos Domaines d'Expertise</span>
+        {/* Hero Banner Services - Prestige & Épuré */}
+        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3 max-w-3xl text-center md:text-left">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
+                <img 
+                  src={icddOfficialLogo} 
+                  alt="Logo ICDD" 
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                  }}
+                />
+              </div>
+              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
+              <span className="text-slate-400">•</span>
+              <span>Nos 6 Domaines d'Expertise</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-light tracking-tight text-slate-900">
-              Ce que ICDD réalise <span className="font-semibold text-slate-900">pour vos espaces</span>
+            
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Ce que ICDD réalise <span className="text-[#005EA6]">pour vos espaces</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
               Architecture intérieure, staffage d'art, cuisines sur mesure et décoration haut de gamme à Kinshasa.
             </p>
           </div>
 
-          <button
-            onClick={openQuoteModal}
-            className="w-full md:w-auto px-6 py-3 rounded-full bg-slate-900 hover:bg-[#005EA6] text-white font-medium text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2 flex-shrink-0 shadow-xs"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-white/80" />
-            <span>Demander un devis</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0">
+            <a
+              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-md flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp Direct</span>
+            </a>
+
+            <button
+              onClick={openQuoteModal}
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/20 border border-sky-400/40"
+            >
+              <FileText className="w-4 h-4 text-sky-200" />
+              <span>Demander un devis</span>
+            </button>
+          </div>
         </div>
 
-        {/* 6 Services Grid - Photo-First with Compact 'Voir le détail' on Photo */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        {/* 6 Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           {ICDD_SERVICES.map((service, index) => {
             const IconComponent = iconMap[service.iconName] || Sparkles;
             const isExpanded = !!expandedServices[service.id];
@@ -103,42 +137,42 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             return (
               <div
                 key={service.id}
-                className="group bg-white rounded-2xl border border-slate-200/70 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
+                className="group bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 flex flex-col overflow-hidden"
               >
                 {/* Visual Header (Photo with Overlay Controls) */}
                 <div 
                   onClick={() => toggleService(service.id)}
-                  className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-100 cursor-pointer select-none"
+                  className="relative h-56 sm:h-60 w-full overflow-hidden bg-slate-100 cursor-pointer select-none"
                 >
                   <img
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
 
                   {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                    <span className="bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
+                    <span className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900 border border-white/60 shadow-sm">
                       {service.tag}
                     </span>
 
-                    <div className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 flex items-center justify-center shadow-xs">
-                      <IconComponent className="w-3.5 h-3.5 text-white" />
+                    <div className="w-9 h-9 rounded-full bg-slate-950/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center shadow-sm">
+                      <IconComponent className="w-4 h-4 text-sky-300" />
                     </div>
                   </div>
 
-                  {/* Bottom on Photo: Title & Compact "Voir le détail" Button */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
+                  {/* Bottom on Photo: Title & Compact "Détails" Button */}
+                  <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-end justify-between gap-2">
                     <div className="text-white space-y-0.5 pr-2 pointer-events-none">
-                      <span className="text-[10px] text-sky-300 font-normal uppercase tracking-widest block">
+                      <span className="text-[10px] text-sky-300 font-bold uppercase tracking-widest block">
                         Service 0{index + 1}
                       </span>
-                      <h3 className="text-sm sm:text-base font-normal tracking-tight line-clamp-1 drop-shadow-xs">
+                      <h3 className="text-base sm:text-lg font-extrabold tracking-tight line-clamp-1 drop-shadow-sm">
                         {service.title}
                       </h3>
                     </div>
@@ -147,45 +181,45 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                     <button
                       type="button"
                       onClick={(e) => toggleService(service.id, e)}
-                      className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-1.5 active:scale-95 flex-shrink-0 ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95 flex-shrink-0 ${
                         isExpanded
                           ? 'bg-[#005EA6] text-white border-sky-400'
                           : 'bg-white/95 hover:bg-white text-slate-900 border-white/80'
                       }`}
-                      title={isExpanded ? "Masquer les détails" : "Voir le détail"}
+                      title={isExpanded ? "Masquer les détails" : "Voir les détails"}
                     >
-                      <Eye className="w-3 h-3 text-[#005EA6]" />
-                      <span>{isExpanded ? 'Masquer' : 'Voir le détail'}</span>
-                      {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      <Eye className="w-3.5 h-3.5 text-[#005EA6]" />
+                      <span>{isExpanded ? 'Masquer' : 'Détails'}</span>
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </div>
 
-                {/* Body Content - Short preview on mobile unless expanded */}
-                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+                {/* Body Content */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
                   
                   {/* Short description always visible */}
-                  <p className="text-xs text-slate-600 font-light leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
                     {service.shortDesc}
                   </p>
 
-                  {/* Expandable Technical Details (Collapsible on mobile) */}
+                  {/* Expandable Technical Details */}
                   {isExpanded && (
-                    <div className="space-y-3.5 pt-3 border-t border-slate-100 text-xs animate-in fade-in duration-200">
-                      <p className="text-xs text-slate-500 font-light leading-relaxed">
+                    <div className="space-y-4 pt-3 border-t border-slate-100 text-xs animate-in fade-in duration-200">
+                      <p className="text-xs text-slate-600 leading-relaxed font-normal">
                         {service.fullDesc}
                       </p>
 
                       {/* Points Checklist */}
-                      <div className="space-y-1.5 pt-1">
-                        <span className="text-[10px] uppercase font-medium tracking-wider text-slate-400 block">
+                      <div className="space-y-2 pt-1">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
                           Ce que comprend la prestation :
                         </span>
-                        <ul className="space-y-1">
+                        <ul className="space-y-1.5">
                           {service.points.map((pt, pIdx) => (
                             <li key={pIdx} className="flex items-start gap-2 text-xs text-slate-700">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                              <span className="font-light">{pt}</span>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                              <span className="font-normal">{pt}</span>
                             </li>
                           ))}
                         </ul>
@@ -194,21 +228,31 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   )}
 
                   {/* Actions Bar */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                     <button
                       onClick={() => handleServiceExplore(service)}
-                      className="inline-flex items-center gap-1 text-xs font-normal text-[#005EA6] hover:underline cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#005EA6] hover:underline cursor-pointer group/link"
                     >
                       <span>Voir les projets</span>
-                      <ArrowRight className="w-3 h-3" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
                     </button>
 
-                    <button
-                      onClick={openQuoteModal}
-                      className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-800 text-xs font-normal transition-all border border-slate-200 cursor-pointer shadow-2xs"
-                    >
-                      Devis gratuit
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={(e) => handleServiceWhatsApp(service, e)}
+                        className="p-2 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors border border-emerald-200 shadow-xs cursor-pointer"
+                        title="Demander des infos sur WhatsApp"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        onClick={openQuoteModal}
+                        className="px-3.5 py-1.5 rounded-full bg-sky-50 hover:bg-[#005EA6] text-[#005EA6] hover:text-white text-xs font-bold transition-all border border-sky-200 cursor-pointer shadow-xs"
+                      >
+                        Devis
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -221,7 +265,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
         <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -233,7 +277,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -245,7 +289,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <PhoneCall className="w-5 h-5" />
               </div>
               <div className="space-y-1">

@@ -278,7 +278,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="Ex: Christian Mukendi"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/30 focus:bg-white"
                     />
                   </div>
 
@@ -292,7 +292,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="+243 ..."
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/30 focus:bg-white"
                     />
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                       placeholder="exemple@domaine.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/30 focus:bg-white"
                     />
                   </div>
 
@@ -318,7 +318,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/30 focus:bg-white"
                     >
                       <option value="Aménagement d'appartement complet">Aménagement d'appartement complet</option>
                       <option value="Décoration & finitions murales">Décoration & finitions murales</option>
@@ -339,7 +339,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                     placeholder="Décrivez votre projet (lieu à Kinshasa, superficie approximative, style souhaité)..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00D7FF] focus:bg-white resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 text-slate-900 text-xs border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/30 focus:bg-white resize-none"
                   />
                 </div>
 
