@@ -21,7 +21,11 @@ import {
   Briefcase,
   ChevronLeft,
   ChevronRight,
-  Eye
+  Eye,
+  Star,
+  Share2,
+  Heart,
+  Check
 } from 'lucide-react';
 import { ICDD_PROJECTS, ICDD_ASSETS } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
@@ -57,23 +61,94 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   const [mobileMediaMode, setMobileMediaMode] = useState<'video' | 'photo'>('video');
   const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hasSwitchedBeforeEndRef = useRef<boolean>(false);
+
+  // Photos réelles de décorations faites par ICDD pour le hero mobile (transition fluide)
+  const heroMobilePhotos = [
+    {
+      src: '/hero_mobile_banner.png',
+      alt: "ICDD Décoration & Architecture d'Intérieur Kinshasa",
+    },
+    {
+      src: ICDD_ASSETS.r19,
+      alt: 'Salon Contemporain & Lignes Épurées réalisé par ICDD',
+    },
+    {
+      src: ICDD_ASSETS.r16,
+      alt: 'Habillage Mural Tasseaux de Bois & Marbre Noir par ICDD',
+    },
+    {
+      src: ICDD_ASSETS.r1,
+      alt: 'Salon Prestigieux & Faux-Plafond Staff Lumineux par ICDD',
+    },
+    {
+      src: ICDD_ASSETS.r22,
+      alt: 'Espace de Vie & Décoration Contemporaine par ICDD',
+    },
+  ];
+  const [currentHeroPhotoIdx, setCurrentHeroPhotoIdx] = useState<number>(0);
+
+  // Sitora UI Interactive State (Heart/Like, Share)
+  const [isHearted, setIsHearted] = useState<boolean>(false);
+  const [heartCount, setHeartCount] = useState<number>(342);
+  const [shareCopied, setShareCopied] = useState<boolean>(false);
+
+  const handleShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: "ICDD - Architecture d'Intérieur Kinshasa",
+          text: "Découvrez ICDD : Le bien-être de tous, pour construire un monde meilleur.",
+          url: window.location.href,
+        });
+      } catch {
+        // User dismissed share dialog
+      }
+    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2200);
+    }
+  };
 
   // Desktop media toggle (to also optionally preview the video showcase on PC)
   const [desktopShowcaseMode, setDesktopShowcaseMode] = useState<'carousel' | 'video'>('carousel');
 
-  // Automatic cycling between video and photo
+  // Déclenchement de la transition vers l'image AVANT la fin de la vidéo
+  const triggerSwitchToPhoto = () => {
+    if (hasSwitchedBeforeEndRef.current) return;
+    hasSwitchedBeforeEndRef.current = true;
+    setMobileMediaMode('photo');
+    setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+  };
+
+  // Détection en temps réel : dès que la vidéo approche de la fin, la transition douce démarre
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current && mobileMediaMode === 'video') {
+      const { currentTime, duration } = videoRef.current;
+      // La vidéo dure ~11.8s. On déclenche le changement vers l'image ~2.4s avant la fin (ou dès 9.2s)
+      const triggerThreshold = duration > 0 ? Math.max(duration - 2.4, 4) : 9.2;
+      if (currentTime >= triggerThreshold) {
+        triggerSwitchToPhoto();
+      }
+    }
+  };
+
+  // Alternance automatique entre la vidéo et les photos de réalisations
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (mobileMediaMode === 'photo') {
-      // Show photo for 5.5 seconds, then transition to video
+      hasSwitchedBeforeEndRef.current = false;
+      // Présentation de la photo de décoration pendant 5 secondes, puis relance de la vidéo
       timer = setTimeout(() => {
         setMobileMediaMode('video');
-      }, 5500);
+      }, 5000);
     } else if (mobileMediaMode === 'video') {
-      // Safety timer in case onEnded is delayed (~12.5 seconds, video is ~11.8s)
+      hasSwitchedBeforeEndRef.current = false;
+      // Minuteur de sécurité garanti AVANT la fin de la vidéo (~11.8s) : déclenchement à 9.2s
       timer = setTimeout(() => {
-        setMobileMediaMode('photo');
-      }, 12500);
+        triggerSwitchToPhoto();
+      }, 9200);
     }
     return () => clearTimeout(timer);
   }, [mobileMediaMode]);
@@ -87,7 +162,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   }, [mobileMediaMode]);
 
   const handleVideoEnded = () => {
-    setMobileMediaMode('photo');
+    triggerSwitchToPhoto();
   };
 
   const toggleDecoDetails = (id: string) => {
@@ -271,18 +346,25 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
           {/* Arrière-plan Médias (Photo & Vidéo alternent seuls automatiquement, sans bouton manuel) */}
           <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-slate-950">
             
-            {/* Photo plein écran rognée sans bandes noires (IMG_4866) */}
-            <img
-              src="/hero_mobile_banner.png"
-              alt="ICDD Décoration & Architecture d'Intérieur Kinshasa"
-              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                mobileMediaMode === 'photo' ? 'opacity-100 scale-100' : 'opacity-0 scale-103 pointer-events-none'
-              }`}
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = '/bright_luxury_living.jpg';
-              }}
-            />
+            {/* Photos plein écran de décorations réelles réalisées par nos équipes ICDD */}
+            {heroMobilePhotos.map((photo, idx) => {
+              const isSelected = idx === currentHeroPhotoIdx;
+              const isVisible = mobileMediaMode === 'photo' && isSelected;
+              return (
+                <img
+                  key={idx}
+                  src={photo.src}
+                  alt={photo.alt}
+                  className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.70] contrast-[1.05] transition-all duration-1000 ease-in-out ${
+                    isVisible ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
+                  }`}
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/realisations/icdd_realisation_19.jpg';
+                  }}
+                />
+              );
+            })}
 
             {/* Vidéo plein écran rognée sans bandes noires (hero_mobile_video.mp4) */}
             <video
@@ -291,10 +373,11 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               muted
               playsInline
               preload="auto"
+              onTimeUpdate={handleVideoTimeUpdate}
               onEnded={handleVideoEnded}
               onLoadedData={() => setIsVideoLoaded(true)}
               className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                mobileMediaMode === 'video' ? 'opacity-100 scale-100' : 'opacity-0 scale-103 pointer-events-none'
+                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
               }`}
             >
               <source src="/hero_mobile_video.mp4" type="video/mp4" />
@@ -306,68 +389,137 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
           </div>
 
-          {/* Superposition épurée : Fond stylisé de prestige au-dessus, centre 100% dégagé */}
-          <div className="relative z-20 w-full h-full flex flex-col justify-between items-center text-center px-4 pt-16 sm:pt-20 pb-7 max-w-sm sm:max-w-md mx-auto pointer-events-none">
+          {/* Superposition Sitora Épurée & Luxueuse : Plein écran, centre dégagé, bas ergonomique */}
+          <div className="relative z-20 w-full h-full flex flex-col justify-between items-center px-4 pt-16 sm:pt-20 pb-6 pointer-events-none max-w-md mx-auto">
             
-            {/* EN HAUT : Fond Stylisé de Prestige (Capsule Architecturale Dépolie & Lumineuse) */}
-            <div className="relative pt-1 sm:pt-2 flex flex-col items-center pointer-events-auto w-full max-w-[320px] sm:max-w-[350px]">
-              
-              {/* Lueur d'ambiance raffinée en arrière-plan (Halo Cyan & Bleu Nuit) */}
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-[#005EA6]/40 via-[#00D7FF]/25 to-sky-400/35 rounded-3xl blur-xl opacity-75 pointer-events-none" />
-
-              {/* Conteneur / Fond Dépoli Haut de Gamme (Glassmorphic Card) */}
-              <div className="relative w-full px-5 py-3.5 sm:py-4 rounded-3xl bg-slate-950/65 backdrop-blur-2xl border border-white/25 shadow-[0_16px_36px_rgba(0,0,0,0.65)] flex flex-col items-center overflow-hidden">
-                
-                {/* Reflet lumineux fin sur l'arrête supérieure */}
-                <div className="absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-sky-300/70 to-transparent pointer-events-none" />
-
-                {/* Petit badge subtil de prestige */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/10 border border-white/15 text-[8.5px] sm:text-[9px] uppercase tracking-[0.24em] text-sky-200 font-bold mb-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00D7FF] shadow-[0_0_8px_#00D7FF] animate-pulse" />
-                  <span>Architecture d'Intérieur</span>
-                  <Sparkles className="w-2.5 h-2.5 text-sky-300" />
-                </div>
-
-                {/* Grand Titre Sculptural ICDD */}
-                <h1 className="text-4xl sm:text-5xl font-black tracking-[0.24em] uppercase text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)] select-none leading-none mt-1">
-                  ICDD
-                </h1>
-
-                {/* Sous-titre architectural */}
-                <p className="text-[9.5px] sm:text-[10.5px] font-extrabold uppercase tracking-[0.3em] text-sky-300 mt-1 drop-shadow-sm">
-                  Interior & Design Decoration
-                </p>
-
-                {/* Ligne de séparation fine et élégante */}
-                <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-sky-400/50 to-transparent my-2" />
-
-                {/* Slogan officiel avec belle typographie */}
-                <p className="text-xs sm:text-[13px] font-light text-slate-100 italic leading-snug drop-shadow-sm max-w-[270px]">
-                  “ Le bien-être de tous, <br />
-                  <span className="font-semibold text-white not-italic">pour construire un monde meilleur</span> ”
-                </p>
-
+            {/* EN HAUT : Floating Action Capsule façon Sitora [ ☆  ↗  ♡ ] */}
+            <div className="pointer-events-auto mt-1 flex flex-col items-center">
+              <div className="inline-flex items-center gap-4 px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-xl border border-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.4)] text-white/90">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('suite-du-site-content');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors text-xs font-semibold active:scale-95"
+                  title="Avis et réalisations de prestige"
+                >
+                  <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                  <span className="text-[11px] font-bold">4.9k</span>
+                </button>
+                <div className="w-[1px] h-3 bg-white/20" />
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="hover:text-sky-300 transition-colors active:scale-95"
+                  title="Partager"
+                >
+                  {shareCopied ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  ) : (
+                    <Share2 className="w-3.5 h-3.5" />
+                  )}
+                </button>
+                <div className="w-[1px] h-3 bg-white/20" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsHearted(!isHearted);
+                    setHeartCount(prev => isHearted ? prev - 1 : prev + 1);
+                  }}
+                  className="flex items-center gap-1 hover:text-rose-400 transition-colors active:scale-95"
+                  title="Ajouter aux favoris"
+                >
+                  <Heart className={`w-3.5 h-3.5 transition-colors ${isHearted ? 'fill-rose-500 text-rose-500' : ''}`} />
+                  <span className="text-[11px] font-bold">{heartCount}</span>
+                </button>
               </div>
+
+              {shareCopied && (
+                <span className="mt-1 text-[10px] text-emerald-300 bg-black/60 px-2 py-0.5 rounded-full border border-emerald-500/40 animate-fade-in">
+                  Lien copié dans le presse-papier !
+                </span>
+              )}
             </div>
 
-            {/* ESPACE CENTRAL TOTALEMENT DÉGAGÉ : Le visage de la personne est complètement visible et net */}
+            {/* ESPACE CENTRAL DÉGAGÉ : Mise en valeur cinématographique de la vidéo & photo plein écran */}
             <div className="flex-1 w-full" />
 
-            {/* EN BAS : Indicateur discret pour défiler vers la suite */}
-            <button
-              type="button"
-              onClick={() => {
-                const el = document.getElementById('suite-du-site-content');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="inline-flex flex-col items-center gap-0.5 text-white/75 hover:text-white transition-colors cursor-pointer active:scale-95 pointer-events-auto"
-              aria-label="Découvrir le contenu"
-            >
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-200/90">
-                Découvrir
-              </span>
-              <ChevronDown className="w-5 h-5 animate-bounce text-sky-400" />
-            </button>
+            {/* EN BAS : Card d'informations & Action Bar façon Sitora */}
+            <div className="w-full pointer-events-auto flex flex-col gap-3">
+              
+              {/* Carte textuelle épurée avec titre, badge et citation officielle */}
+              <div className="w-full text-left">
+                {/* Ligne Titre + Badge d'évaluation Sitora */}
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl sm:text-2xl font-black tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                      ICDD Kinshasa
+                    </h1>
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-white/15 backdrop-blur-md border border-white/25 text-sky-200">
+                      RDC
+                    </span>
+                  </div>
+                  
+                  {/* Badge Star Pill */}
+                  <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-sm text-xs font-bold">
+                    <Star className="w-3 h-3 fill-amber-300 text-amber-300" />
+                    <span className="text-[11px]">4.9</span>
+                  </div>
+                </div>
+
+                {/* Slogan officiel et description préservés */}
+                <p className="text-[12.5px] sm:text-sm text-slate-200/95 font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] max-w-sm">
+                  <span className="italic text-white font-medium">« Le bien-être de tous, pour construire un monde meilleur. »</span>{' '}
+                  Architecture d'intérieur, aménagement 3D et décoration d'exception à Kinshasa.
+                </p>
+              </div>
+
+              {/* Barre d'Action façon Sitora : Bouton Devis Pilule + Bouton Message Circulaire */}
+              <div className="flex items-center gap-2.5 pt-1">
+                {/* Bouton Principal façon Sitora "Add To Cart" / "Devis" avec icône circulaire */}
+                <button
+                  id="sitora-hero-devis-btn"
+                  onClick={openQuoteModal}
+                  className="flex-1 h-12 rounded-full bg-white/25 hover:bg-white/35 active:scale-[0.98] backdrop-blur-xl border border-white/35 text-white shadow-[0_10px_25px_rgba(0,0,0,0.4)] flex items-center justify-between pl-5 pr-1.5 transition-all group cursor-pointer"
+                >
+                  <span className="font-extrabold text-xs sm:text-sm tracking-wide text-white">
+                    Demander un Devis
+                  </span>
+                  <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <Phone className="w-4 h-4 text-[#005EA6]" />
+                  </div>
+                </button>
+
+                {/* Bouton Circulaire Message / WhatsApp façon Sitora */}
+                <a
+                  href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20prestations%20d%27am%C3%A9nagement."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-xl border border-white/25 text-white flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.4)] transition-all flex-shrink-0 cursor-pointer"
+                  title="Contacter sur WhatsApp"
+                  aria-label="Contacter sur WhatsApp"
+                >
+                  <MessageCircle className="w-5 h-5 text-emerald-300" />
+                </a>
+              </div>
+
+              {/* Indicateur de défilement discret vers les projets */}
+              <div className="flex justify-center pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('suite-du-site-content');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-slate-300/80 hover:text-white transition-colors"
+                >
+                  <span>Découvrir nos projets</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-sky-300 animate-bounce" />
+                </button>
+              </div>
+
+            </div>
 
           </div>
         </section>

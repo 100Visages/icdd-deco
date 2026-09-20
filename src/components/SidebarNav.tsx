@@ -5,9 +5,16 @@ import { NavTab } from '../types';
 interface SidebarNavProps {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
+  isScrolledDown?: boolean;
 }
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab }) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({ 
+  activeTab, 
+  setActiveTab,
+  isScrolledDown = false
+}) => {
+  // Sur l'accueil (Sitora Hero plein écran), la barre de navigation ne s'affiche que si l'utilisateur défile vers le bas.
+  const shouldShowMobileNav = activeTab === 'accueil' ? isScrolledDown : true;
   const navItems = [
     {
       id: 'accueil' as NavTab,
@@ -46,7 +53,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ activeTab, setActiveTab 
       {/* Mobile Floating Bottom Navigation: Glass Pill Dock for all 5 tabs (Desktop uses the TopBar) */}
       <nav 
         id="mobile-bottom-navigation" 
-        className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-[420px]"
+        className={`md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-[420px] transition-all duration-500 ease-out transform ${
+          shouldShowMobileNav
+            ? 'translate-y-0 opacity-100 pointer-events-auto scale-100 shadow-xl'
+            : 'translate-y-24 opacity-0 pointer-events-none scale-95'
+        }`}
         aria-label="Navigation mobile"
       >
         <div className="flex items-center justify-between p-1 bg-white/95 backdrop-blur-2xl rounded-full border border-slate-200/90 shadow-xl shadow-slate-300/50">

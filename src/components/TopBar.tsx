@@ -57,105 +57,137 @@ export const TopBar: React.FC<TopBarProps> = ({
       }`}
     >
       
-      {/* MOBILE TOP HEADER */}
-      <div className="md:hidden relative">
-        <div className={`flex items-center justify-between gap-2 px-3 py-2 rounded-2xl transition-all duration-300 ${
-          activeTab === 'accueil'
-            ? 'bg-black/45 backdrop-blur-xl border border-white/20 shadow-xl text-white'
-            : 'bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-md text-slate-800'
-        }`}>
-          
-          {/* Brand Monogram & Name */}
-          <div 
-            onClick={() => {
-              setActiveTab('accueil');
-              setIsMobileMenuOpen(false);
-            }}
-            className="flex items-center gap-2.5 cursor-pointer group"
-          >
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shadow-sm border-2 tracking-tight overflow-hidden relative flex-shrink-0 ${
-              activeTab === 'accueil' ? 'bg-black border-sky-400' : 'bg-white text-slate-900 border-sky-400'
-            }`}>
-              <span className="text-[10px] text-[#005EA6]">IC</span>
-              <img 
-                src={icddOfficialLogo} 
-                alt="Logo ICDD" 
-                className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+        {/* MOBILE TOP HEADER */}
+        <div className="md:hidden relative">
+          {activeTab === 'accueil' ? (
+            /* SITORA LUXURY TOP BAR ON ACCUEIL */
+            <div className="flex items-center justify-between gap-3 px-1 py-1">
+              {/* Left: Circular Frosted Glass Button (Navigation Menu) */}
+              <button
+                id="mobile-menu-toggle-btn"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="w-11 h-11 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-xl border border-white/25 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition-all cursor-pointer"
+                aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5 text-rose-300" />
+                ) : (
+                  <Menu className="w-5 h-5 text-white" />
+                )}
+              </button>
+
+              {/* Center: Brand Title 'ICDD' in pure luxury Sitora typography */}
+              <div 
+                onClick={() => {
+                  setActiveTab('accueil');
+                  setIsMobileMenuOpen(false);
                 }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className={`font-black text-xs tracking-wider uppercase leading-none ${
-                  activeTab === 'accueil' ? 'text-white' : 'text-slate-900'
-                }`}>
+                className="flex flex-col items-center cursor-pointer select-none"
+              >
+                <span className="font-extrabold text-lg sm:text-xl tracking-[0.3em] uppercase text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.7)] leading-tight">
                   ICDD
                 </span>
-                <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-tight border ${
-                  activeTab === 'accueil'
-                    ? 'bg-sky-500/20 text-sky-200 border-sky-400/40'
-                    : 'bg-sky-50 text-[#005EA6] border-sky-200/60'
-                }`}>
-                  Kinshasa
+                <span className="text-[8px] font-bold tracking-[0.24em] uppercase text-sky-200/90 leading-none">
+                  Interior & Design
                 </span>
               </div>
-              <span className={`text-[9px] font-medium tracking-tight leading-tight mt-0.5 ${
-                activeTab === 'accueil' ? 'text-slate-300' : 'text-slate-500'
-              }`}>
-                Interior & Design
-              </span>
+
+              {/* Right: Circular Frosted Glass Button (Devis Modal Trigger) */}
+              <button
+                id="mobile-btn-devis"
+                onClick={() => {
+                  openQuoteModal();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-11 h-11 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-xl border border-white/25 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.3)] transition-all cursor-pointer"
+                title="Demander un devis"
+                aria-label="Demander un devis"
+              >
+                <PhoneCall className="w-4 h-4 text-sky-200" />
+              </button>
             </div>
-          </div>
+          ) : (
+            /* Standard Mobile Header for other tabs */
+            <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-md text-slate-800 transition-all duration-300">
+              
+              {/* Brand Monogram & Name */}
+              <div 
+                onClick={() => {
+                  setActiveTab('accueil');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2.5 cursor-pointer group"
+              >
+                <div className="w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shadow-sm border-2 tracking-tight overflow-hidden relative flex-shrink-0 bg-white text-slate-900 border-sky-400">
+                  <span className="text-[10px] text-[#005EA6]">IC</span>
+                  <img 
+                    src={icddOfficialLogo} 
+                    alt="Logo ICDD" 
+                    className="absolute inset-0 w-full h-full object-cover scale-[1.32]" 
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-black text-xs tracking-wider uppercase leading-none text-slate-900">
+                      ICDD
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-tight border bg-sky-50 text-[#005EA6] border-sky-200/60">
+                      Kinshasa
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-medium tracking-tight leading-tight mt-0.5 text-slate-500">
+                    Interior & Design
+                  </span>
+                </div>
+              </div>
 
-          {/* Right Actions on Mobile */}
-          <div className="flex items-center gap-1.5">
-            {/* Direct WhatsApp Action */}
-            <a
-              href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20prestations%20d%27am%C3%A9nagement."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm active:scale-95 transition-transform flex items-center justify-center"
-              title="WhatsApp ICDD (+243 897504570)"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-            </a>
+              {/* Right Actions on Mobile */}
+              <div className="flex items-center gap-1.5">
+                {/* Direct WhatsApp Action */}
+                <a
+                  href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20prestations%20d%27am%C3%A9nagement."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm active:scale-95 transition-transform flex items-center justify-center"
+                  title="WhatsApp ICDD (+243 897504570)"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                </a>
 
-            {/* Quick Devis CTA Button */}
-            <button
-              id="mobile-btn-devis"
-              onClick={() => {
-                openQuoteModal();
-                setIsMobileMenuOpen(false);
-              }}
-              className="px-3 py-1.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-extrabold text-[11px] shadow-sm border border-sky-400/40 flex items-center gap-1 active:scale-95 transition-transform cursor-pointer"
-            >
-              <PhoneCall className="w-3 h-3 text-sky-200" />
-              <span>Devis</span>
-            </button>
+                {/* Quick Devis CTA Button */}
+                <button
+                  id="mobile-btn-devis"
+                  onClick={() => {
+                    openQuoteModal();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-1.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-extrabold text-[11px] shadow-sm border border-sky-400/40 flex items-center gap-1 active:scale-95 transition-transform cursor-pointer"
+                >
+                  <PhoneCall className="w-3 h-3 text-sky-200" />
+                  <span>Devis</span>
+                </button>
 
-            {/* Mobile Menu Toggle Button (Hamburger / Close) */}
-            <button
-              id="mobile-menu-toggle-btn"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`p-2 rounded-full active:scale-95 transition-all shadow-sm border cursor-pointer ${
-                activeTab === 'accueil'
-                  ? 'bg-white/15 text-white hover:bg-white/25 border-white/20'
-                  : 'bg-slate-100 text-slate-800 hover:bg-slate-200 border-slate-200'
-              }`}
-              aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-4 h-4 text-rose-400" />
-              ) : (
-                <Menu className={`w-4 h-4 ${activeTab === 'accueil' ? 'text-white' : 'text-[#005EA6]'}`} />
-              )}
-            </button>
-          </div>
+                {/* Mobile Menu Toggle Button (Hamburger / Close) */}
+                <button
+                  id="mobile-menu-toggle-btn"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 rounded-full active:scale-95 transition-all shadow-sm border cursor-pointer bg-slate-100 text-slate-800 hover:bg-slate-200 border-slate-200"
+                  aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                >
+                  {isMobileMenuOpen ? (
+                    <X className="w-4 h-4 text-rose-400" />
+                  ) : (
+                    <Menu className="w-4 h-4 text-[#005EA6]" />
+                  )}
+                </button>
+              </div>
 
-        </div>
+            </div>
+          )}
 
         {/* MOBILE MENU DROPDOWN DRAWER */}
         {isMobileMenuOpen && (
