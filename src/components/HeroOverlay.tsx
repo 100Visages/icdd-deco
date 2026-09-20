@@ -114,26 +114,64 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   // Desktop media toggle (to also optionally preview the video showcase on PC)
   const [desktopShowcaseMode, setDesktopShowcaseMode] = useState<'carousel' | 'video'>('carousel');
 
-  // Lecture continue et en boucle fluide de la vidéo sans interruption
+  // Mode média mobile : méthodes de transition douce
+  // Déclenchement de la transition vers l'image AVANT la fin de la vidéo
+  const triggerSwitchToPhoto = () => {
+    if (hasSwitchedBeforeEndRef.current) return;
+    hasSwitchedBeforeEndRef.current = true;
+    setMobileMediaMode('photo');
+    setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+  };
+
+  // Détection en temps réel : transition douce dès 1.8s avant la fin ou dès 85% de lecture
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current && mobileMediaMode === 'video') {
+      const { currentTime, duration } = videoRef.current;
+      const threshold = duration > 0 ? Math.min(duration * 0.85, duration - 1.8) : 9.0;
+      if (currentTime >= threshold) {
+        triggerSwitchToPhoto();
+      }
+    }
+  };
+
+  // Alternance automatique entre la vidéo et les photos de réalisations avec fondu enchaîné
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (mobileMediaMode === 'photo') {
+      hasSwitchedBeforeEndRef.current = false;
+      // Affichage de la photo de décoration pendant 5 secondes, puis retour en douceur à la vidéo
+      timer = setTimeout(() => {
+        setMobileMediaMode('video');
+      }, 5000);
+    } else if (mobileMediaMode === 'video') {
+      hasSwitchedBeforeEndRef.current = false;
+      // Minuteur de sécurité avant la fin du clip si timeUpdate n'est pas déclenché
+      timer = setTimeout(() => {
+        triggerSwitchToPhoto();
+      }, 9500);
+    }
+    return () => clearTimeout(timer);
+  }, [mobileMediaMode]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     video.muted = true;
-    video.loop = true;
     video.playsInline = true;
 
     const playVideo = () => {
-      if (video.paused) {
+      if (video.paused && mobileMediaMode === 'video') {
         video.play().catch(() => {});
       }
     };
 
-    playVideo();
+    if (mobileMediaMode === 'video') {
+      playVideo();
+    }
 
-    // Reprise immédiate si l'utilisateur revient sur l'onglet ou interagit
     const handleResume = () => {
-      if (!document.hidden) {
+      if (!document.hidden && mobileMediaMode === 'video') {
         playVideo();
       }
     };
@@ -147,13 +185,10 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
       document.removeEventListener('visibilitychange', handleResume);
       window.removeEventListener('focus', handleResume);
     };
-  }, []);
+  }, [mobileMediaMode]);
 
   const handleVideoEnded = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
+    triggerSwitchToPhoto();
   };
 
   const toggleDecoDetails = (id: string) => {
@@ -332,11 +367,13 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               autoPlay
               muted
               playsInline
-              loop
               preload="auto"
+              onTimeUpdate={handleVideoTimeUpdate}
               onEnded={handleVideoEnded}
               onLoadedData={() => setIsVideoLoaded(true)}
-              className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out z-10"
+              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out ${
+                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
+              }`}
             >
               <source src="/hero_mobile_video.mp4" type="video/mp4" />
               <source src="/hero_mobile_video_h264.mp4" type="video/mp4" />
@@ -875,10 +912,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
 
                 {/* Contenu inférieur */}
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Coup de cœur ICDD • 18+ chantiers livrés</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
@@ -939,10 +973,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 </div>
 
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Tendance 2026 • 12+ cuisines livrées</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
@@ -1001,10 +1032,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 </div>
 
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Signature Maître Staffeur • 25+ plafonds</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
@@ -1063,10 +1091,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 </div>
 
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Haute Isolation • 60+ blocs installés</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
@@ -1125,10 +1150,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 </div>
 
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Ambiance Feutrée • 15+ suites royales</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
@@ -1187,10 +1209,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 </div>
 
                 <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
-                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
-                    <span>Prestige Corporate • 10+ cabinets équipés</span>
-                  </div>
+
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
