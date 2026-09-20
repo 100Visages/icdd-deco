@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Project, FilterState } from '../types';
 import { MapPin, ArrowUpRight, Search, Sparkles, Filter, SlidersHorizontal, Bookmark, Ruler, Palette, Calendar, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -42,9 +43,9 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Header Section - Prestige & Épuré */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-white/20 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
           <div className="space-y-3 max-w-2xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/80 text-[#00D7FF] text-xs font-bold border border-white/20 shadow-sm">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
@@ -56,15 +57,15 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                   }}
                 />
               </div>
-              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
-              <span className="text-slate-400">•</span>
-              <span>Portfolio d'Exception</span>
+              <span className="uppercase tracking-widest text-[#00D7FF] font-black">ICDD</span>
+              <span className="text-white/40">•</span>
+              <span className="text-slate-200">Portfolio d'Exception</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Nos Projets <span className="text-[#005EA6]">de Référence</span>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Nos Projets <span className="text-[#00D7FF]">de Référence</span>
             </h2>
-            <p className="text-xs sm:text-base text-slate-600 font-normal leading-relaxed">
+            <p className="text-xs sm:text-base text-slate-200 font-normal leading-relaxed">
               Découvrez nos conceptions d'architecture d'intérieur sur-mesure pour résidences privées, penthouses et espaces professionnels à Kinshasa.
             </p>
           </div>
@@ -77,33 +78,36 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
               placeholder="Rechercher par lieu, style..."
               value={filters.searchQuery}
               onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
-              className="w-full pl-9 pr-4 py-3 rounded-full bg-slate-50 text-slate-900 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/20 focus:bg-white border border-slate-200 transition-all shadow-xs"
+              className="w-full pl-9 pr-4 py-3 rounded-full bg-slate-950/80 text-white text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:bg-slate-950 border border-white/20 transition-all shadow-inner"
             />
           </div>
         </div>
 
-        {/* Mobile Quick Category Horizontal Filter Strip */}
-        <div className="flex md:hidden items-center gap-2 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
-          {['Tous', 'Décoration Top Modèle', 'Décoration Gold', 'Décoration luxueuse', 'Décoration classique', 'Décoration simple'].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilters(prev => ({ ...prev, category: cat }))}
-              className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all min-h-[36px] flex items-center cursor-pointer active:scale-95 ${
-                filters.category === cat
-                  ? 'bg-[#005EA6] text-white border border-[#00D7FF]/40 shadow-md'
-                  : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-white/60 hover:bg-white'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Quick Category Horizontal Filter Strip */}
+        <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1 -mx-1 px-1">
+          {['Tous', 'Décoration Top Modèle', 'Décoration Gold', 'Décoration luxueuse', 'Décoration classique', 'Décoration simple'].map((cat) => {
+            const isSelected = filters.category === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setFilters(prev => ({ ...prev, category: cat }))}
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center cursor-pointer active:scale-95 ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white shadow-md shadow-[#005EA6]/35 border border-sky-400/50 scale-[1.02]'
+                    : 'bg-slate-900/80 backdrop-blur-md text-slate-200 border border-white/15 hover:bg-slate-800 hover:text-white hover:border-white/30'
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
         {/* Filter Pills Summary */}
-        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 px-1 sm:px-2">
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#005EA6] dark:text-[#00D7FF]" />
-            <span className="font-semibold text-slate-900 dark:text-slate-100">
+        <div className="flex items-center justify-between text-xs text-slate-300 px-1 sm:px-2">
+          <div className="flex items-center gap-2 font-normal">
+            <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00D7FF]" />
+            <span className="font-semibold text-white">
               {filteredProjects.length} projet(s) trouvé(s)
             </span>
           </div>
@@ -111,7 +115,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
           {(filters.category !== 'Tous' || filters.style !== 'Tous' || filters.budget !== 'Tous' || filters.searchQuery) && (
             <button
               onClick={() => setFilters({ category: 'Tous', style: 'Tous', budget: 'Tous', searchQuery: '' })}
-              className="text-[#005EA6] dark:text-[#00D7FF] font-bold hover:underline cursor-pointer"
+              className="text-sky-300 hover:text-white font-medium hover:underline cursor-pointer"
             >
               Réinitialiser
             </button>
@@ -120,117 +124,97 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
-          {filteredProjects.map((project) => (
-            <div
+          {filteredProjects.map((project, index) => (
+            <motion.div
               key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: (index % 6) * 0.06 }}
+              whileHover={{ y: -5 }}
               onClick={() => onOpenProject(project)}
-              className="group bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl rounded-[24px] sm:rounded-[32px] border border-white/80 dark:border-white/20 shadow-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 cursor-pointer flex flex-col justify-between"
+              className="group bg-slate-900/90 backdrop-blur-2xl rounded-3xl border border-white/20 hover:border-sky-400/50 shadow-xl overflow-hidden hover:shadow-[0_15px_35px_rgba(0,40,90,0.3)] transition-all duration-300 cursor-pointer flex flex-col justify-between text-white"
             >
               {/* Image Thumbnail */}
-              <div className="relative h-52 sm:h-60 w-full overflow-hidden">
+              <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-slate-950">
                 <img
                   src={project.coverImage}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
 
                 {/* Category Badge Top Left */}
-                <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-slate-900 dark:text-white border border-white/60 shadow-sm">
+                <div className="absolute top-3.5 left-3.5 bg-slate-950/70 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs">
                   {project.category}
                 </div>
 
-                {/* Top Right: Location and Bookmark Action */}
-                <div className="absolute top-4 right-4 flex items-center gap-1.5">
-                  <div className="bg-slate-950/80 text-white backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-medium flex items-center gap-1 border border-white/20">
-                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
-                    <span>{project.location}</span>
-                  </div>
-
+                {/* Top Right: Bookmark Action */}
+                <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleFavorite(project);
                     }}
                     title={isFavorite(project.id) ? "Retirer des favoris" : "Enregistrer dans mes favoris"}
-                    className={`p-1.5 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
+                    className={`p-2 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
                       isFavorite(project.id)
-                        ? 'bg-[#005EA6] text-white border-[#00D7FF] shadow-md scale-105'
-                        : 'bg-slate-950/70 text-white/80 border-white/20 hover:text-white hover:bg-slate-900'
+                        ? 'bg-[#005EA6] text-white border-sky-400 shadow-md scale-105'
+                        : 'bg-slate-950/70 text-slate-300 border-white/20 hover:text-white hover:bg-slate-900'
                     }`}
                   >
-                    <Bookmark className={`w-3.5 h-3.5 ${isFavorite(project.id) ? 'fill-current' : ''}`} />
+                    <Bookmark className={`w-3.5 h-3.5 ${isFavorite(project.id) ? 'fill-current text-[#00D7FF]' : ''}`} />
                   </button>
                 </div>
 
                 {/* Title Overlay at bottom of image */}
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h3 className="text-xl font-bold tracking-tight drop-shadow-md group-hover:text-[#00D7FF] transition-colors">
+                <div className="absolute bottom-3.5 left-4 right-4 text-white">
+                  <h3 className="text-lg sm:text-xl font-bold tracking-tight drop-shadow-md group-hover:text-[#00D7FF] transition-colors line-clamp-1">
                     {project.title}
                   </h3>
-                  <p className="text-xs text-slate-200 opacity-90 line-clamp-1 font-medium">
+                  <p className="text-xs text-slate-300 line-clamp-1 font-light">
                     {project.subtitle}
                   </p>
                 </div>
               </div>
 
               {/* Card Body */}
-              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-normal line-clamp-2 leading-relaxed">
+              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                <p className="text-xs sm:text-sm text-slate-200 font-normal line-clamp-2 leading-relaxed">
                   {project.description}
                 </p>
 
-                {/* Specs tag bar */}
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-                    <Ruler className="w-3 h-3 text-[#005EA6] dark:text-[#00D7FF]" />
-                    <span>{project.area} m²</span>
-                  </span>
-                  <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-                    <Palette className="w-3 h-3 text-[#005EA6] dark:text-[#00D7FF]" />
-                    <span>{project.style}</span>
-                  </span>
-                  <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-[#005EA6] dark:text-[#00D7FF]" />
-                    <span>{project.year}</span>
-                  </span>
-                </div>
-
                 {/* Card Footer */}
-                <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-slate-500 font-medium">Matériaux dès</span>
-                    <span className="text-sm font-extrabold text-[#005EA6] dark:text-[#00D7FF]">
-                      {project.startingPrice ? `${project.startingPrice} $` : project.budgetRange}
-                    </span>
-                  </div>
+                <div className="pt-3 border-t border-white/15 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#00D7FF] group-hover:underline flex items-center gap-1">
+                    <span>Découvrir le projet</span>
+                  </span>
 
-                  <button className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-[#005EA6] group-hover:text-[#00D7FF] group-hover:rotate-45 transition-all duration-300 shadow-md">
-                    <ArrowUpRight className="w-4.5 h-4.5" />
-                  </button>
+                  <div className="w-9 h-9 rounded-full bg-white/10 group-hover:bg-[#005EA6] text-white flex items-center justify-center transition-all duration-300 border border-white/20 group-hover:border-sky-400/50 group-hover:scale-110">
+                    <ArrowUpRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
 
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Empty State */}
         {filteredProjects.length === 0 && (
-          <div className="text-center py-16 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-[32px] p-8 border border-white/60">
-            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+          <div className="text-center py-16 bg-slate-900/80 backdrop-blur-2xl rounded-[32px] p-8 border border-white/20 text-white">
+            <h3 className="text-xl font-bold text-white mb-2">
               Aucun projet ne correspond à vos critères
             </h3>
-            <p className="text-sm text-slate-500 mb-6">
-              Essayez de modifier vos filtres de catégorie, de style ou de budget.
+            <p className="text-sm text-slate-300 mb-6">
+              Essayez de modifier vos filtres de recherche.
             </p>
             <button
               onClick={() => setFilters({ category: 'Tous', style: 'Tous', budget: 'Tous', searchQuery: '' })}
-              className="px-6 py-2.5 rounded-full bg-[#005EA6] text-white text-xs font-bold hover:bg-[#004f8c] transition-colors border border-[#00D7FF]/40 shadow-md"
+              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white text-xs font-bold hover:scale-105 active:scale-95 transition-all border border-sky-400/40 shadow-md cursor-pointer"
             >
               Réinitialiser la recherche
             </button>

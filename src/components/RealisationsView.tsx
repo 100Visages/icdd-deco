@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { Project, RealisationCategory } from '../types';
 import { 
   MapPin, 
@@ -114,9 +115,9 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Header Section */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-white/20 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
           <div className="space-y-3 max-w-3xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/80 text-[#00D7FF] text-xs font-bold border border-white/20 shadow-sm">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
@@ -128,15 +129,15 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                   }}
                 />
               </div>
-              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
-              <span className="text-slate-400">•</span>
-              <span>Galerie Visuelle</span>
+              <span className="uppercase tracking-widest text-[#00D7FF] font-black">ICDD</span>
+              <span className="text-white/40">•</span>
+              <span className="text-slate-200">Galerie Visuelle</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Nos Réalisations <span className="text-[#005EA6]">en Images</span>
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Nos Réalisations <span className="text-[#00D7FF]">en Images</span>
             </h1>
-            <p className="text-xs sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-200 font-normal leading-relaxed">
               Explorez toutes nos photos de chantiers finis classées par univers : appartements, chambres, staff, cuisines et décoration.
             </p>
           </div>
@@ -150,13 +151,13 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 placeholder="Filtrer (Gombe, Staff, Cuisine...)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-3 rounded-full bg-slate-50 text-slate-900 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/20 focus:bg-white border border-slate-200 transition-all shadow-xs"
+                className="w-full pl-9 pr-4 py-3 rounded-full bg-slate-950/80 text-white text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:bg-slate-950 border border-white/20 transition-all shadow-inner"
               />
             </div>
 
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/20 border border-sky-400/40 whitespace-nowrap"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/30 border border-sky-400/40 whitespace-nowrap"
             >
               <FileText className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
@@ -175,15 +176,15 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer active:scale-95 ${
                   isSelected
-                    ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/25 border border-sky-400/40 scale-[1.02]'
-                    : 'bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50 hover:text-[#005EA6]'
+                    ? 'bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white shadow-md shadow-[#005EA6]/35 border border-sky-400/50 scale-[1.02]'
+                    : 'bg-slate-900/80 backdrop-blur-md text-slate-200 border border-white/15 hover:bg-slate-800 hover:text-white hover:border-white/30'
                 }`}
               >
                 <span>{cat.label}</span>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
                   isSelected 
                     ? 'bg-white/20 text-white' 
-                    : 'bg-slate-100 text-slate-500'
+                    : 'bg-white/10 text-slate-300'
                 }`}>
                   {cat.count}
                 </span>
@@ -193,9 +194,9 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
         </div>
 
         {/* Filter Count & Reset */}
-        <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+        <div className="flex items-center justify-between text-xs text-slate-300 px-1">
           <div className="flex items-center gap-1.5 font-normal">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-sky-400" />
             <span>{filteredPhotos.length} photos disponibles</span>
           </div>
 
@@ -205,113 +206,93 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 setSelectedCategory('Tous');
                 setSearchQuery('');
               }}
-              className="text-slate-700 text-xs hover:underline cursor-pointer"
+              className="text-sky-300 hover:text-white text-xs hover:underline cursor-pointer transition-colors"
             >
               Afficher toutes les photos
             </button>
           )}
         </div>
 
-        {/* Visual Gallery Grid without Titles - Pure Focus on Imagery with Live Like Counter */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+        {/* Visual Gallery Grid - Pure Focus on Decorative Imagery with Concise Details */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {filteredPhotos.map((photo, index) => {
-            const photoLiked = isLiked(photo.id);
-            const likesCount = getLikesCount(photo.id);
+            const shortTitle = photo.project?.title 
+              ? photo.project.title.split('–')[0].replace('Kinshasa', '').trim()
+              : photo.mainCategory;
+            const shortLocation = photo.location ? photo.location.split(',')[0] : 'Kinshasa';
 
             return (
-              <div
+              <motion.div
                 key={photo.id}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: Math.min((index % 8) * 0.04, 0.3) }}
+                whileHover={{ y: -4 }}
                 onClick={() => setActivePhotoIndex(index)}
-                className="group relative h-64 sm:h-72 md:h-80 bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
+                className="group relative h-80 sm:h-96 md:h-[390px] rounded-[24px] overflow-hidden cursor-pointer shadow-md hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.35)] border border-white/20 hover:border-sky-400/50 transition-all duration-500 flex flex-col justify-between p-5 bg-slate-900 select-none"
               >
                 {/* Visual Image with Hover Zoom */}
                 <img
                   src={photo.image}
                   alt={`Réalisation ICDD ${photo.mainCategory} ${photo.location}`}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out select-none"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
                   }}
                 />
 
-                {/* Subtle Multi-directional Vignette & Gradients for High Legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none opacity-80 group-hover:opacity-95 transition-opacity" />
+                {/* Subtle Gradient Mask */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/20 group-hover:via-slate-950/40 transition-colors duration-500 pointer-events-none" />
 
-                {/* Top Badges: Category & Location (NO TITLE) */}
-                <div className="relative z-10 p-3 sm:p-3.5 flex items-center justify-between gap-2 pointer-events-none">
-                  <span className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider text-slate-800 shadow-sm border border-white/60">
-                    {photo.mainCategory}
-                  </span>
-
-                  <span className="bg-black/50 backdrop-blur-md text-white/95 px-2.5 py-1 rounded-full text-[10px] font-light flex items-center gap-1 border border-white/20 shadow-xs">
-                    <MapPin className="w-3 h-3 text-sky-400" />
-                    <span>{photo.location.split(',')[0]}</span>
-                  </span>
-                </div>
-
-                {/* Bottom Bar: Action buttons on the left + Interactive LIKE COUNTER on the right */}
-                <div className="relative z-10 p-3 sm:p-3.5 flex items-center justify-between gap-2">
-                  
-                  {/* Left: Quick WhatsApp and Zoom actions */}
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={(e) => handleWhatsAppInquiry(photo, e)}
-                      title="Contacter sur WhatsApp pour cette réalisation"
-                      className="p-2 rounded-full bg-emerald-600/90 hover:bg-emerald-600 text-white backdrop-blur-md border border-emerald-400/40 shadow-sm transition-all duration-200 active:scale-90 cursor-pointer"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setActivePhotoIndex(index)}
-                      title="Agrandir en plein écran"
-                      className="px-2.5 py-1.5 rounded-full bg-white/90 hover:bg-white text-slate-800 text-[11px] font-medium backdrop-blur-md border border-white/60 shadow-sm transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1"
-                    >
-                      <Maximize2 className="w-3 h-3 text-[#005EA6]" />
-                      <span className="hidden sm:inline">Agrandir</span>
-                    </button>
+                {/* Top Badges: Category & City */}
+                <div className="relative z-10 flex items-center justify-between gap-2 pointer-events-none">
+                  <div className="bg-slate-950/75 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-white border border-white/20 flex items-center gap-1.5 shadow-xs">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>{photo.mainCategory}</span>
                   </div>
 
-                  {/* Right: LIKE BUTTON WITH LIVE COUNTER */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleLike(photo.id);
-                    }}
-                    title={photoLiked ? "Je n'aime plus" : "J'aime cette réalisation"}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-md active:scale-90 select-none ${
-                      photoLiked
-                        ? 'bg-rose-500 text-white border-rose-400 shadow-rose-500/30'
-                        : 'bg-white/95 hover:bg-white text-slate-700 hover:text-rose-600 border-white/80'
-                    }`}
-                  >
-                    <Heart 
-                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        photoLiked ? 'fill-white text-white scale-110' : 'text-slate-600 group-hover:text-rose-500'
-                      }`} 
-                    />
-                    <span className={`text-xs font-semibold tracking-tight ${photoLiked ? 'text-white' : 'text-slate-800'}`}>
-                      {likesCount}
-                    </span>
-                  </button>
-
+                  <div className="bg-slate-950/75 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-medium text-slate-200 border border-white/15 flex items-center gap-1 shadow-xs">
+                    <MapPin className="w-3 h-3 text-sky-300" />
+                    <span>{shortLocation}</span>
+                  </div>
                 </div>
-              </div>
+
+                {/* Bottom Content: Clean, Concise & Informative */}
+                <div className="relative z-10 space-y-2">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors line-clamp-1">
+                      {shortTitle}
+                    </h3>
+                    {photo.project?.subtitle && (
+                      <p className="text-[11px] sm:text-xs text-slate-300 line-clamp-1 font-normal mt-0.5">
+                        {photo.project.subtitle}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-1.5 flex items-center justify-between border-t border-white/15">
+                    <span className="text-xs font-semibold text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Agrandir</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Empty state */}
         {filteredPhotos.length === 0 && (
-          <div className="text-center py-16 bg-white/80 rounded-2xl p-8 border border-slate-200/60">
-            <h3 className="text-base font-normal text-slate-800 mb-1">
+          <div className="text-center py-16 bg-slate-900/80 backdrop-blur-2xl rounded-2xl p-8 border border-white/20 text-white">
+            <h3 className="text-base font-normal text-white mb-1">
               Aucune photo trouvée
             </h3>
-            <p className="text-xs text-slate-400 mb-4 font-light">
+            <p className="text-xs text-slate-300 mb-4 font-light">
               Essayez un autre filtre ou réinitialisez la recherche.
             </p>
             <button
@@ -319,7 +300,7 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
                 setSelectedCategory('Tous');
                 setSearchQuery('');
               }}
-              className="px-4 py-1.5 rounded-full bg-slate-900 text-white text-xs font-normal hover:bg-slate-800 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white text-xs font-bold border border-sky-400/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
               Afficher tout
             </button>

@@ -11,6 +11,18 @@ import { ContactView } from './components/ContactView';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { QuoteEstimatorModal } from './components/QuoteEstimatorModal';
 import icddDecoBg from './assets/realisations/icdd_realisation_19.jpg';
+import icddDecoRealisations from './assets/realisations/icdd_realisation_11.jpg';
+import icddDecoServices from './assets/realisations/icdd_realisation_6.jpg';
+import icddDecoShop from './assets/realisations/icdd_realisation_8.jpg';
+import icddDecoContact from './assets/realisations/icdd_realisation_1.jpg';
+
+const TAB_BACKGROUNDS: Record<NavTab, string> = {
+  accueil: icddDecoBg,
+  realisations: icddDecoRealisations,
+  services: icddDecoServices,
+  shop: icddDecoShop,
+  contact: icddDecoContact,
+};
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('accueil');
@@ -86,25 +98,24 @@ export default function App() {
       {/* Outer Pill-Shaped Glass Frame */}
       <main 
         id="pill-shaped-container"
-        className="relative w-full h-full max-w-none rounded-none sm:rounded-[24px] lg:rounded-[32px] xl:rounded-[38px] border-0 sm:border-[2px] border-white/95 shadow-[0_20px_50px_-10px_rgba(0,40,90,0.08)] overflow-hidden flex flex-col bg-white/95 transition-all duration-500"
+        className="relative w-full h-full max-w-none rounded-none sm:rounded-[24px] lg:rounded-[32px] xl:rounded-[38px] border-0 sm:border-[2px] border-slate-700/30 shadow-[0_25px_60px_-15px_rgba(0,10,30,0.3)] overflow-hidden flex flex-col bg-slate-950/40 transition-all duration-500"
       >
         
-        {/* Main Background Image: Véritable photo de décoration d'intérieur réalisée par ICDD à Kinshasa */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-slate-100">
+        {/* Main Background Image: Véritable photo de décoration d'intérieur réalisée par ICDD pour chaque page avec masque noirci élégant */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-slate-950">
           <img
-            src={icddDecoBg}
-            alt="ICDD - Décoration et Aménagement d'Intérieur Réalisés par nos équipes"
-            className={`w-full h-full object-cover object-center transition-all duration-700 ${
-              activeTab !== 'accueil' ? 'scale-105 blur-sm opacity-20' : 'scale-100 opacity-60'
-            }`}
+            key={activeTab}
+            src={TAB_BACKGROUNDS[activeTab] || icddDecoBg}
+            alt="ICDD - Décoration et Aménagement d'Intérieur"
+            className="w-full h-full object-cover object-center brightness-[0.75] contrast-[1.10] scale-100 opacity-75 transition-all duration-700 animate-in fade-in"
             referrerPolicy="no-referrer"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = '/realisations/icdd_realisation_19.jpg';
             }}
           />
-          {/* Voiles de dégradé architectural pour sublimer la décoration tout en assurant une lisibilité maximale */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/65 to-white/25" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-transparent to-white/70" />
+          {/* Masque architectural noirci : élimination de l'excès blanc pour une ambiance feutrée et contrastée */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-slate-950/70" />
+          <div className="absolute inset-0 bg-black/35" />
         </div>
 
         {/* Sidebar Navigation (Left Vertical Pill on Desktop, Floating Bottom Dock on Mobile) */}

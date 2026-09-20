@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { ICDD_SHOP_PRODUCTS, getWhatsAppProductLink, ICDD_WHATSAPP_NUMBER } from '../data/shop';
 import { ShopCategory, ShopProduct } from '../types';
 import { 
@@ -92,9 +93,9 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Shop Header Banner - Prestige & Épuré */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-white/20 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
           <div className="space-y-3 max-w-3xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/80 text-[#00D7FF] text-xs font-bold border border-white/20 shadow-sm">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
@@ -106,15 +107,15 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
                   }}
                 />
               </div>
-              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
-              <span className="text-slate-400">•</span>
-              <span>Boutique Matériaux</span>
+              <span className="uppercase tracking-widest text-[#00D7FF] font-black">ICDD</span>
+              <span className="text-white/40">•</span>
+              <span className="text-slate-200">Boutique Matériaux</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Matériaux et finitions <span className="text-[#005EA6]">haut de gamme</span>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Matériaux et finitions <span className="text-[#00D7FF]">haut de gamme</span>
             </h2>
-            <p className="text-xs sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-200 font-normal leading-relaxed">
               Peintures velours, blocs-portes acoustiques, cuisines modernes et staff d’art à Kinshasa. Commandez directement sur WhatsApp.
             </p>
           </div>
@@ -124,14 +125,14 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
               href={`https://wa.me/${ICDD_WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour ICDD, je souhaite des conseils pour acheter des matériaux ou des finitions de décoration.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 whitespace-nowrap border border-emerald-400/40"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Direct</span>
             </a>
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/20 border border-sky-400/40"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/30 border border-sky-400/40"
             >
               <FileText className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
@@ -154,16 +155,16 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 cursor-pointer active:scale-95 ${
                     isSelected
-                      ? 'bg-[#005EA6] text-white shadow-md shadow-[#005EA6]/25 border border-sky-400/40 scale-[1.02]'
-                      : 'bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50 hover:text-[#005EA6]'
+                      ? 'bg-gradient-to-r from-[#005EA6] to-[#0077c8] text-white shadow-md shadow-[#005EA6]/35 border border-sky-400/50 scale-[1.02]'
+                      : 'bg-slate-900/80 backdrop-blur-md text-slate-200 border border-white/15 hover:bg-slate-800 hover:text-white hover:border-white/30'
                   }`}
                 >
-                  <IconComp className={`w-3.5 h-3.5 ${isSelected ? 'text-sky-200' : 'text-[#005EA6]'}`} />
+                  <IconComp className={`w-3.5 h-3.5 ${isSelected ? 'text-sky-200' : 'text-[#00D7FF]'}`} />
                   <span>{cat.label}</span>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
                     isSelected 
                       ? 'bg-white/20 text-white' 
-                      : 'bg-slate-100 text-slate-500'
+                      : 'bg-white/10 text-slate-300'
                   }`}>
                     {cat.count}
                   </span>
@@ -180,131 +181,81 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
               placeholder="Rechercher un produit..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 rounded-full bg-slate-50 text-slate-900 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#005EA6]/20 focus:bg-white border border-slate-200 transition-all shadow-xs"
+              className="w-full pl-9 pr-3 py-2.5 rounded-full bg-slate-950/80 text-white text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400/40 focus:bg-slate-950 border border-white/20 transition-all shadow-inner"
             />
           </div>
 
         </div>
 
         {/* Product Cards Grid */}
+        {/* Products Grid - Decorative Visual Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-          {filteredProducts.map((product) => {
+          {filteredProducts.map((product, index) => {
             const whatsappUrl = getWhatsAppProductLink(product);
-            const isExpanded = !!openShopDetails[product.id];
 
             return (
-              <div
+              <motion.div
                 key={product.id}
-                className="group bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: (index % 8) * 0.05 }}
+                whileHover={{ y: -5 }}
+                onClick={() => setActiveModalProduct(product)}
+                className="group relative h-[380px] sm:h-[420px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.3)] border border-white/20 hover:border-sky-400/50 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none text-white"
               >
-                {/* Product Photo with Badges & "Détails" Button */}
-                <div 
-                  onClick={() => toggleProductDetails(product.id)}
-                  className="relative h-56 sm:h-60 w-full overflow-hidden bg-slate-100 cursor-pointer select-none"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
+                {/* Background Photo with Zoom */}
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out select-none"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_2.jpg';
+                  }}
+                />
+                
+                {/* Architectural Dark Gradient Mask */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 group-hover:via-slate-950/30 transition-colors duration-500 pointer-events-none" />
 
-                  {/* Top Badges */}
-                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
-                    <span className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900 border border-white/60 shadow-sm">
-                      {product.category}
-                    </span>
-
-                    {/* Availability */}
-                    <span className="bg-slate-950/60 text-white backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 border border-white/20 shadow-sm">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                      {product.availability}
-                    </span>
+                {/* Top Badges: Category & Price */}
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium text-white border border-white/20 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>{product.category}</span>
                   </div>
 
-                  {/* Bottom of Photo: Price + Compact "Détails" Button */}
-                  <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-end justify-between gap-2">
-                    <div>
-                      <span className="text-xs font-black bg-white text-[#005EA6] px-3 py-1 rounded-full shadow-md border border-white/90 block">
-                        {product.priceDisplay}
-                      </span>
-                    </div>
-
-                    {/* Small Button ON THE PHOTO */}
-                    <button
-                      type="button"
-                      onClick={(e) => toggleProductDetails(product.id, e)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95 flex-shrink-0 ${
-                        isExpanded
-                          ? 'bg-[#005EA6] text-white border-sky-400'
-                          : 'bg-white/95 hover:bg-white text-slate-900 border-white/80'
-                      }`}
-                      title={isExpanded ? "Masquer les détails" : "Voir les détails"}
-                    >
-                      <Eye className="w-3.5 h-3.5 text-[#005EA6]" />
-                      <span>{isExpanded ? 'Masquer' : 'Détails'}</span>
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
+                  <span className="bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/20 shadow-xs">
+                    {product.priceDisplay}
+                  </span>
                 </div>
 
-                {/* Body Details */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-1.5">
-                    <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#005EA6] transition-colors leading-snug">
-                      {product.name}
-                    </h3>
-                    
-                    {/* Expandable details */}
-                    {isExpanded ? (
-                      <div className="space-y-3 pt-2 animate-in fade-in duration-200">
-                        <p className="text-xs text-slate-600 font-normal leading-relaxed">
-                          {product.shortDesc}
-                        </p>
+                {/* Bottom Decorative Content */}
+                <div className="relative z-10 space-y-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors line-clamp-1">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-slate-300 font-light line-clamp-1">
+                    {product.shortDesc}
+                  </p>
 
-                        {/* Specifications Checklist */}
-                        {product.specs && (
-                          <div className="space-y-1.5 pt-2 border-t border-slate-100">
-                            {product.specs.map((spec, sIdx) => (
-                              <div key={sIdx} className="flex items-center gap-2 text-xs text-slate-700">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                                <span className="font-normal">{spec}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-slate-500 font-normal line-clamp-2 leading-relaxed">
-                        {product.shortDesc}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* WhatsApp Action Buttons */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center gap-2">
+                  <div className="pt-2 flex items-center justify-between gap-2">
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3.5 py-2 rounded-full bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 border border-emerald-400/40 shadow-xs transition-all active:scale-95 cursor-pointer"
                     >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Commander WhatsApp</span>
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>WhatsApp</span>
                     </a>
 
-                    <button
-                      onClick={() => setActiveModalProduct(product)}
-                      title="Fiche technique complète"
-                      className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 cursor-pointer transition-colors shadow-xs"
-                    >
+                    <div className="w-9 h-9 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
                       <ExternalLink className="w-4 h-4" />
-                    </button>
+                    </div>
                   </div>
                 </div>
-
-              </div>
+              </motion.div>
             );
           })}
         </div>

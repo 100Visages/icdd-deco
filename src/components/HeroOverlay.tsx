@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { Project, NavTab, RealisationCategory } from '../types';
 import { 
   ArrowRight, 
   Sparkles, 
   Phone, 
+  PhoneCall,
   MessageCircle, 
   Building2, 
   Paintbrush, 
@@ -25,7 +27,8 @@ import {
   Star,
   Share2,
   Heart,
-  Check
+  Check,
+  Sofa
 } from 'lucide-react';
 import { ICDD_PROJECTS, ICDD_ASSETS } from '../data/projects';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
@@ -46,11 +49,8 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   setActiveTab,
   onSelectCategory,
 }) => {
-  // Filters for "Trouve ton goût"
-  const [selectedSpace, setSelectedSpace] = useState<string>('Salon');
-  const [selectedStyle, setSelectedStyle] = useState<string>('Moderne');
-  const [selectedProject, setSelectedProjectType] = useState<string>('Appartement');
-  const [tasteDiscovered, setTasteDiscovered] = useState<boolean>(false);
+  // Filtre actif pour les réalisations présentées sur la page d'accueil
+  const [homeCategoryFilter, setHomeCategoryFilter] = useState<RealisationCategory>('Tous');
 
   // Mobile clean view toggles
   const [showMobileHeroDetails, setShowMobileHeroDetails] = useState<boolean>(false);
@@ -114,55 +114,46 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   // Desktop media toggle (to also optionally preview the video showcase on PC)
   const [desktopShowcaseMode, setDesktopShowcaseMode] = useState<'carousel' | 'video'>('carousel');
 
-  // Déclenchement de la transition vers l'image AVANT la fin de la vidéo
-  const triggerSwitchToPhoto = () => {
-    if (hasSwitchedBeforeEndRef.current) return;
-    hasSwitchedBeforeEndRef.current = true;
-    setMobileMediaMode('photo');
-    setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
-  };
+  // Lecture continue et en boucle fluide de la vidéo sans interruption
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  // Détection en temps réel : dès que la vidéo approche de la fin, la transition douce démarre
-  const handleVideoTimeUpdate = () => {
-    if (videoRef.current && mobileMediaMode === 'video') {
-      const { currentTime, duration } = videoRef.current;
-      // La vidéo dure ~11.8s. On déclenche le changement vers l'image ~2.4s avant la fin (ou dès 9.2s)
-      const triggerThreshold = duration > 0 ? Math.max(duration - 2.4, 4) : 9.2;
-      if (currentTime >= triggerThreshold) {
-        triggerSwitchToPhoto();
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    const playVideo = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
       }
-    }
-  };
+    };
 
-  // Alternance automatique entre la vidéo et les photos de réalisations
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (mobileMediaMode === 'photo') {
-      hasSwitchedBeforeEndRef.current = false;
-      // Présentation de la photo de décoration pendant 5 secondes, puis relance de la vidéo
-      timer = setTimeout(() => {
-        setMobileMediaMode('video');
-      }, 5000);
-    } else if (mobileMediaMode === 'video') {
-      hasSwitchedBeforeEndRef.current = false;
-      // Minuteur de sécurité garanti AVANT la fin de la vidéo (~11.8s) : déclenchement à 9.2s
-      timer = setTimeout(() => {
-        triggerSwitchToPhoto();
-      }, 9200);
-    }
-    return () => clearTimeout(timer);
-  }, [mobileMediaMode]);
+    playVideo();
 
-  useEffect(() => {
-    if (videoRef.current && mobileMediaMode === 'video') {
-      videoRef.current.currentTime = 0;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {});
-    }
-  }, [mobileMediaMode]);
+    // Reprise immédiate si l'utilisateur revient sur l'onglet ou interagit
+    const handleResume = () => {
+      if (!document.hidden) {
+        playVideo();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleResume);
+    window.addEventListener('focus', handleResume);
+    window.addEventListener('touchstart', playVideo, { once: true });
+    window.addEventListener('click', playVideo, { once: true });
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleResume);
+      window.removeEventListener('focus', handleResume);
+    };
+  }, []);
 
   const handleVideoEnded = () => {
-    triggerSwitchToPhoto();
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
   };
 
   const toggleDecoDetails = (id: string) => {
@@ -299,37 +290,6 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
     setActiveTab('realisations');
   };
 
-  const handleDiscoverTaste = () => {
-    setTasteDiscovered(true);
-
-    // Map selected space to realization category
-    let targetCategory: RealisationCategory = 'Tous';
-    if (selectedSpace === 'Salon') {
-      targetCategory = 'Décoration';
-    } else if (selectedSpace === 'Chambre') {
-      targetCategory = 'Chambres';
-    } else if (selectedSpace === 'Cuisine') {
-      targetCategory = 'Cuisines';
-    } else if (selectedSpace === 'Staff') {
-      targetCategory = 'Staff';
-    } else if (selectedSpace === 'Portes') {
-      targetCategory = 'Portes';
-    } else if (selectedSpace === 'Bureau') {
-      targetCategory = 'Bureaux';
-    } else if (selectedProject === 'Appartement') {
-      targetCategory = 'Appartements';
-    }
-
-    if (onSelectCategory) {
-      onSelectCategory(targetCategory);
-    }
-
-    // Smooth scroll down to realisations section or navigate
-    if (realisationsRef.current) {
-      realisationsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
   return (
     <div id="accueil-view-container" className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar p-0 md:p-7 lg:p-9 xl:p-10 pointer-events-auto">
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto pb-28 sm:pb-24">
@@ -372,13 +332,11 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               autoPlay
               muted
               playsInline
+              loop
               preload="auto"
-              onTimeUpdate={handleVideoTimeUpdate}
               onEnded={handleVideoEnded}
               onLoadedData={() => setIsVideoLoaded(true)}
-              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
-              }`}
+              className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out z-10"
             >
               <source src="/hero_mobile_video.mp4" type="video/mp4" />
               <source src="/hero_mobile_video_h264.mp4" type="video/mp4" />
@@ -824,731 +782,851 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         <div id="suite-du-site-content" className="px-3 sm:px-6 md:px-0 space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
 
         {/* ========================================================================= */}
-        {/* 2. SECTION "TROUVE TON GOÛT" (Sélecteur architectural épuré)              */}
+        {/* 2. NOS RÉALISATIONS EMBLÉMATIQUES (Design & Composition Haute Facture)   */}
         {/* ========================================================================= */}
-        <section id="trouve-ton-gout" className="relative">
-          <div className="bg-white/90 backdrop-blur-xl p-5 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200/60 shadow-xs space-y-4">
-            
-            <div className="space-y-1 text-center sm:text-left">
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                Sélection Personnalisée
-              </span>
-              <h2 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
-                Trouve ton goût
+        <section ref={realisationsRef} id="nos-realisations-section" className="space-y-6 sm:space-y-8">
+          
+          {/* Section Header: Titre architectural & sélecteur de filtres rapides */}
+          <div className="bg-white/90 backdrop-blur-xl p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] border border-slate-200/80 shadow-xs flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#005EA6] text-[11px] font-semibold border border-sky-200/70 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#005EA6]" />
+                <span>Chantiers & Décors d'Exception à Kinshasa</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-slate-900 tracking-tight">
+                Nos réalisations emblématiques
               </h2>
-              <p className="text-xs text-slate-500 font-light">
-                Quel espace souhaitez-vous transformer ?
+              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+                Une sélection rigoureuse d'aménagements conçus et livrés par nos artisans : salons royaux, cuisines ergonomiques, staff sculptural, menuiserie acoustique et suites feutrées.
               </p>
             </div>
 
-            {/* Selectors Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-end pt-1">
-              
-              {/* Selector 1: Type d'espace */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
-                  Type d'espace
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedSpace}
-                    onChange={(e) => setSelectedSpace(e.target.value)}
-                    className="w-full appearance-none bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-800 text-xs font-normal rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
-                  >
-                    <option value="Salon">Salon</option>
-                    <option value="Cuisine">Cuisine</option>
-                    <option value="Staff">Staff & Plafonds</option>
-                    <option value="Portes">Portes & Menuiserie</option>
-                    <option value="Chambre">Chambre & Dressing</option>
-                    <option value="Bureau">Bureau & Espace Pro</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Selector 2: Style */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
-                  Style
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedStyle}
-                    onChange={(e) => setSelectedStyle(e.target.value)}
-                    className="w-full appearance-none bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-800 text-xs font-normal rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
-                  >
-                    <option value="Moderne">Moderne & Épuré</option>
-                    <option value="Classique">Classique Élégant</option>
-                    <option value="Luxe">Luxe Contemporain</option>
-                    <option value="Gold">Gold Prestige</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Selector 3: Projet */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
-                  Projet
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedProject}
-                    onChange={(e) => setSelectedProjectType(e.target.value)}
-                    className="w-full appearance-none bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-800 text-xs font-normal rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
-                  >
-                    <option value="Appartement">Appartement</option>
-                    <option value="Villa">Villa / Résidence</option>
-                    <option value="Espace Pro">Espace Professionnel</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Button: Découvrir */}
-              <div className="pt-1 sm:pt-0">
-                <button
-                  onClick={handleDiscoverTaste}
-                  className="w-full px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-[#005EA6] text-white text-xs font-medium transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
-                >
-                  <span>Découvrir</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-white/80" />
-                </button>
-              </div>
-
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button
+                onClick={() => setActiveTab('realisations')}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-[#005EA6] text-white text-xs font-medium transition-all shadow-xs cursor-pointer group"
+              >
+                <span>Voir tout le portfolio (+35 chantiers)</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
+          </div>
 
-            {/* Interactive Feedback Banner */}
-            {tasteDiscovered && (
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-600 text-xs flex flex-col sm:flex-row items-center justify-between gap-2 animate-fadeIn">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-[#005EA6] flex-shrink-0" />
-                  <span className="font-light">
-                    Sélection : <strong className="font-medium text-slate-900">{selectedSpace}</strong> • style <strong className="font-medium text-slate-900">{selectedStyle}</strong> • <strong className="font-medium text-slate-900">{selectedProject}</strong>
-                  </span>
-                </div>
+          {/* Filtres rapides pour la grille de la page d'accueil */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {[
+              { label: 'Toutes nos créations', cat: 'Tous' as RealisationCategory },
+              { label: 'Salons & Réceptions', cat: 'Décoration' as RealisationCategory },
+              { label: 'Cuisines Épurées', cat: 'Cuisines' as RealisationCategory },
+              { label: 'Staff & Faux-Plafonds', cat: 'Staff' as RealisationCategory },
+              { label: 'Portes & Menuiserie', cat: 'Portes' as RealisationCategory },
+              { label: 'Chambres & Suites', cat: 'Chambres' as RealisationCategory },
+              { label: 'Bureaux & Salons Pro', cat: 'Bureaux' as RealisationCategory },
+            ].map((f) => {
+              const isActive = homeCategoryFilter === f.cat;
+              return (
                 <button
-                  onClick={() => setActiveTab('realisations')}
-                  className="text-xs font-medium text-[#005EA6] hover:underline cursor-pointer whitespace-nowrap"
+                  key={f.cat}
+                  onClick={() => setHomeCategoryFilter(f.cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex-shrink-0 ${
+                    isActive
+                      ? 'bg-[#005EA6] text-white shadow-sm ring-2 ring-[#005EA6]/30'
+                      : 'bg-white/85 backdrop-blur-md text-slate-700 hover:text-slate-950 hover:bg-white border border-slate-200/80 shadow-xs'
+                  }`}
                 >
-                  Voir les chantiers correspondants →
+                  {f.label}
                 </button>
+              );
+            })}
+          </div>
+
+          {/* Grille des cartes de réalisations : design immersif, grande lisibilité et composition structurée */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+            
+            {/* 1. SALONS & RÉCEPTIONS VIP */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Décoration') && (
+              <div 
+                onClick={() => handleExploreCategory('Décoration')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
+                <img
+                  src={ICDD_ASSETS.r7}
+                  alt="Salons contemporains et royaux par ICDD à Kinshasa"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/realisations/icdd_realisation_19.jpg';
+                  }}
+                />
+                
+                {/* Masque architectural noirci & feutré pour faire ressortir les informations */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
+
+                {/* Badges supérieurs */}
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <Sofa className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Salons & Réceptions VIP</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
+                    Dès 350 $
+                  </div>
+                </div>
+
+                {/* Contenu inférieur */}
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Coup de cœur ICDD • 18+ chantiers livrés</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Salons Contemporains & Royaux
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Stuc vénitien haut de gamme, corniches lumineuses, marbre de Carrare et agencement d'art pour villas privées.
+                    </p>
+                  </div>
+
+                  {/* Puces de matériaux nobles */}
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Stuc vénitien</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Gorges LED</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Marbre</span>
+                  </div>
+
+                  {/* Bouton d'action */}
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Découvrir les réalisations salons</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 3. NOS RÉALISATIONS (Grille 6 cartes épurées et sobres)                   */}
-        {/* ========================================================================= */}
-        <section ref={realisationsRef} className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <div className="space-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                Portfolio Réalisations ICDD
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-light text-slate-900 tracking-tight">
-                Nos réalisations
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-light">
-                Sélection de projets de décoration intérieure conçus et réalisés à Kinshasa.
-              </p>
-            </div>
-
-            <button
-              onClick={() => setActiveTab('realisations')}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 hover:text-[#005EA6] transition-colors cursor-pointer whitespace-nowrap"
-            >
-              <span>Voir tout le portfolio</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Grid of 6 Categories */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-4 sm:gap-5">
-            
-            {/* Card 1: SALONS */}
-            <div 
-              onClick={() => handleExploreCategory('Décoration')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
-                <img
-                  src={ICDD_ASSETS.r7}
-                  alt="Salons contemporains et royaux par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Salon & Séjour
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Salons</h3>
-                    <p className="text-[11px] text-white/70 font-light">Aménagements contemporains</p>
-                  </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
-                    Dès 350 $
-                  </span>
-                </div>
-              </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Stuc vénitien & éclairage</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
-
-            {/* Card 2: CUISINES */}
-            <div 
-              onClick={() => handleExploreCategory('Cuisines')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
+            {/* 2. CUISINES CONTEMPORAINES & ÎLOTS */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Cuisines') && (
+              <div 
+                onClick={() => handleExploreCategory('Cuisines')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
                 <img
                   src={ICDD_ASSETS.cuisine3}
-                  alt="Cuisines modernes par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Cuisines d'architecte sur mesure par ICDD à Kinshasa"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/realisations/icdd_realisation_22.jpg';
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Cuisine & Îlot
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Cuisines</h3>
-                    <p className="text-[11px] text-white/70 font-light">Sur mesure & plans quartz</p>
-                  </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
-                    Dès 500 $
-                  </span>
-                </div>
-              </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Rangements & LED intégrées</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
 
-            {/* Card 3: STAFF & PLAFONDS */}
-            <div 
-              onClick={() => handleExploreCategory('Staff')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <ChefHat className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Cuisines & Art Culinaire</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
+                    Dès 500 $
+                  </div>
+                </div>
+
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Tendance 2026 • 12+ cuisines livrées</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Cuisines Épurées sur Mesure
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Plans en quartz Calacatta, îlots conviviaux rétroéclairés, façades laquées anti-traces et quincaillerie invisible.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Plans Quartz</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Îlot central</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">LED intégrées</span>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Découvrir les cuisines installées</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. STAFF, ROSACES & FAUX-PLAFONDS */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Staff') && (
+              <div 
+                onClick={() => handleExploreCategory('Staff')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
                 <img
                   src={ICDD_ASSETS.sp3}
-                  alt="Staff et plafonds par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Staff et faux-plafonds sculptés par les maîtres artisans ICDD"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Staff & Plafonds
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Staff</h3>
-                    <p className="text-[11px] text-white/70 font-light">Gorges LED & faux-plafonds</p>
-                  </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
-                    Dès 250 $
-                  </span>
-                </div>
-              </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Maîtres staffeurs & plâtre fibré</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
 
-            {/* Card 4: PORTES */}
-            <div 
-              onClick={() => handleExploreCategory('Portes')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Staff & Plâtres Sculptés</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
+                    Dès 250 $
+                  </div>
+                </div>
+
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Signature Maître Staffeur • 25+ plafonds</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Staff, Rosaces & Gorges LED
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Faux-plafonds suspendus, corniches artistiques en plâtre fibré et gorges lumineuses invisibles pour magnifier vos volumes.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Plâtre fibré</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Corniches d'art</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Jeux de lumière</span>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Explorer les œuvres de staff</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 4. BLOCS-PORTES ISOPHONIQUES */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Portes') && (
+              <div 
+                onClick={() => handleExploreCategory('Portes')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
                 <img
                   src={ICDD_ASSETS.porte2}
-                  alt="Portes intérieures réalisées par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Portes d'intérieur isophoniques contemporaines posées par ICDD"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/realisations/icdd_realisation_3.jpg';
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Menuiserie
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Portes</h3>
-                    <p className="text-[11px] text-white/70 font-light">Blocs-portes isophoniques</p>
-                  </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
-                    Dès 290 $
-                  </span>
-                </div>
-              </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Vantaux pleins acoustiques</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
 
-            {/* Card 5: CHAMBRES */}
-            <div 
-              onClick={() => handleExploreCategory('Chambres')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <DoorClosed className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Menuiserie & Portes Nobles</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
+                    Dès 290 $
+                  </div>
+                </div>
+
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Haute Isolation • 60+ blocs installés</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Blocs-Portes Isophoniques
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Portes pleines au design minimaliste affleurant, charnières invisibles magnétiques et isolation acoustique certifiée.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Âme acoustique</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Charnières invisibles</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Serrures magnétiques</span>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Voir la menuiserie et blocs-portes</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 5. SUITES PARENTALES & CHAMBRES */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Chambres') && (
+              <div 
+                onClick={() => handleExploreCategory('Chambres')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
                 <img
                   src={ICDD_ASSETS.chambre5}
-                  alt="Décoration de chambres et suites parentales par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Suites parentales et chambres luxueuses conçues par ICDD"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/chambre_deco_1.jpg';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Chambre
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Chambres</h3>
-                    <p className="text-[11px] text-white/70 font-light">Suites parentales & têtes de lit</p>
-                  </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
-                    Dès 350 $
-                  </span>
-                </div>
-              </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Reliefs velours & lumières</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
 
-            {/* Card 6: BUREAUX */}
-            <div 
-              onClick={() => handleExploreCategory('Bureaux')}
-              className="group bg-white rounded-2xl border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md overflow-hidden cursor-pointer transition-all duration-300 flex flex-col"
-            >
-              <div className="relative h-48 sm:h-56 lg:h-60 2xl:h-52 w-full overflow-hidden bg-slate-100">
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <BedDouble className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Suites & Espace Nuit</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
+                    Dès 350 $
+                  </div>
+                </div>
+
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Ambiance Feutrée • 15+ suites royales</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Chambres & Têtes de Lit Déco
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Panneaux muraux en velours capitonné, tasseaux de bois précieux, dressings rétroéclairés et atmosphères calmes.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Têtes de lit velours</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Tasseaux chêne</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Dressing LED</span>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Découvrir les suites parentales</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 6. BUREAUX & ESPACES DIRIGEANTS */}
+            {(homeCategoryFilter === 'Tous' || homeCategoryFilter === 'Bureaux') && (
+              <div 
+                onClick={() => handleExploreCategory('Bureaux')}
+                className="group relative h-[420px] sm:h-[460px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.22)] border border-white/20 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none"
+              >
                 <img
                   src={ICDD_ASSETS.bureau2}
-                  alt="Décoration de bureaux et espaces professionnels par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Bureaux de direction et espaces professionnels réalisés par ICDD"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/bureau_deco_1.jpg';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[9px] font-medium uppercase tracking-wider text-slate-800 border border-white/60 shadow-xs">
-                  Bureau & Pro
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                  <div>
-                    <h3 className="text-base font-normal tracking-tight">Bureaux</h3>
-                    <p className="text-[11px] text-white/70 font-light">Espaces de travail & cabinets</p>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-slate-950/30 group-hover:via-slate-950/40 transition-colors duration-500" />
+
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-xs flex items-center gap-1.5">
+                    <Briefcase className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>Bureaux & Salons Exécutifs</span>
                   </div>
-                  <span className="text-[11px] font-normal text-white/90 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-slate-900 border border-white/70 shadow-xs">
                     Dès 350 $
-                  </span>
+                  </div>
+                </div>
+
+                <div className="relative z-10 space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#005EA6]/85 backdrop-blur-sm text-[10px] font-medium text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Prestige Corporate • 10+ cabinets équipés</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                      Cabinets & Bureaux Dirigeants
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light mt-1 line-clamp-2">
+                      Claustras bois nobles, panneaux acoustiques feutrés, bibliothèques intégrées et mobilier sur mesure renforçant l'image de marque.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Claustras bois</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Acoustique pro</span>
+                    <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15">Design corporate</span>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Explorer les espaces de travail</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="hidden sm:flex p-3 items-center justify-between text-xs text-slate-500 font-light bg-slate-50/50 border-t border-slate-100 group-hover:text-slate-800 transition-colors">
-                <span>Habillage mural & acoustique</span>
-                <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-              </div>
+            )}
+
+          </div>
+
+          {/* Bandeau d'invitation à découvrir la galerie complète ou demander un devis */}
+          <div className="p-6 sm:p-8 rounded-[24px] bg-gradient-to-r from-slate-900 via-[#003865] to-slate-950 text-white flex flex-col sm:flex-row items-center justify-between gap-5 border border-white/15 shadow-sm">
+            <div className="space-y-1 text-center sm:text-left">
+              <h4 className="text-lg sm:text-xl font-light text-white tracking-tight">
+                Vous avez un projet de décoration ou de rénovation à Kinshasa ?
+              </h4>
+              <p className="text-xs text-slate-300 font-light max-w-xl">
+                Parcourez nos 35+ chantiers photographiés en haute définition ou échangez directement avec notre équipe technique pour une étude personnalisée.
+              </p>
             </div>
-
+            <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => setActiveTab('realisations')}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-900 text-xs font-medium transition-all shadow-xs cursor-pointer text-center"
+              >
+                Explorer tout le portfolio
+              </button>
+              <button
+                onClick={openQuoteModal}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#00D7FF] hover:bg-[#38bdf8] text-slate-950 text-xs font-semibold transition-all shadow-xs cursor-pointer text-center"
+              >
+                Demander un devis gratuit
+              </button>
+            </div>
           </div>
 
-          {/* Centered button "Voir toutes les réalisations" */}
-          <div className="text-center pt-2">
-            <button
-              onClick={() => setActiveTab('realisations')}
-              className="px-6 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium shadow-xs transition-all cursor-pointer"
-            >
-              Voir tout le portfolio →
-            </button>
-          </div>
         </section>
 
         {/* ========================================================================= */}
-        {/* 4. DÉCOUVREZ NOTRE SAVOIR-FAIRE (Carte info déco épurée)                 */}
+        {/* 4. DÉCOUVREZ NOTRE SAVOIR-FAIRE (Harmonisé au design actuel)             */}
         {/* ========================================================================= */}
-        <section className="space-y-10 sm:space-y-14 pt-4 border-t border-slate-200/60">
+        <section className="space-y-10 sm:space-y-12 pt-6 border-t border-white/15">
           
-          <div className="text-center max-w-2xl mx-auto space-y-1.5">
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
+          <div className="text-center max-w-3xl mx-auto space-y-2">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#00D7FF] block">
               Architectural & Craftsmanship
             </span>
-            <h2 className="text-2xl sm:text-3xl font-light text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
               Découvrez notre savoir-faire
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-200 font-normal leading-relaxed max-w-2xl mx-auto">
               Une maîtrise complète de l'espace intérieur où chaque matière, chaque ligne de plâtre et chaque source de lumière dialoguent harmonieusement.
             </p>
           </div>
 
-          <div className="space-y-10 sm:space-y-14 lg:space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
 
-            {/* Block 1: SALON (Image on Left, Text on Right) */}
-            <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
+            {/* Carte 1: SALON */}
+            <div className="group rounded-[28px] overflow-hidden bg-slate-900/90 border border-white/20 shadow-2xl backdrop-blur-2xl hover:border-sky-400/50 hover:shadow-[0_20px_50px_rgba(0,100,200,0.25)] transition-all duration-500 flex flex-col justify-between">
               
-              <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group">
+              {/* Photo Showcase */}
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-950">
                 <img
                   src={ICDD_ASSETS.r21}
                   alt="Salon contemporain réalisé par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 text-[10px] font-light text-white/90 bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-md border border-white/10">
-                  Chantier Réel • Gombe
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-md flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Chantier Réel • Gombe</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-slate-900 border border-white/70 shadow-md">
+                    Dès 450 $
+                  </div>
+                </div>
+
+                {/* Bottom Image Overlay Tag */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#005EA6]/90 backdrop-blur-sm text-[10px] font-bold text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Pièce de Vie Signature</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile button: placed AFTER the image */}
-              <div className="lg:hidden">
-                <button
-                  type="button"
-                  onClick={() => toggleDecoDetails('salon')}
-                  className={`w-full py-2.5 px-3.5 rounded-xl border text-xs transition-all cursor-pointer active:scale-[0.99] flex items-center justify-between shadow-xs ${
-                    openDecoDetails['salon']
-                      ? 'bg-slate-900 text-white border-slate-800'
-                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200/90'
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors ${
-                      openDecoDetails['salon'] ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <Eye className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="font-normal tracking-tight">
-                      {openDecoDetails['salon'] ? 'Masquer les détails' : 'Voir les détails de la déco (Salon)'}
-                    </span>
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                    openDecoDetails['salon'] ? 'rotate-180 text-white' : 'text-slate-400'
-                  }`} />
-                </button>
-              </div>
-
-              {/* Text: hidden on mobile unless toggled by the button */}
-              <div className={`${openDecoDetails['salon'] ? 'block' : 'hidden'} lg:block lg:col-span-5 space-y-4 text-slate-700 pt-1 lg:pt-0 animate-in fade-in duration-300`}>
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                    Pièce de Vie Signature
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
-                    Salon contemporain
+              {/* Card Body */}
+              <div className="p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                    Salon Contemporain & Espace de Vie
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-slate-200 font-light leading-relaxed">
                     Un espace pensé autour de l'élégance, du confort et de l'harmonie des matériaux. Nos architectes d'intérieur orchestrent les volumes, l'éclairage indirect et les textures pour créer un lieu de vie chaleureux et prestigieux.
                   </p>
                 </div>
 
                 {/* Specs / metrics */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-center">
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-950/70 border border-white/15 text-center">
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Finitions</span>
-                    <span className="text-xs font-normal text-slate-800">Stuc & Velours</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Finitions</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Stuc & Velours</span>
                   </div>
-                  <div className="border-x border-slate-200">
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Éclairage</span>
-                    <span className="text-xs font-normal text-slate-800">Gorges LED</span>
+                  <div className="border-x border-white/15">
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Éclairage</span>
+                    <span className="text-xs font-bold text-sky-200 mt-0.5 block">Gorges LED</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Style</span>
-                    <span className="text-xs font-normal text-slate-800">Moderne Épuré</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Style</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Moderne Épuré</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] font-light text-slate-500">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Décoration
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Staff
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Éclairage
-                  </span>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Décoration murale</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Staff d'art</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Gorges lumineuses</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Tasseaux bois</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => handleExploreCategory('Décoration')}
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all border border-sky-400/40"
+                  >
+                    <span>Voir les salons réalisés</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={openQuoteModal}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sky-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                    title="Devis pour ce style"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Devis</span>
+                  </button>
                 </div>
               </div>
+
             </div>
 
-            {/* Block 2: CUISINE (Text on Left, Image on Right) */}
-            <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
+            {/* Carte 2: CUISINE */}
+            <div className="group rounded-[28px] overflow-hidden bg-slate-900/90 border border-white/20 shadow-2xl backdrop-blur-2xl hover:border-sky-400/50 hover:shadow-[0_20px_50px_rgba(0,100,200,0.25)] transition-all duration-500 flex flex-col justify-between">
               
-              <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group order-1 lg:order-2">
+              {/* Photo Showcase */}
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-950">
                 <img
                   src={ICDD_ASSETS.cuisine1}
-                  alt="Cuisine moderne sur mesure réalisée par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  alt="Cuisine contemporaine réalisée par ICDD"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 text-[10px] font-light text-white/90 bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-md border border-white/10">
-                  Chantier Réel • Kinshasa
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-md flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Chantier Réel • Kinshasa</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-slate-900 border border-white/70 shadow-md">
+                    Sur mesure
+                  </div>
+                </div>
+
+                {/* Bottom Image Overlay Tag */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#005EA6]/90 backdrop-blur-sm text-[10px] font-bold text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Cœur de Maison</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile button: placed AFTER the image */}
-              <div className="order-2 lg:hidden">
-                <button
-                  type="button"
-                  onClick={() => toggleDecoDetails('cuisine')}
-                  className={`w-full py-2.5 px-3.5 rounded-xl border text-xs transition-all cursor-pointer active:scale-[0.99] flex items-center justify-between shadow-xs ${
-                    openDecoDetails['cuisine']
-                      ? 'bg-slate-900 text-white border-slate-800'
-                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200/90'
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors ${
-                      openDecoDetails['cuisine'] ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <Eye className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="font-normal tracking-tight">
-                      {openDecoDetails['cuisine'] ? 'Masquer les détails' : 'Voir les détails de la déco (Cuisine)'}
-                    </span>
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                    openDecoDetails['cuisine'] ? 'rotate-180 text-white' : 'text-slate-400'
-                  }`} />
-                </button>
-              </div>
-
-              {/* Text: hidden on mobile unless toggled by the button */}
-              <div className={`${openDecoDetails['cuisine'] ? 'block' : 'hidden'} lg:block lg:col-span-5 space-y-4 text-slate-700 order-3 lg:order-1 pt-1 lg:pt-0 animate-in fade-in duration-300`}>
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                    Cœur de Maison
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
-                    Cuisine sur mesure
+              {/* Card Body */}
+              <div className="p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                    Cuisine Contemporaine & Îlot
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-slate-200 font-light leading-relaxed">
                     Des espaces fonctionnels et conviviaux conçus pour s'intégrer harmonieusement à votre intérieur. Îlots centraux, façades épurées anti-traces, gorges LED et rangements ergonomiques personnalisés.
                   </p>
                 </div>
 
-                {/* Specs */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-center">
+                {/* Specs / metrics */}
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-950/70 border border-white/15 text-center">
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Conception</span>
-                    <span className="text-xs font-normal text-slate-800">Sur Mesure</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Conception</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Sur Mesure 3D</span>
                   </div>
-                  <div className="border-x border-slate-200">
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Matériaux</span>
-                    <span className="text-xs font-normal text-slate-800">Hydrofuge HD</span>
+                  <div className="border-x border-white/15">
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Matériaux</span>
+                    <span className="text-xs font-bold text-sky-200 mt-0.5 block">Hydrofuge HD</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Confort</span>
-                    <span className="text-xs font-normal text-slate-800">Amortis</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Confort</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Amortis Soft-close</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] font-light text-slate-500">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Îlot Central
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Rangements
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Plan Quartz
-                  </span>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Îlot central</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Plan quartz</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Caissons hydrofuges</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">LED intégrées</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => handleExploreCategory('Cuisines')}
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all border border-sky-400/40"
+                  >
+                    <span>Voir les cuisines réalisées</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={openQuoteModal}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sky-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                    title="Devis pour ce style"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Devis</span>
+                  </button>
                 </div>
               </div>
 
             </div>
 
-            {/* Block 3: STAFF & PLAFONDS (Image on Left, Text on Right) */}
-            <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
+            {/* Carte 3: STAFF & PLAFONDS */}
+            <div className="group rounded-[28px] overflow-hidden bg-slate-900/90 border border-white/20 shadow-2xl backdrop-blur-2xl hover:border-sky-400/50 hover:shadow-[0_20px_50px_rgba(0,100,200,0.25)] transition-all duration-500 flex flex-col justify-between">
               
-              <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group">
+              {/* Photo Showcase */}
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-950">
                 <img
                   src={ICDD_ASSETS.sp2}
                   alt="Staff et plafonds sculptés par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 text-[10px] font-light text-white/90 bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-md border border-white/10">
-                  Ateliers Staff • Kinshasa
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-md flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Ateliers Staff • Kinshasa</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-slate-900 border border-white/70 shadow-md">
+                    Dès 350 $
+                  </div>
+                </div>
+
+                {/* Bottom Image Overlay Tag */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#005EA6]/90 backdrop-blur-sm text-[10px] font-bold text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Art du Plâtre & Volume</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile button: placed AFTER the image */}
-              <div className="lg:hidden">
-                <button
-                  type="button"
-                  onClick={() => toggleDecoDetails('staff')}
-                  className={`w-full py-2.5 px-3.5 rounded-xl border text-xs transition-all cursor-pointer active:scale-[0.99] flex items-center justify-between shadow-xs ${
-                    openDecoDetails['staff']
-                      ? 'bg-slate-900 text-white border-slate-800'
-                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200/90'
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors ${
-                      openDecoDetails['staff'] ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <Eye className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="font-normal tracking-tight">
-                      {openDecoDetails['staff'] ? 'Masquer les détails' : 'Voir les détails de la déco (Staff & Plafonds)'}
-                    </span>
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                    openDecoDetails['staff'] ? 'rotate-180 text-white' : 'text-slate-400'
-                  }`} />
-                </button>
-              </div>
-
-              {/* Text: hidden on mobile unless toggled by the button */}
-              <div className={`${openDecoDetails['staff'] ? 'block' : 'hidden'} lg:block lg:col-span-5 space-y-4 text-slate-700 pt-1 lg:pt-0 animate-in fade-in duration-300`}>
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                    Art du Plâtre & Volume
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
-                    Staff & plafonds sculptés
+              {/* Card Body */}
+              <div className="p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                    Staff & Plafonds Sculptés
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-slate-200 font-light leading-relaxed">
                     L'art du plâtre façonné à la main par nos maîtres staffeurs à Kinshasa. Faux-plafonds suspendus, corniches sculptées et gorges lumineuses LED dissimulées qui apportent profondeur et majesté aux volumes.
                   </p>
                 </div>
 
-                {/* Specs */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-center">
+                {/* Specs / metrics */}
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-950/70 border border-white/15 text-center">
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Précision</span>
-                    <span className="text-xs font-normal text-slate-800">Moulage Manuel</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Précision</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Moulage Manuel</span>
                   </div>
-                  <div className="border-x border-slate-200">
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Lumière</span>
-                    <span className="text-xs font-normal text-slate-800">Gorges LED</span>
+                  <div className="border-x border-white/15">
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Lumière</span>
+                    <span className="text-xs font-bold text-sky-200 mt-0.5 block">Gorges LED doubles</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Aspect</span>
-                    <span className="text-xs font-normal text-slate-800">Blanc Soyeux</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Aspect</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Blanc Soyeux</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] font-light text-slate-500">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Gorges LED
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Corniches
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Rosaces
-                  </span>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Gorges LED</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Corniches d'art</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Rosaces staff</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Faux-plafonds</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => handleExploreCategory('Staff')}
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all border border-sky-400/40"
+                  >
+                    <span>Voir les plafonds réalisés</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={openQuoteModal}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sky-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                    title="Devis pour ce style"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Devis</span>
+                  </button>
                 </div>
               </div>
+
             </div>
 
-            {/* Block 4: PORTES & MENUISERIE (Text on Left, Image on Right) */}
-            <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
+            {/* Carte 4: PORTES & MENUISERIE */}
+            <div className="group rounded-[28px] overflow-hidden bg-slate-900/90 border border-white/20 shadow-2xl backdrop-blur-2xl hover:border-sky-400/50 hover:shadow-[0_20px_50px_rgba(0,100,200,0.25)] transition-all duration-500 flex flex-col justify-between">
               
-              <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200/70 h-64 sm:h-80 md:h-96 lg:h-[400px] relative group order-1 lg:order-2">
+              {/* Photo Showcase */}
+              <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-950">
                 <img
                   src={ICDD_ASSETS.porte3}
                   alt="Porte intérieure contemporaine réalisée par ICDD"
-                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 text-[10px] font-light text-white/90 bg-black/40 px-2.5 py-0.5 rounded-full backdrop-blur-md border border-white/10">
-                  Pose Chantier • Macampagne
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-white border border-white/20 shadow-md flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Pose Chantier • Macampagne</span>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-slate-900 border border-white/70 shadow-md">
+                    Dès 290 $
+                  </div>
+                </div>
+
+                {/* Bottom Image Overlay Tag */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#005EA6]/90 backdrop-blur-sm text-[10px] font-bold text-white border border-white/20">
+                    <Sparkles className="w-3 h-3 text-[#00D7FF]" />
+                    <span>Ouvertures & Menuiserie</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile button: placed AFTER the image */}
-              <div className="order-2 lg:hidden">
-                <button
-                  type="button"
-                  onClick={() => toggleDecoDetails('portes')}
-                  className={`w-full py-2.5 px-3.5 rounded-xl border text-xs transition-all cursor-pointer active:scale-[0.99] flex items-center justify-between shadow-xs ${
-                    openDecoDetails['portes']
-                      ? 'bg-slate-900 text-white border-slate-800'
-                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200/90'
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className={`w-6 h-6 rounded-lg flex items-center justify-center transition-colors ${
-                      openDecoDetails['portes'] ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <Eye className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="font-normal tracking-tight">
-                      {openDecoDetails['portes'] ? 'Masquer les détails' : 'Voir les détails de la déco (Portes)'}
-                    </span>
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                    openDecoDetails['portes'] ? 'rotate-180 text-white' : 'text-slate-400'
-                  }`} />
-                </button>
-              </div>
-
-              {/* Text: hidden on mobile unless toggled by the button */}
-              <div className={`${openDecoDetails['portes'] ? 'block' : 'hidden'} lg:block lg:col-span-5 space-y-4 text-slate-700 order-3 lg:order-1 pt-1 lg:pt-0 animate-in fade-in duration-300`}>
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
-                    Ouvertures & Menuiserie
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
-                    Portes intérieures & finitions
+              {/* Card Body */}
+              <div className="p-5 sm:p-7 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                    Portes Contemporaines & Finitions
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-slate-200 font-light leading-relaxed">
                     Véritables blocs-portes contemporains fabriqués dans nos ateliers de Kinshasa : vantaux pleins acoustiques, huisseries affleurantes, rainurages design et serrures magnétiques silencieuses.
                   </p>
                 </div>
 
-                {/* Specs */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/60 text-center">
+                {/* Specs / metrics */}
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-950/70 border border-white/15 text-center">
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Acoustique</span>
-                    <span className="text-xs font-normal text-slate-800">Âme Pleine</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Acoustique</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Âme Pleine Isophonique</span>
                   </div>
-                  <div className="border-x border-slate-200">
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Paumelles</span>
-                    <span className="text-xs font-normal text-slate-800">Invisibles 3D</span>
+                  <div className="border-x border-white/15">
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Paumelles</span>
+                    <span className="text-xs font-bold text-sky-200 mt-0.5 block">Invisibles 3D</span>
                   </div>
                   <div>
-                    <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Fermeture</span>
-                    <span className="text-xs font-normal text-slate-800">Magnétique</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Fermeture</span>
+                    <span className="text-xs font-bold text-white mt-0.5 block">Serrure Magnétique</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] font-light text-slate-500">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Blocs-portes
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Rainurages
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Sur mesure
-                  </span>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/15">
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Blocs-portes</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Rainurages CNC</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Charnières invisibles</span>
+                  <span className="text-[10px] bg-white/15 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full border border-white/15 font-medium">Finition laquée</span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    onClick={() => handleExploreCategory('Portes')}
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-98 transition-all border border-sky-400/40"
+                  >
+                    <span>Voir les portes posées</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={openQuoteModal}
+                    className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sky-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                    title="Devis pour ce style"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Devis</span>
+                  </button>
                 </div>
               </div>
 
@@ -1560,23 +1638,23 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* ========================================================================= */}
         {/* 5. NOS SERVICES (Ce que ICDD fait pour ses clients)                       */}
         {/* ========================================================================= */}
-        <section className="bg-white/90 backdrop-blur-xl p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-200/60 shadow-xs space-y-6">
+        <section className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-8 lg:p-10 rounded-[28px] border border-white/20 shadow-2xl space-y-6 text-white">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div className="space-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#00D7FF] block">
                 Expertise & Métiers
               </span>
-              <h2 className="text-2xl sm:text-3xl font-light text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Nos services
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-light">
+              <p className="text-xs sm:text-sm text-slate-200 font-normal">
                 Ce que ICDD conçoit et réalise pour sublimer votre cadre de vie à Kinshasa.
               </p>
             </div>
 
             <button
               onClick={() => setActiveTab('services')}
-              className="px-5 py-2 rounded-full bg-slate-900 hover:bg-[#005EA6] text-white text-xs font-medium transition-all shadow-xs cursor-pointer whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap border border-sky-400/40 hover:scale-105 active:scale-95"
             >
               Découvrir nos services
             </button>
@@ -1613,30 +1691,30 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                 <div
                   key={idx}
                   onClick={() => setActiveTab('services')}
-                  className="p-4 sm:p-6 rounded-xl bg-slate-50/60 hover:bg-white border border-slate-200/60 hover:border-slate-300 transition-all cursor-pointer space-y-2 shadow-xs group"
+                  className="p-5 sm:p-6 rounded-2xl bg-slate-950/70 hover:bg-slate-950/95 border border-white/15 hover:border-sky-400/50 transition-all cursor-pointer space-y-3 shadow-lg group"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200/80 text-slate-800 flex items-center justify-center shadow-xs">
-                      <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-[#005EA6]/30 border border-sky-400/40 text-sky-200 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-[#005EA6] group-hover:text-white transition-all">
+                      <IconComp className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
 
                     {/* Mobile toggle button */}
                     <button
                       type="button"
                       onClick={(e) => toggleServiceHeroDetails(idx, e)}
-                      className="sm:hidden px-2 py-0.5 rounded-md text-[10px] text-slate-500 bg-white border border-slate-200/80 flex items-center gap-1 active:scale-95"
+                      className="sm:hidden px-2.5 py-1 rounded-full text-[10px] text-sky-200 bg-white/10 border border-white/20 flex items-center gap-1 active:scale-95"
                     >
                       <span>{isExpanded ? 'Moins' : 'Détail'}</span>
-                      <ChevronDown className={`w-2.5 h-2.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </button>
                   </div>
 
-                  <h4 className="text-sm font-normal text-slate-900 group-hover:text-[#005EA6] transition-colors">
+                  <h4 className="text-base font-bold text-white group-hover:text-sky-200 transition-colors">
                     {srv.title}
                   </h4>
 
-                  {/* Hidden by default on mobile unless toggled */}
-                  <p className={`text-xs text-slate-500 leading-relaxed font-light ${
+                  {/* Description */}
+                  <p className={`text-xs text-slate-200 leading-relaxed font-light ${
                     isExpanded ? 'block' : 'hidden sm:block'
                   }`}>
                     {srv.desc}
@@ -1650,23 +1728,23 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* ========================================================================= */}
         {/* 6. SHOP (Matériaux / produits disponibles à la vente – Distinction nette)  */}
         {/* ========================================================================= */}
-        <section className="bg-white/90 backdrop-blur-xl p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-200/60 shadow-xs space-y-6">
+        <section className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-8 lg:p-10 rounded-[28px] border border-white/20 shadow-2xl space-y-6 text-white">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div className="space-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#00D7FF] block">
                 Matériaux & Mobilier
               </span>
-              <h2 className="text-2xl sm:text-3xl font-light text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Le Shop ICDD
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-light">
+              <p className="text-xs sm:text-sm text-slate-200 font-normal">
                 Achetez directement vos peintures haut de gamme, blocs-portes, éléments de cuisine et corniches.
               </p>
             </div>
 
             <button
               onClick={() => setActiveTab('shop')}
-              className="px-5 py-2 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium transition-all shadow-xs cursor-pointer whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-950 text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap hover:scale-105 active:scale-95"
             >
               Voir tout le Shop
             </button>
@@ -1703,24 +1781,21 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               <div
                 key={idx}
                 onClick={() => setActiveTab('shop')}
-                className="group relative rounded-xl overflow-hidden border border-slate-200/70 hover:border-slate-300 shadow-xs hover:shadow-md cursor-pointer transition-all duration-500 h-44 sm:h-52 lg:h-60 flex flex-col justify-end p-3.5 text-white"
+                className="group relative rounded-2xl overflow-hidden border border-white/20 hover:border-sky-400/50 shadow-md hover:shadow-[0_12px_30px_rgba(0,100,200,0.3)] cursor-pointer transition-all duration-500 h-48 sm:h-56 lg:h-64 flex flex-col justify-end p-4 text-white bg-slate-950"
               >
                 <img
                   src={prod.image}
                   alt={prod.title}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
                 <div className="relative z-10 space-y-1">
-                  <span className="inline-block px-2 py-0.5 rounded bg-white/20 backdrop-blur-md border border-white/20 text-[9px] font-light text-white">
-                    {prod.badge}
-                  </span>
-                  <h4 className="text-xs sm:text-sm font-normal tracking-tight">
+                  <h4 className="text-xs sm:text-sm font-bold tracking-tight text-white group-hover:text-sky-200 transition-colors">
                     {prod.title}
                   </h4>
-                  <p className="text-[10px] sm:text-[11px] text-white/70 font-light line-clamp-1">
+                  <p className="text-[10px] sm:text-[11px] text-slate-200 font-light line-clamp-1">
                     {prod.desc}
                   </p>
                 </div>
@@ -1732,35 +1807,35 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* ========================================================================= */}
         {/* 7. CONTACT / DEMANDE DE DEVIS (Parlons de votre projet)                   */}
         {/* ========================================================================= */}
-        <section className="bg-slate-50/80 backdrop-blur-xl p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-200/70 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center md:text-left max-w-xl">
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400 block">
+        <section className="bg-gradient-to-r from-slate-950 via-slate-900 to-[#003865] backdrop-blur-2xl p-6 sm:p-8 lg:p-10 rounded-[28px] border border-white/20 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-white">
+          <div className="space-y-1.5 text-center md:text-left max-w-xl">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#00D7FF] block">
               Démarrer Votre Projet
             </span>
-            <h2 className="text-xl sm:text-2xl font-light text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Parlons de votre projet
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-200 font-normal leading-relaxed">
               Vous avez un projet de rénovation, de salon, de cuisine ou de villa à Kinshasa ? Contactez nos maîtres artisans pour un devis gratuit et personnalisé.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
             <a
               href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20d%27am%C3%A9nagement."
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-normal shadow-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full sm:w-auto px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer whitespace-nowrap border border-emerald-400/30 hover:scale-105 active:scale-95"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Direct</span>
             </a>
 
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-slate-900 hover:bg-[#005EA6] text-white text-xs font-normal shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-1.5"
+              className="w-full sm:w-auto px-5 py-3 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white text-xs font-bold shadow-lg transition-all active:scale-95 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 border border-sky-400/40 hover:scale-105"
             >
-              <Phone className="w-3.5 h-3.5 text-white/80" />
+              <PhoneCall className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
             </button>
           </div>

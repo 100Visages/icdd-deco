@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { ICDD_SERVICES } from '../data/services';
 import { ServiceItem, RealisationCategory } from '../types';
 import { buildServiceWhatsAppMessage, openWhatsAppChat } from '../utils/whatsapp';
@@ -80,9 +81,9 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-10 pb-28 sm:pb-20">
 
         {/* Hero Banner Services - Prestige & Épuré */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-10 lg:p-12 rounded-[28px] sm:rounded-[36px] border border-white/20 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 text-white">
           <div className="space-y-3 max-w-3xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-sky-50 text-[#005EA6] text-xs font-bold border border-sky-200/80 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/80 text-[#00D7FF] text-xs font-bold border border-white/20 shadow-sm">
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white border border-slate-200 shadow-sm flex-shrink-0 relative">
                 <img 
                   src={icddOfficialLogo} 
@@ -94,15 +95,15 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   }}
                 />
               </div>
-              <span className="uppercase tracking-widest text-[#005EA6] font-black">ICDD</span>
-              <span className="text-slate-400">•</span>
-              <span>Nos 6 Domaines d'Expertise</span>
+              <span className="uppercase tracking-widest text-[#00D7FF] font-black">ICDD</span>
+              <span className="text-white/40">•</span>
+              <span className="text-slate-200">Nos 6 Domaines d'Expertise</span>
             </div>
             
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              Ce que ICDD réalise <span className="text-[#005EA6]">pour vos espaces</span>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Ce que ICDD réalise <span className="text-[#00D7FF]">pour vos espaces</span>
             </h2>
-            <p className="text-xs sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed">
+            <p className="text-xs sm:text-base lg:text-lg text-slate-200 font-normal leading-relaxed">
               Architecture intérieure, staffage d'art, cuisines sur mesure et décoration haut de gamme à Kinshasa.
             </p>
           </div>
@@ -112,7 +113,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               href="https://wa.me/243897504570?text=Bonjour%20ICDD,%20je%20souhaite%20un%20renseignement%20sur%20vos%20services."
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-md flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border border-emerald-400/40"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp Direct</span>
@@ -120,7 +121,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
 
             <button
               onClick={openQuoteModal}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#005EA6] hover:bg-[#004f8c] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/20 border border-sky-400/40"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-gradient-to-r from-[#005EA6] to-[#0077c8] hover:from-[#006ec4] text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-[#005EA6]/30 border border-sky-400/40"
             >
               <FileText className="w-4 h-4 text-sky-200" />
               <span>Demander un devis</span>
@@ -128,173 +129,112 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
           </div>
         </div>
 
-        {/* 6 Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+        {/* 6 Services Grid - Decorative Visual Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {ICDD_SERVICES.map((service, index) => {
             const IconComponent = iconMap[service.iconName] || Sparkles;
-            const isExpanded = !!expandedServices[service.id];
 
             return (
-              <div
+              <motion.div
                 key={service.id}
-                className="group bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 flex flex-col overflow-hidden"
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                whileHover={{ y: -6 }}
+                onClick={() => handleServiceExplore(service)}
+                className="group relative h-[380px] sm:h-[440px] rounded-[26px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_20px_45px_-12px_rgba(0,40,90,0.3)] border border-white/20 hover:border-sky-400/50 transition-all duration-500 flex flex-col justify-between p-5 sm:p-6 bg-slate-900 select-none text-white"
               >
-                {/* Visual Header (Photo with Overlay Controls) */}
-                <div 
-                  onClick={() => toggleService(service.id)}
-                  className="relative h-56 sm:h-60 w-full overflow-hidden bg-slate-100 cursor-pointer select-none"
-                >
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
+                {/* Background Photo with Zoom */}
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out select-none"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/projects/real_project_1.jpg';
+                  }}
+                />
+                
+                {/* Architectural Dark Gradient Mask */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 group-hover:via-slate-950/30 transition-colors duration-500 pointer-events-none" />
+
+                {/* Top Badge: Icon + Tag */}
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="bg-slate-950/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium text-white border border-white/20 flex items-center gap-1.5">
+                    <IconComponent className="w-3.5 h-3.5 text-[#00D7FF]" />
+                    <span>{service.tag}</span>
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleServiceWhatsApp(service, e);
                     }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
-
-                  {/* Top Badges */}
-                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
-                    <span className="bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900 border border-white/60 shadow-sm">
-                      {service.tag}
-                    </span>
-
-                    <div className="w-9 h-9 rounded-full bg-slate-950/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center shadow-sm">
-                      <IconComponent className="w-4 h-4 text-sky-300" />
-                    </div>
-                  </div>
-
-                  {/* Bottom on Photo: Title & Compact "Détails" Button */}
-                  <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-end justify-between gap-2">
-                    <div className="text-white space-y-0.5 pr-2 pointer-events-none">
-                      <span className="text-[10px] text-sky-300 font-bold uppercase tracking-widest block">
-                        Service 0{index + 1}
-                      </span>
-                      <h3 className="text-base sm:text-lg font-extrabold tracking-tight line-clamp-1 drop-shadow-sm">
-                        {service.title}
-                      </h3>
-                    </div>
-
-                    {/* Small Button directly on photo */}
-                    <button
-                      type="button"
-                      onClick={(e) => toggleService(service.id, e)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95 flex-shrink-0 ${
-                        isExpanded
-                          ? 'bg-[#005EA6] text-white border-sky-400'
-                          : 'bg-white/95 hover:bg-white text-slate-900 border-white/80'
-                      }`}
-                      title={isExpanded ? "Masquer les détails" : "Voir les détails"}
-                    >
-                      <Eye className="w-3.5 h-3.5 text-[#005EA6]" />
-                      <span>{isExpanded ? 'Masquer' : 'Détails'}</span>
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
+                    title="WhatsApp direct"
+                    className="p-2 rounded-full bg-slate-950/70 hover:bg-emerald-600 text-white backdrop-blur-md border border-white/20 hover:border-emerald-400 transition-colors shadow-xs"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 text-emerald-400 group-hover/btn:text-white" />
+                  </button>
                 </div>
 
-                {/* Body Content */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
-                  
-                  {/* Short description always visible */}
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                {/* Bottom Decorative Content */}
+                <div className="relative z-10 space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-xs text-slate-300 font-light line-clamp-2">
                     {service.shortDesc}
                   </p>
 
-                  {/* Expandable Technical Details */}
-                  {isExpanded && (
-                    <div className="space-y-4 pt-3 border-t border-slate-100 text-xs animate-in fade-in duration-200">
-                      <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                        {service.fullDesc}
-                      </p>
-
-                      {/* Points Checklist */}
-                      <div className="space-y-2 pt-1">
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
-                          Ce que comprend la prestation :
-                        </span>
-                        <ul className="space-y-1.5">
-                          {service.points.map((pt, pIdx) => (
-                            <li key={pIdx} className="flex items-start gap-2 text-xs text-slate-700">
-                              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                              <span className="font-normal">{pt}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Actions Bar */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => handleServiceExplore(service)}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#005EA6] hover:underline cursor-pointer group/link"
-                    >
-                      <span>Voir les projets</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
-                    </button>
-
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={(e) => handleServiceWhatsApp(service, e)}
-                        className="p-2 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors border border-emerald-200 shadow-xs cursor-pointer"
-                        title="Demander des infos sur WhatsApp"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                      </button>
-
-                      <button
-                        onClick={openQuoteModal}
-                        className="px-3.5 py-1.5 rounded-full bg-sky-50 hover:bg-[#005EA6] text-[#005EA6] hover:text-white text-xs font-bold transition-all border border-sky-200 cursor-pointer shadow-xs"
-                      >
-                        Devis
-                      </button>
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-white/90 group-hover:text-[#00D7FF] transition-colors flex items-center gap-1.5">
+                      <span>Découvrir les réalisations</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                    </span>
+                    <div className="w-9 h-9 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                      <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
                 </div>
-
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Commitment Banner */}
-        <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-8 rounded-[28px] border border-slate-200/80 shadow-sm">
+        <div className="bg-slate-900/90 backdrop-blur-2xl p-6 sm:p-8 rounded-[28px] border border-white/20 shadow-2xl text-white">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-[#005EA6]/30 border border-sky-400/40 text-sky-200 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900">Qualité & Finitions Garanties</h4>
-                <p className="text-xs text-slate-600">
+                <h4 className="text-sm font-bold text-white">Qualité & Finitions Garanties</h4>
+                <p className="text-xs text-slate-200">
                   Matériaux certifiés, ponçage soigné et absence de bavures ou de raccords visibles.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-[#005EA6]/30 border border-sky-400/40 text-sky-200 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900">Respect des Délais à Kinshasa</h4>
-                <p className="text-xs text-slate-600">
+                <h4 className="text-sm font-bold text-white">Respect des Délais à Kinshasa</h4>
+                <p className="text-xs text-slate-200">
                   Planning clair dès le début du chantier et reporting régulier d’avancement.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-sky-50 border border-sky-100 text-[#005EA6] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-[#005EA6]/30 border border-sky-400/40 text-sky-200 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                 <PhoneCall className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900">Interlocuteur Unique Dédié</h4>
-                <p className="text-xs text-slate-600">
+                <h4 className="text-sm font-bold text-white">Interlocuteur Unique Dédié</h4>
+                <p className="text-xs text-slate-200">
                   Un chef de projet ICDD coordonne tous les corps d'état jusqu'à la remise des clés.
                 </p>
               </div>

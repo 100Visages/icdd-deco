@@ -60,7 +60,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         }`}
         aria-label="Navigation mobile"
       >
-        <div className="flex items-center justify-between p-1 bg-white/95 backdrop-blur-2xl rounded-full border border-slate-200/90 shadow-xl shadow-slate-300/50">
+        <div className="flex items-center justify-between p-1.5 bg-slate-950/90 backdrop-blur-2xl rounded-full border border-white/20 shadow-[0_14px_40px_rgba(0,0,0,0.7)]">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -72,12 +72,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                 onClick={() => setActiveTab(item.id)}
                 className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-300 cursor-pointer min-h-[44px] ${
                   isActive
-                    ? 'bg-[#005EA6] text-white shadow-sm scale-[1.02] border border-sky-400/40'
-                    : 'text-slate-600 hover:text-[#005EA6] active:bg-slate-100/70'
+                    ? 'bg-[#005EA6] text-white shadow-md scale-[1.02] border border-sky-400/50'
+                    : 'text-slate-300 hover:text-white active:bg-white/10'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-sky-200' : 'text-current'}`} />
-                <span className="text-[9px] font-bold tracking-tight mt-0.5 leading-tight truncate max-w-[58px]">
+                <Icon className={`w-4 h-4 ${isActive ? 'text-sky-200' : 'text-slate-300'}`} />
+                <span className={`text-[9px] font-bold tracking-tight mt-0.5 leading-tight truncate max-w-[58px] ${
+                  isActive ? 'text-white' : 'text-slate-300'
+                }`}>
                   {item.label}
                 </span>
               </button>
