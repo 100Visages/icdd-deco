@@ -326,7 +326,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   };
 
   return (
-    <div id="accueil-view-container" className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar p-0 md:p-7 lg:p-9 xl:p-10 pointer-events-auto">
+    <div id="accueil-view-container" className="relative w-full h-full min-h-0 overflow-y-auto custom-scrollbar p-0 m-0 pointer-events-auto">
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto pb-28 sm:pb-24">
 
         {/* ========================================================================= */}
@@ -520,43 +520,43 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         </section>
 
         {/* --- DESKTOP HERO: DESIGN ARCHITECTURAL GRAND FORMAT (Sur PC & écrans moyens/larges) --- */}
-        <section className="hidden md:block relative rounded-3xl overflow-hidden bg-white/95 text-slate-800 shadow-sm border border-slate-200/60 backdrop-blur-xl mb-12 sm:mb-16">
+        <section className="hidden md:block relative w-full overflow-hidden bg-slate-900/90 text-white shadow-2xl border-b border-white/10 backdrop-blur-2xl mb-12 sm:mb-16 pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-12 rounded-b-[36px] sm:rounded-b-[48px]">
           
           {/* Ambient luminous glow behind title */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-56 bg-gradient-to-b from-[#005EA6]/10 via-[#00D7FF]/5 to-transparent blur-3xl pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-72 bg-gradient-to-b from-[#005EA6]/25 via-[#00D7FF]/10 to-transparent blur-3xl pointer-events-none" />
 
           {/* Header Bar inside Hero: Stylized Branding & Catchphrase */}
-          <div className="pt-6 sm:pt-10 lg:pt-12 px-4 sm:px-12 text-center space-y-3 sm:space-y-4 z-10 relative flex flex-col items-center">
+          <div className="px-4 sm:px-12 text-center space-y-3 sm:space-y-4 z-10 relative flex flex-col items-center">
             
             {/* Top Prestige Pill / Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white/85 border border-slate-200/80 shadow-2xs backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-[#005EA6] shadow-[0_0_8px_#00D7FF] animate-pulse" />
-              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#005EA6]">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-950/80 border border-white/20 shadow-sm backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-[#00D7FF] shadow-[0_0_8px_#00D7FF] animate-pulse" />
+              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#00D7FF]">
                 Architecture d'Intérieur & Décoration • Kinshasa
               </span>
-              <Sparkles className="w-3 h-3 text-[#005EA6]" />
+              <Sparkles className="w-3 h-3 text-[#00D7FF]" />
             </div>
 
             {/* Stylized Sculptural ICDD Title */}
             <div className="relative inline-flex items-center justify-center w-full my-1">
               {/* Left Flanking Architectural Accent Line (visible on sm+) */}
-              <div className="hidden sm:block flex-1 max-w-[100px] md:max-w-[160px] lg:max-w-[200px] h-[1.5px] bg-gradient-to-r from-transparent via-slate-300 to-[#005EA6]/60" />
+              <div className="hidden sm:block flex-1 max-w-[100px] md:max-w-[160px] lg:max-w-[200px] h-[1.5px] bg-gradient-to-r from-transparent via-white/30 to-[#00D7FF]/60" />
 
-              <h1 className="px-4 sm:px-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[0.16em] sm:tracking-[0.22em] uppercase bg-gradient-to-br from-slate-950 via-[#003B6D] to-[#005EA6] bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(0,94,166,0.18)] select-none">
+              <h1 className="px-4 sm:px-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[0.16em] sm:tracking-[0.22em] uppercase bg-gradient-to-r from-white via-slate-100 to-sky-200 bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(0,215,255,0.25)] select-none">
                 ICDD
               </h1>
 
               {/* Right Flanking Architectural Accent Line (visible on sm+) */}
-              <div className="hidden sm:block flex-1 max-w-[100px] md:max-w-[160px] lg:max-w-[200px] h-[1.5px] bg-gradient-to-l from-transparent via-slate-300 to-[#005EA6]/60" />
+              <div className="hidden sm:block flex-1 max-w-[100px] md:max-w-[160px] lg:max-w-[200px] h-[1.5px] bg-gradient-to-l from-transparent via-white/30 to-[#00D7FF]/60" />
             </div>
 
             {/* Stylized Motto / Slogan Capsule */}
-            <div className="inline-flex items-center gap-2 px-4 sm:px-7 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-slate-50/90 via-white to-slate-50/90 border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,60,120,0.06)] backdrop-blur-md max-w-full">
-              <span className="text-[#005EA6] font-serif text-lg sm:text-xl font-bold leading-none select-none">“</span>
-              <p className="text-xs sm:text-sm md:text-base font-normal tracking-wide text-slate-700 italic">
-                Le bien-être de tous, <span className="font-semibold text-slate-900 not-italic">pour construire un monde meilleur</span>
+            <div className="inline-flex items-center gap-2 px-4 sm:px-7 py-2 sm:py-2.5 rounded-full bg-slate-950/80 border border-white/20 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)] backdrop-blur-md max-w-full">
+              <span className="text-[#00D7FF] font-serif text-lg sm:text-xl font-bold leading-none select-none">“</span>
+              <p className="text-xs sm:text-sm md:text-base font-normal tracking-wide text-slate-200 italic">
+                Le bien-être de tous, <span className="font-semibold text-white not-italic">pour construire un monde meilleur</span>
               </p>
-              <span className="text-[#005EA6] font-serif text-lg sm:text-xl font-bold leading-none select-none">”</span>
+              <span className="text-[#00D7FF] font-serif text-lg sm:text-xl font-bold leading-none select-none">”</span>
             </div>
 
           </div>
@@ -815,8 +815,8 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
           </div>
         </section>
 
-        {/* Contenu de la suite du site avec marges adaptées pour mobile */}
-        <div id="suite-du-site-content" className="px-3 sm:px-6 md:px-0 space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
+        {/* Contenu de la suite du site avec marges adaptées */}
+        <div id="suite-du-site-content" className="px-3 sm:px-6 md:px-8 lg:px-10 space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
 
         {/* ========================================================================= */}
         {/* 2. NOS RÉALISATIONS EMBLÉMATIQUES (Design & Composition Haute Facture)   */}

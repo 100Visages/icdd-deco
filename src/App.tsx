@@ -93,12 +93,12 @@ export default function App() {
   };
 
   return (
-    <div id="icdd-main-wrapper" className="h-screen w-screen overflow-hidden bg-[#F4F6F9] text-slate-800 flex items-center justify-center p-0 sm:p-1.5 lg:p-2 xl:p-2.5 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
+    <div id="icdd-main-wrapper" className="h-[100dvh] w-full min-h-[100dvh] overflow-hidden bg-slate-950 text-slate-800 flex flex-col p-0 m-0 font-sans selection:bg-[#00D7FF] selection:text-[#005EA6]">
       
-      {/* Outer Pill-Shaped Glass Frame */}
+      {/* Full-bleed Application Container without borders or outer gaps */}
       <main 
         id="pill-shaped-container"
-        className="relative w-full h-full max-w-none rounded-none sm:rounded-[24px] lg:rounded-[32px] xl:rounded-[38px] border-0 sm:border-[2px] border-slate-700/30 shadow-[0_25px_60px_-15px_rgba(0,10,30,0.3)] overflow-hidden flex flex-col bg-slate-950/40 transition-all duration-500"
+        className="relative w-full h-full min-h-0 overflow-hidden flex flex-col bg-slate-950 transition-all duration-500 p-0 m-0 border-0 rounded-none shadow-none"
       >
         
         {/* Main Background Image: Véritable photo de décoration d'intérieur réalisée par ICDD pour chaque page avec masque noirci élégant */}

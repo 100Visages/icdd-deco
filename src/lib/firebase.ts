@@ -71,16 +71,14 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   throw new Error(JSON.stringify(errInfo));
 }
 
-// Connection test on boot
+// Connection test on boot (optional & non-blocking)
 export async function testConnection() {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Please check your Firebase configuration.");
-    }
+  } catch {
+    // Silently handle offline/not-yet-provisioned state without throwing errors
   }
 }
 
-// Automatically verify connection on module load
-testConnection();
+// Automatically verify connection on module load without blocking
+testConnection().catch(() => {});

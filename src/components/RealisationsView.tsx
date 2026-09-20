@@ -111,7 +111,7 @@ export const RealisationsView: React.FC<RealisationsViewProps> = ({
   const activePhoto = activePhotoIndex !== null ? filteredPhotos[activePhotoIndex] : null;
 
   return (
-    <div id="realisations-view-container" className="w-full h-full min-h-0 overflow-y-auto p-3 sm:p-6 md:p-8 lg:p-10 custom-scrollbar">
+    <div id="realisations-view-container" className="w-full h-full min-h-0 overflow-y-auto pt-20 sm:pt-24 md:pt-28 px-3 sm:px-6 md:px-8 lg:px-10 pb-6 custom-scrollbar">
       <div className="w-full max-w-[1720px] 2xl:max-w-[1920px] mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-20">
         
         {/* Header Section */}

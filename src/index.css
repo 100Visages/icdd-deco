@@ -8,6 +8,14 @@
 }
 
 /* Custom Sleek Scrollbar for ICDD interface */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #020617;
+  overflow: hidden;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;

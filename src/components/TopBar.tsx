@@ -50,7 +50,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header 
       id="top-navigation-bar" 
-      className="w-full z-30 flex-shrink-0 transition-all duration-300 absolute top-0 left-0 right-0 pt-2 sm:pt-3 px-3 sm:px-6 pointer-events-none [&>*]:pointer-events-auto md:relative md:pt-4 md:px-8 lg:px-10 xl:px-12"
+      className="w-full z-30 flex-shrink-0 transition-all duration-300 absolute top-0 left-0 right-0 pt-2 sm:pt-3 md:pt-4 px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 pointer-events-none [&>*]:pointer-events-auto"
     >
       
       {/* MOBILE TOP HEADER - Unifié et identique sur TOUTES les pages (comme la page home) */}
