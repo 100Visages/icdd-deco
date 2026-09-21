@@ -57,20 +57,13 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   const [openDecoDetails, setOpenDecoDetails] = useState<Record<string, boolean>>({});
   const [openServiceHeroDetails, setOpenServiceHeroDetails] = useState<Record<number, boolean>>({});
 
-  // Mobile Full-screen Media State (Minuterie de 8 secondes pour la vidéo, puis 2 photos avant reprise de la vidéo)
-  const [mobileMediaMode, setMobileMediaMode] = useState<'video' | 'photo'>('video');
-  const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
+  // Mobile Full-screen Media State (Photo principale IMG_0385.png 8s avec zoom Ken Burns, puis 2 photos de réalisations)
+  const [mobileMediaMode, setMobileMediaMode] = useState<'main' | 'photo'>('main');
   const [photosShownInCycle, setPhotosShownInCycle] = useState<number>(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [mainPhotoKey, setMainPhotoKey] = useState<number>(0);
 
   // Photos de réalisations d'exception réalisées par ICDD
   const heroMobilePhotos = [
-    {
-      src: '/hero_mobile_banner.png',
-      alt: "ICDD Décoration & Architecture d'Intérieur Kinshasa",
-      title: "ICDD Architecture d'Intérieur",
-      location: 'Kinshasa, Gombe',
-    },
     {
       src: ICDD_ASSETS.r19,
       alt: 'Salon Contemporain & Lignes Épurées réalisé par ICDD',
@@ -127,38 +120,31 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
     }
   };
 
-  // Desktop media toggle (to also optionally preview the video showcase on PC)
+  // Desktop media toggle (to also optionally preview the showcase on PC)
   const [desktopShowcaseMode, setDesktopShowcaseMode] = useState<'carousel' | 'video'>('carousel');
 
-  // Minuterie exacte de 8 secondes pour la vidéo, puis 2 photos de réalisations, puis reprise de la vidéo
+  // Minuterie exacte de 8 secondes pour la photo principale IMG_0385 avec zoom Ken Burns, puis 2 photos de réalisations
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (mobileMediaMode === 'video') {
-      const video = videoRef.current;
-      if (video) {
-        video.currentTime = 0;
-        video.muted = true;
-        video.playsInline = true;
-        video.play().catch(() => {});
-      }
-
-      // Minuterie de 8 secondes (8000ms) pour la vidéo avant de passer aux photos
+    if (mobileMediaMode === 'main') {
+      // Photo principale IMG_0385.png affichée avec zoom Ken Burns pendant 8 secondes
       timer = setTimeout(() => {
         setPhotosShownInCycle(1);
         setMobileMediaMode('photo');
       }, 8000);
     } else {
-      // Mode photos : chaque photo reste affichée 5 secondes
+      // Mode photos de réalisations : chaque photo reste affichée 5 secondes
       timer = setTimeout(() => {
         if (photosShownInCycle < 2) {
           // Affiche la 2ème photo du cycle
           setPhotosShownInCycle((prev) => prev + 1);
           setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
         } else {
-          // Après 2 photos affichées, la vidéo reprend immédiatement
+          // Après 2 photos affichées, retour sur la photo principale avec relance du zoom
           setPhotosShownInCycle(0);
-          setMobileMediaMode('video');
+          setMainPhotoKey((k) => k + 1);
+          setMobileMediaMode('main');
           setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
         }
       }, 5000);
@@ -169,26 +155,17 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
     };
   }, [mobileMediaMode, photosShownInCycle, currentHeroPhotoIdx, heroMobilePhotos.length]);
 
-  // Détection en continu pour garantir que la vidéo bascule vers les photos après 8 secondes
-  const handleVideoTimeUpdate = () => {
-    if (videoRef.current && mobileMediaMode === 'video') {
-      if (videoRef.current.currentTime >= 8.0) {
-        setPhotosShownInCycle(1);
-        setMobileMediaMode('photo');
-      }
-    }
-  };
-
   // Permettre à l'utilisateur de passer manuellement s'il le souhaite
   const handleNextMedia = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (mobileMediaMode === 'video') {
+    if (mobileMediaMode === 'main') {
       setPhotosShownInCycle(1);
       setMobileMediaMode('photo');
     } else {
       if (photosShownInCycle >= 2) {
         setPhotosShownInCycle(0);
-        setMobileMediaMode('video');
+        setMainPhotoKey((k) => k + 1);
+        setMobileMediaMode('main');
         setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
       } else {
         setPhotosShownInCycle((prev) => prev + 1);
@@ -202,7 +179,8 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
     if (mobileMediaMode === 'photo') {
       if (photosShownInCycle <= 1) {
         setPhotosShownInCycle(0);
-        setMobileMediaMode('video');
+        setMainPhotoKey((k) => k + 1);
+        setMobileMediaMode('main');
       } else {
         setPhotosShownInCycle((prev) => prev - 1);
         setCurrentHeroPhotoIdx((prev) => (prev === 0 ? heroMobilePhotos.length - 1 : prev - 1));
@@ -355,15 +333,15 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* 1. HERO SECTION                                                          */}
         {/* ========================================================================= */}
 
-        {/* --- MOBILE HERO: PLEIN ÉCRAN (100vh / 100dvh) AVEC MINUTERIE DE 8 SECONDES VIDÉO PUIS PHOTOS --- */}
+        {/* --- MOBILE HERO: PLEIN ÉCRAN (100vh / 100dvh) AVEC PHOTO PRINCIPALE IMG_0385 (8s AVEC ZOOM KEN BURNS) PUIS 2 PHOTOS --- */}
         <section 
           id="mobile-hero-fullscreen"
           className="md:hidden relative w-full h-[100dvh] min-h-[100dvh] overflow-hidden flex flex-col select-none"
         >
-          {/* Arrière-plan Médias (Vidéo 8 secondes puis Séquence de Photos de réalisations) */}
+          {/* Arrière-plan Médias (Photo principale IMG_0385.png avec Zoom Ken Burns 8s puis Séquence de 2 Photos) */}
           <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-slate-950">
             
-            {/* Photos de réalisations prestigieuses d'ICDD */}
+            {/* Photos de réalisations prestigieuses d'ICDD (Séquence alternée de 2 photos) */}
             {heroMobilePhotos.map((photo, idx) => {
               const isSelected = idx === currentHeroPhotoIdx;
               const isVisible = mobileMediaMode === 'photo' && isSelected;
@@ -383,22 +361,25 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               );
             })}
 
-            {/* Vidéo plein écran rognée avec minuterie exacte de 8 secondes */}
-            <video
-              ref={videoRef}
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              onTimeUpdate={handleVideoTimeUpdate}
-              onLoadedData={() => setIsVideoLoaded(true)}
-              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.72] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0'
+            {/* Photo d'accueil principale IMG_0385.png en haute résolution avec Animation de zoom cinématographique (Ken Burns 8 secondes) */}
+            <div
+              key={mainPhotoKey}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                mobileMediaMode === 'main' ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
               }`}
             >
-              <source src="/hero_mobile_video.mp4" type="video/mp4" />
-              <source src="/hero_mobile_video_h264.mp4" type="video/mp4" />
-            </video>
+              <img
+                src="/IMG_0385.png"
+                alt="ICDD Décoration & Architecture d'Intérieur Kinshasa"
+                className={`w-full h-full object-cover object-center brightness-[0.78] contrast-[1.05] ${
+                  mobileMediaMode === 'main' ? 'animate-kenburns' : ''
+                }`}
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/hero_mobile_banner.png';
+                }}
+              />
+            </div>
 
             {/* Voile sombre d'atténuation uniforme et cinématographique */}
             <div className="absolute inset-0 z-20 bg-black/35 pointer-events-none" />
