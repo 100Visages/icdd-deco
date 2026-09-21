@@ -8,18 +8,18 @@
   "theme_color": "#005EA6",
   "icons": [
     {
-      "src": "/icdd.jpeg",
+      "src": "/icdd.jpg",
       "sizes": "180x180",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "/icdd.jpeg",
+      "src": "/icdd.jpg",
       "sizes": "192x192",
       "type": "image/jpeg"
     },
     {
-      "src": "/icdd.jpeg",
+      "src": "/icdd.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }

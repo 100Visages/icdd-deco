@@ -57,33 +57,49 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   const [openDecoDetails, setOpenDecoDetails] = useState<Record<string, boolean>>({});
   const [openServiceHeroDetails, setOpenServiceHeroDetails] = useState<Record<number, boolean>>({});
 
-  // Mobile Full-screen Media State (alternates automatically between video and photo)
+  // Mobile Full-screen Media State (Minuterie de 8 secondes pour la vidéo, puis 2 photos avant reprise de la vidéo)
   const [mobileMediaMode, setMobileMediaMode] = useState<'video' | 'photo'>('video');
   const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
+  const [photosShownInCycle, setPhotosShownInCycle] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hasSwitchedBeforeEndRef = useRef<boolean>(false);
 
-  // Photos réelles de décorations faites par ICDD pour le hero mobile (transition fluide)
+  // Photos de réalisations d'exception réalisées par ICDD
   const heroMobilePhotos = [
     {
       src: '/hero_mobile_banner.png',
       alt: "ICDD Décoration & Architecture d'Intérieur Kinshasa",
+      title: "ICDD Architecture d'Intérieur",
+      location: 'Kinshasa, Gombe',
     },
     {
       src: ICDD_ASSETS.r19,
       alt: 'Salon Contemporain & Lignes Épurées réalisé par ICDD',
+      title: 'Salon Contemporain & Lignes Épurées',
+      location: 'Kinshasa, Gombe',
     },
     {
       src: ICDD_ASSETS.r16,
       alt: 'Habillage Mural Tasseaux de Bois & Marbre Noir par ICDD',
+      title: 'Habillage Mural Tasseaux & Marbre',
+      location: 'Kinshasa, Ngaliema',
     },
     {
       src: ICDD_ASSETS.r1,
       alt: 'Salon Prestigieux & Faux-Plafond Staff Lumineux par ICDD',
+      title: 'Salon Prestigieux & Staff Profilé',
+      location: 'Kinshasa, Gombe',
     },
     {
       src: ICDD_ASSETS.r22,
       alt: 'Espace de Vie & Décoration Contemporaine par ICDD',
+      title: 'Espace de Vie & Décoration Contemporaine',
+      location: 'Kinshasa, Macampagne',
+    },
+    {
+      src: ICDD_ASSETS.r34,
+      alt: 'Villa Résidentielle & Grand Séjour Lounge par ICDD',
+      title: 'Villa Résidentielle & Grand Séjour',
+      location: 'Kinshasa, Mont-Fleury',
     },
   ];
   const [currentHeroPhotoIdx, setCurrentHeroPhotoIdx] = useState<number>(0);
@@ -114,81 +130,87 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
   // Desktop media toggle (to also optionally preview the video showcase on PC)
   const [desktopShowcaseMode, setDesktopShowcaseMode] = useState<'carousel' | 'video'>('carousel');
 
-  // Mode média mobile : méthodes de transition douce
-  // Déclenchement de la transition vers l'image AVANT la fin de la vidéo
-  const triggerSwitchToPhoto = () => {
-    if (hasSwitchedBeforeEndRef.current) return;
-    hasSwitchedBeforeEndRef.current = true;
-    setMobileMediaMode('photo');
-    setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
-  };
-
-  // Détection en temps réel : transition douce dès 1.8s avant la fin ou dès 85% de lecture
-  const handleVideoTimeUpdate = () => {
-    if (videoRef.current && mobileMediaMode === 'video') {
-      const { currentTime, duration } = videoRef.current;
-      const threshold = duration > 0 ? Math.min(duration * 0.85, duration - 1.8) : 9.0;
-      if (currentTime >= threshold) {
-        triggerSwitchToPhoto();
-      }
-    }
-  };
-
-  // Alternance automatique entre la vidéo et les photos de réalisations avec fondu enchaîné
+  // Minuterie exacte de 8 secondes pour la vidéo, puis 2 photos de réalisations, puis reprise de la vidéo
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (mobileMediaMode === 'photo') {
-      hasSwitchedBeforeEndRef.current = false;
-      // Affichage de la photo de décoration pendant 5 secondes, puis retour en douceur à la vidéo
-      timer = setTimeout(() => {
-        setMobileMediaMode('video');
-      }, 5000);
-    } else if (mobileMediaMode === 'video') {
-      hasSwitchedBeforeEndRef.current = false;
-      // Minuteur de sécurité avant la fin du clip si timeUpdate n'est pas déclenché
-      timer = setTimeout(() => {
-        triggerSwitchToPhoto();
-      }, 9500);
-    }
-    return () => clearTimeout(timer);
-  }, [mobileMediaMode]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = true;
-    video.playsInline = true;
-
-    const playVideo = () => {
-      if (video.paused && mobileMediaMode === 'video') {
-        video.play().catch(() => {});
-      }
-    };
 
     if (mobileMediaMode === 'video') {
-      playVideo();
+      const video = videoRef.current;
+      if (video) {
+        video.currentTime = 0;
+        video.muted = true;
+        video.playsInline = true;
+        video.play().catch(() => {});
+      }
+
+      // Minuterie de 8 secondes (8000ms) pour la vidéo avant de passer aux photos
+      timer = setTimeout(() => {
+        setPhotosShownInCycle(1);
+        setMobileMediaMode('photo');
+      }, 8000);
+    } else {
+      // Mode photos : chaque photo reste affichée 5 secondes
+      timer = setTimeout(() => {
+        if (photosShownInCycle < 2) {
+          // Affiche la 2ème photo du cycle
+          setPhotosShownInCycle((prev) => prev + 1);
+          setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+        } else {
+          // Après 2 photos affichées, la vidéo reprend immédiatement
+          setPhotosShownInCycle(0);
+          setMobileMediaMode('video');
+          setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+        }
+      }, 5000);
     }
 
-    const handleResume = () => {
-      if (!document.hidden && mobileMediaMode === 'video') {
-        playVideo();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleResume);
-    window.addEventListener('focus', handleResume);
-    window.addEventListener('touchstart', playVideo, { once: true });
-    window.addEventListener('click', playVideo, { once: true });
-
     return () => {
-      document.removeEventListener('visibilitychange', handleResume);
-      window.removeEventListener('focus', handleResume);
+      clearTimeout(timer);
     };
-  }, [mobileMediaMode]);
+  }, [mobileMediaMode, photosShownInCycle, currentHeroPhotoIdx, heroMobilePhotos.length]);
 
-  const handleVideoEnded = () => {
-    triggerSwitchToPhoto();
+  // Détection en continu pour garantir que la vidéo bascule vers les photos après 8 secondes
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current && mobileMediaMode === 'video') {
+      if (videoRef.current.currentTime >= 8.0) {
+        setPhotosShownInCycle(1);
+        setMobileMediaMode('photo');
+      }
+    }
+  };
+
+  // Permettre à l'utilisateur de passer manuellement s'il le souhaite
+  const handleNextMedia = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (mobileMediaMode === 'video') {
+      setPhotosShownInCycle(1);
+      setMobileMediaMode('photo');
+    } else {
+      if (photosShownInCycle >= 2) {
+        setPhotosShownInCycle(0);
+        setMobileMediaMode('video');
+        setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+      } else {
+        setPhotosShownInCycle((prev) => prev + 1);
+        setCurrentHeroPhotoIdx((prev) => (prev + 1) % heroMobilePhotos.length);
+      }
+    }
+  };
+
+  const handlePrevMedia = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (mobileMediaMode === 'photo') {
+      if (photosShownInCycle <= 1) {
+        setPhotosShownInCycle(0);
+        setMobileMediaMode('video');
+      } else {
+        setPhotosShownInCycle((prev) => prev - 1);
+        setCurrentHeroPhotoIdx((prev) => (prev === 0 ? heroMobilePhotos.length - 1 : prev - 1));
+      }
+    } else {
+      setPhotosShownInCycle(2);
+      setMobileMediaMode('photo');
+    }
   };
 
   const toggleDecoDetails = (id: string) => {
@@ -333,15 +355,15 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
         {/* 1. HERO SECTION                                                          */}
         {/* ========================================================================= */}
 
-        {/* --- MOBILE HERO: PLEIN ÉCRAN (100vh / 100dvh) AVEC ARRIÈRE-PLAN PHOTO & VIDÉO AUTO-SWITCH --- */}
+        {/* --- MOBILE HERO: PLEIN ÉCRAN (100vh / 100dvh) AVEC MINUTERIE DE 8 SECONDES VIDÉO PUIS PHOTOS --- */}
         <section 
           id="mobile-hero-fullscreen"
           className="md:hidden relative w-full h-[100dvh] min-h-[100dvh] overflow-hidden flex flex-col select-none"
         >
-          {/* Arrière-plan Médias (Photo & Vidéo alternent seuls automatiquement, sans bouton manuel) */}
+          {/* Arrière-plan Médias (Vidéo 8 secondes puis Séquence de Photos de réalisations) */}
           <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-slate-950">
             
-            {/* Photos plein écran de décorations réelles réalisées par nos équipes ICDD */}
+            {/* Photos de réalisations prestigieuses d'ICDD */}
             {heroMobilePhotos.map((photo, idx) => {
               const isSelected = idx === currentHeroPhotoIdx;
               const isVisible = mobileMediaMode === 'photo' && isSelected;
@@ -351,7 +373,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
                   src={photo.src}
                   alt={photo.alt}
                   className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.70] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                    isVisible ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
+                    isVisible ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0'
                   }`}
                   referrerPolicy="no-referrer"
                   onError={(e) => {
@@ -361,7 +383,7 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               );
             })}
 
-            {/* Vidéo plein écran rognée sans bandes noires (hero_mobile_video.mp4) */}
+            {/* Vidéo plein écran rognée avec minuterie exacte de 8 secondes */}
             <video
               ref={videoRef}
               autoPlay
@@ -369,76 +391,38 @@ export const HeroOverlay: React.FC<HeroOverlayProps> = ({
               playsInline
               preload="auto"
               onTimeUpdate={handleVideoTimeUpdate}
-              onEnded={handleVideoEnded}
               onLoadedData={() => setIsVideoLoaded(true)}
-              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.68] contrast-[1.05] transition-all duration-1000 ease-in-out ${
-                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-103 pointer-events-none z-0'
+              className={`absolute inset-0 w-full h-full object-cover object-center brightness-[0.72] contrast-[1.05] transition-all duration-1000 ease-in-out ${
+                mobileMediaMode === 'video' ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0'
               }`}
             >
               <source src="/hero_mobile_video.mp4" type="video/mp4" />
               <source src="/hero_mobile_video_h264.mp4" type="video/mp4" />
             </video>
 
-            {/* Voile sombre d'atténuation uniforme et cinématographique : supprime les bandes artificielles et adoucit la luminosité globale */}
-            <div className="absolute inset-0 z-10 bg-black/35 pointer-events-none" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
+            {/* Voile sombre d'atténuation uniforme et cinématographique */}
+            <div className="absolute inset-0 z-20 bg-black/35 pointer-events-none" />
+            <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
           </div>
 
           {/* Superposition Sitora Épurée & Luxueuse : Plein écran, centre dégagé, bas ergonomique */}
-          <div className="relative z-20 w-full h-full flex flex-col justify-between items-center px-4 pt-16 sm:pt-20 pb-6 pointer-events-none max-w-md mx-auto">
+          <div className="relative z-20 w-full h-full flex flex-col justify-between items-center px-4 pt-12 sm:pt-14 pb-6 pointer-events-none max-w-md mx-auto">
             
-            {/* EN HAUT : Floating Action Capsule façon Sitora [ ☆  ↗  ♡ ] */}
-            <div className="pointer-events-auto mt-1 flex flex-col items-center">
-              <div className="inline-flex items-center gap-4 px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-xl border border-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.4)] text-white/90">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.getElementById('suite-du-site-content');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors text-xs font-semibold active:scale-95"
-                  title="Avis et réalisations de prestige"
-                >
-                  <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-                  <span className="text-[11px] font-bold">4.9k</span>
-                </button>
-                <div className="w-[1px] h-3 bg-white/20" />
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="hover:text-sky-300 transition-colors active:scale-95"
-                  title="Partager"
-                >
-                  {shareCopied ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  ) : (
-                    <Share2 className="w-3.5 h-3.5" />
-                  )}
-                </button>
-                <div className="w-[1px] h-3 bg-white/20" />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsHearted(!isHearted);
-                    setHeartCount(prev => isHearted ? prev - 1 : prev + 1);
-                  }}
-                  className="flex items-center gap-1 hover:text-rose-400 transition-colors active:scale-95"
-                  title="Ajouter aux favoris"
-                >
-                  <Heart className={`w-3.5 h-3.5 transition-colors ${isHearted ? 'fill-rose-500 text-rose-500' : ''}`} />
-                  <span className="text-[11px] font-bold">{heartCount}</span>
-                </button>
-              </div>
-
-              {shareCopied && (
-                <span className="mt-1 text-[10px] text-emerald-300 bg-black/60 px-2 py-0.5 rounded-full border border-emerald-500/40 animate-fade-in">
-                  Lien copié dans le presse-papier !
-                </span>
-              )}
+            {/* ESPACE SUPÉRIEUR ET CENTRAL DÉGAGÉ : Navigation gauche/droite tactile */}
+            <div className="flex-1 w-full flex items-center justify-between pointer-events-auto py-4">
+              <button
+                type="button"
+                onClick={handlePrevMedia}
+                aria-label="Média précédent"
+                className="w-1/3 h-full opacity-0 active:opacity-10 transition-opacity bg-white/10"
+              />
+              <button
+                type="button"
+                onClick={handleNextMedia}
+                aria-label="Média suivant"
+                className="w-2/3 h-full opacity-0 active:opacity-10 transition-opacity bg-white/10"
+              />
             </div>
-
-            {/* ESPACE CENTRAL DÉGAGÉ : Mise en valeur cinématographique de la vidéo & photo plein écran */}
-            <div className="flex-1 w-full" />
 
             {/* EN BAS : Card d'informations & Action Bar façon Sitora */}
             <div className="w-full pointer-events-auto flex flex-col gap-3">
