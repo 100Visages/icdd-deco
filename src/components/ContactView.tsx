@@ -36,8 +36,29 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMessage(null);
+
+    const trimmedName = formData.name.trim();
+    const trimmedPhone = formData.phone.trim();
+    const trimmedMessage = formData.message.trim();
+    const trimmedEmail = formData.email.trim();
+
+    if (!trimmedName) {
+      setErrorMessage('Veuillez renseigner votre nom complet.');
+      return;
+    }
+
+    if (!trimmedPhone) {
+      setErrorMessage('Veuillez renseigner votre numéro de téléphone ou WhatsApp.');
+      return;
+    }
+
+    if (!trimmedMessage) {
+      setErrorMessage('Veuillez préciser votre message ou votre projet.');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
     const msgDocRef = doc(db, 'messages', messageId);
@@ -45,11 +66,11 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
     try {
       await setDoc(msgDocRef, {
         userId: user ? user.uid : 'guest',
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
+        name: trimmedName,
+        email: trimmedEmail,
+        phone: trimmedPhone,
         subject: formData.subject.trim(),
-        message: formData.message.trim(),
+        message: trimmedMessage,
         status: 'unread',
         createdAt: serverTimestamp(),
       });
@@ -430,7 +451,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 {errorMessage && (
                   <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-xs">
                     {errorMessage}

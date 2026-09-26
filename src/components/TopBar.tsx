@@ -18,6 +18,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { AuthModal } from './AuthModal';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
 interface TopBarProps {
@@ -31,8 +32,9 @@ export const TopBar: React.FC<TopBarProps> = ({
   setActiveTab,
   openQuoteModal,
 }) => {
-  const { user, loading, signIn, favorites } = useAuth();
+  const { user, loading, favorites } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const navLinks: { id: NavTab; label: string; icon: React.ElementType; desc: string }[] = [
     { id: 'accueil', label: 'Accueil', icon: Home, desc: 'Présentation & Vision' },
@@ -188,7 +190,14 @@ export const TopBar: React.FC<TopBarProps> = ({
               {/* User Account Bar in Drawer */}
               <div className="pt-2 flex items-center justify-between px-1">
                 {user ? (
-                  <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAuthModalOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors text-left"
+                  >
                     {user.photoURL ? (
                       <img
                         src={user.photoURL}
@@ -202,19 +211,19 @@ export const TopBar: React.FC<TopBarProps> = ({
                       </div>
                     )}
                     <span className="text-xs font-medium text-slate-200">
-                      {user.displayName || 'Connecté'}
+                      {user.displayName || 'Mon Compte'}
                     </span>
                     {favorites.length > 0 && (
                       <span className="text-[10px] font-bold text-sky-300 flex items-center gap-0.5 bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
                         <Bookmark className="w-2.5 h-2.5 fill-current" />
-                        {favorites.length} projet{favorites.length > 1 ? 's' : ''}
+                        {favorites.length}
                       </span>
                     )}
-                  </div>
+                  </button>
                 ) : (
                   <button
                     onClick={() => {
-                      signIn();
+                      setIsAuthModalOpen(true);
                       setIsMobileMenuOpen(false);
                     }}
                     className="text-xs font-bold text-sky-300 hover:text-white flex items-center gap-1.5 py-1"
@@ -314,7 +323,11 @@ export const TopBar: React.FC<TopBarProps> = ({
           {loading ? (
             <div className="w-8 h-8 rounded-full bg-slate-800 animate-pulse border border-white/20" />
           ) : user ? (
-            <div className="flex items-center gap-1.5 bg-slate-950/80 backdrop-blur-xl p-1.5 rounded-full border border-white/20 shadow-lg text-white">
+            <button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="flex items-center gap-1.5 bg-slate-950/80 hover:bg-slate-900 backdrop-blur-xl p-1.5 rounded-full border border-white/20 hover:border-sky-400 shadow-lg text-white transition-all cursor-pointer"
+              title="Mon compte Google & favoris"
+            >
               {user.photoURL ? (
                 <img
                   src={user.photoURL}
@@ -333,20 +346,28 @@ export const TopBar: React.FC<TopBarProps> = ({
                   {favorites.length}
                 </span>
               )}
-            </div>
+            </button>
           ) : (
             <button
-              onClick={signIn}
-              className="p-2 rounded-full bg-slate-950/80 hover:bg-slate-900 text-slate-200 hover:text-white shadow-lg active:scale-95 transition-all cursor-pointer border border-white/20 backdrop-blur-xl"
-              title="Connexion"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-3.5 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900 text-slate-200 hover:text-white shadow-lg active:scale-95 transition-all cursor-pointer border border-white/20 backdrop-blur-xl flex items-center gap-2 text-xs font-bold"
+              title="Connexion Google"
             >
-              <LogIn className="w-4 h-4" />
+              <LogIn className="w-3.5 h-3.5 text-sky-300" />
+              <span>Connexion</span>
             </button>
           )}
 
         </div>
 
       </div>
+
+      {/* Google Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        onOpenQuoteModal={openQuoteModal}
+      />
 
     </header>
   );

@@ -26,6 +26,10 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isSignedIn() && (request.auth.token.email == 'charlysalamau@gmail.com' && request.auth.token.email_verified == true);
+    }
+
     // Validation for Quotes / Consultation requests
     function isValidQuote(data) {
       return (
@@ -33,7 +37,7 @@ service cloud.firestore {
         data.userId is string && data.userId.size() <= 128 &&
         (!isSignedIn() ? data.userId == 'guest' : (data.userId == request.auth.uid || data.userId == 'guest')) &&
         data.clientName is string && data.clientName.size() >= 2 && data.clientName.size() <= 100 &&
-        data.clientEmail is string && data.clientEmail.size() >= 5 && data.clientEmail.size() <= 150 &&
+        data.clientEmail is string && (data.clientEmail == '' || (data.clientEmail.size() >= 5 && data.clientEmail.size() <= 150)) &&
         data.selectedOffer is string && data.selectedOffer.size() <= 100 &&
         data.wallArea is number && data.wallArea > 0 && data.wallArea <= 50000 &&
         data.roomType is string && data.roomType.size() <= 100 &&
@@ -56,7 +60,7 @@ service cloud.firestore {
         data.userId is string && data.userId.size() <= 128 &&
         (!isSignedIn() ? data.userId == 'guest' : (data.userId == request.auth.uid || data.userId == 'guest')) &&
         data.name is string && data.name.size() >= 2 && data.name.size() <= 100 &&
-        data.email is string && data.email.size() >= 5 && data.email.size() <= 150 &&
+        data.email is string && (data.email == '' || (data.email.size() >= 5 && data.email.size() <= 150)) &&
         data.subject is string && data.subject.size() >= 2 && data.subject.size() <= 150 &&
         data.message is string && data.message.size() >= 3 && data.message.size() <= 2000 &&
         data.status in ['unread', 'read'] &&
@@ -78,10 +82,10 @@ service cloud.firestore {
 
     // Collection: /quotes/{quoteId}
     match /quotes/{quoteId} {
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid);
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isValidId(quoteId) && isValidQuote(incoming());
-      allow update, delete: if false;
+      allow update, delete: if isAdmin();
     }
 
     // Connectivity test collection
@@ -91,10 +95,10 @@ service cloud.firestore {
 
     // Collection: /messages/{messageId}
     match /messages/{messageId} {
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid);
-      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if isValidId(messageId) && isValidMessage(incoming());
-      allow update, delete: if false;
+      allow update, delete: if isAdmin();
     }
 
     // Subcollection: /users/{userId}/favorites/{projectId}

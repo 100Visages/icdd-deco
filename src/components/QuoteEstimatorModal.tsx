@@ -189,8 +189,24 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setSubmitError(null);
+
+    // React state validation to avoid browser native regex crashes
+    const trimmedName = formData.clientName.trim();
+    const trimmedEmail = formData.clientEmail.trim();
+    const trimmedPhone = formData.clientPhone.trim();
+
+    if (!trimmedName) {
+      setSubmitError('Veuillez renseigner votre nom et prénom.');
+      return;
+    }
+
+    if (!trimmedPhone || trimmedPhone === '+243') {
+      setSubmitError('Veuillez renseigner un numéro de téléphone WhatsApp valide.');
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const refId = 'DEV-ICDD-' + Math.floor(100000 + Math.random() * 900000);
     setQuoteReference(refId);
@@ -208,9 +224,9 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
     try {
       await setDoc(quoteDocRef, {
         userId: user ? user.uid : 'guest',
-        clientName: formData.clientName.trim(),
-        clientEmail: formData.clientEmail.trim(),
-        clientPhone: formData.clientPhone.trim(),
+        clientName: trimmedName,
+        clientEmail: trimmedEmail,
+        clientPhone: trimmedPhone,
         clientMessage: fullMessage,
         selectedOffer: formData.selectedOffer,
         wallArea: Number(formData.wallArea),
@@ -631,7 +647,7 @@ export const QuoteEstimatorModal: React.FC<QuoteEstimatorModalProps> = ({
 
                 {/* STEP 3: Client Details & Submission */}
                 {step === 3 && (
-                  <form onSubmit={handleSubmit} className="space-y-4 animate-in fade-in duration-200">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-4 animate-in fade-in duration-200">
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Name */}
