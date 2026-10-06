@@ -12,10 +12,14 @@ import {
   auth, 
   db, 
   loginWithGoogle, 
+  loginWithEmail,
+  registerWithEmail,
+  resetUserPassword,
   logoutUser, 
   handleFirestoreError, 
   OperationType 
 } from '../lib/firebase';
+import { supabase, signInWithSupabaseGoogle, signOutSupabase } from '../lib/supabase';
 import { Project } from '../types';
 
 interface AuthContextType {
@@ -23,6 +27,11 @@ interface AuthContextType {
   loading: boolean;
   favorites: string[];
   signIn: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInWithSupabase: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   toggleFavorite: (project: Project) => Promise<void>;
   isFavorite: (projectId: string) => boolean;
@@ -33,6 +42,11 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   favorites: [],
   signIn: async () => {},
+  signInWithGoogle: async () => {},
+  signInWithSupabase: async () => {},
+  signInWithEmail: async () => {},
+  signUpWithEmail: async () => {},
+  resetPassword: async () => {},
   signOut: async () => {},
   toggleFavorite: async () => {},
   isFavorite: () => false,
@@ -44,12 +58,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
+    // 1. Écoute de l'authentification Firebase
+    const unsubscribeFirebase = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setLoading(false);
+      } else {
+        // Vérifie si une session Supabase active existe
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session?.user) {
+            const adaptedUser = {
+              uid: session.user.id,
+              email: session.user.email,
+              displayName: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0],
+              photoURL: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || null,
+              emailVerified: !!session.user.email_confirmed_at,
+            } as unknown as User;
+            setUser(adaptedUser);
+          } else {
+            setUser(null);
+          }
+          setLoading(false);
+        });
+      }
     });
 
-    return () => unsubscribe();
+    // 2. Écoute de l'authentification Supabase (OAuth Google)
+    const { data: { subscription: unsubscribeSupabase } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user && !auth.currentUser) {
+        const adaptedUser = {
+          uid: session.user.id,
+          email: session.user.email,
+          displayName: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0],
+          photoURL: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || null,
+          emailVerified: !!session.user.email_confirmed_at,
+        } as unknown as User;
+        setUser(adaptedUser);
+        setLoading(false);
+      } else if (!session && !auth.currentUser) {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      unsubscribeFirebase();
+      unsubscribeSupabase.unsubscribe();
+    };
   }, []);
 
   // Sync favorites in real-time when user is authenticated
@@ -76,18 +130,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribeFavorites();
   }, [user]);
 
-  const signIn = async () => {
+  const signInWithGoogle = async () => {
     try {
       await loginWithGoogle();
     } catch (error) {
-      console.error('Login error:', error);
+      console.warn('Firebase Google Auth a échoué, tentative via Supabase Google OAuth...', error);
+      try {
+        await signInWithSupabaseGoogle();
+      } catch {
+        throw error;
+      }
+    }
+  };
+
+  const signInWithSupabase = async () => {
+    try {
+      await signInWithSupabaseGoogle();
+    } catch (error) {
+      console.error('Erreur Supabase Google OAuth:', error);
+      throw error;
+    }
+  };
+
+  const signIn = signInWithGoogle;
+
+  const signInWithEmail = async (email: string, password: string) => {
+    try {
+      await loginWithEmail(email, password);
+    } catch (error) {
+      console.error('Email login error:', error);
+      throw error;
+    }
+  };
+
+  const signUpWithEmail = async (email: string, password: string, displayName?: string) => {
+    try {
+      await registerWithEmail(email, password, displayName);
+    } catch (error) {
+      console.error('Email registration error:', error);
+      throw error;
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      await resetUserPassword(email);
+    } catch (error) {
+      console.error('Password reset error:', error);
       throw error;
     }
   };
 
   const signOut = async () => {
     try {
-      await logoutUser();
+      await Promise.allSettled([logoutUser(), signOutSupabase()]);
+      setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
@@ -99,7 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const toggleFavorite = async (project: Project) => {
     if (!user) {
       // If not logged in, prompt user to sign in
-      await signIn();
+      await signInWithGoogle();
       return;
     }
 
@@ -132,6 +229,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         favorites,
         signIn,
+        signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
+        resetPassword,
         signOut,
         toggleFavorite,
         isFavorite,

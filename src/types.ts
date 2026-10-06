@@ -1,8 +1,8 @@
-export type NavTab = 'accueil' | 'realisations' | 'services' | 'shop' | 'contact';
+export type NavTab = 'accueil' | 'realisations' | 'services' | 'shop' | 'contact' | 'connexion' | 'admin';
 
 export type RealisationCategory = 'Tous' | 'Appartements' | 'Chambres' | 'Bureaux' | 'Cuisines' | 'Portes' | 'Décoration' | 'Staff';
 
-export type ShopCategory = 'Tous' | 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux';
+export type ShopCategory = 'Tous' | 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux' | 'Meubles' | 'Tables';
 
 export type DecorOffer = 
   | 'Décoration simple' 
@@ -53,7 +53,7 @@ export interface ServiceItem {
 export interface ShopProduct {
   id: string;
   name: string;
-  category: 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux';
+  category: 'Peintures' | 'Portes' | 'Cuisines' | 'Matériaux' | 'Meubles' | 'Tables';
   shortDesc: string;
   description: string;
   priceDisplay: string;
@@ -63,6 +63,21 @@ export interface ShopProduct {
   badge?: string;
   specs?: string[];
   whatsappMessage: string;
+}
+
+export interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  badge: string;
+  badgeColor?: 'sky' | 'emerald' | 'amber' | 'slate' | 'rose';
+  description: string;
+  photoUrl: string;
+  phone?: string;
+  whatsappMessage?: string;
+  email?: string;
+  order?: number;
 }
 
 export interface QuoteFormData {
@@ -78,6 +93,37 @@ export interface QuoteFormData {
   clientPhone: string;
   clientMessage: string;
   preferredDate?: string;
+}
+
+export interface ClientQuote {
+  id: string;
+  userId?: string;
+  clientName: string;
+  clientEmail?: string;
+  clientPhone: string;
+  clientMessage?: string;
+  selectedOffer: string;
+  wallArea: number;
+  roomType: string;
+  materialsIncluded?: string[];
+  estimatedBudgetMin?: number;
+  estimatedBudgetMax?: number;
+  currency?: string;
+  laborIncluded?: boolean;
+  status: 'pending' | 'in_review' | 'contacted';
+  createdAt?: any;
+}
+
+export interface ClientMessage {
+  id: string;
+  userId?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'unread' | 'read';
+  createdAt?: any;
 }
 
 export interface FilterState {

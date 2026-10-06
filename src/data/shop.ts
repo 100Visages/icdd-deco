@@ -181,5 +181,91 @@ export const ICDD_SHOP_PRODUCTS: ShopProduct[] = [
     badge: 'Fait Main',
     specs: ['Diamètres disponibles : 45cm, 60cm, 80cm', 'Motifs : Feuilles d’acanthe, lignes modernes ou florales', 'Plâtre staff dense renforcé', 'Fixation sécurisée'],
     whatsappMessage: 'Bonjour ICDD, je souhaite commander une Rosace de Plafond en staff.'
+  },
+
+  // 5. MEUBLES (Fabrication & Agencement Sur Mesure ICDD)
+  {
+    id: 'meuble-tv-mural-luxe',
+    name: 'Meuble TV Mural Suspendu & Panneau Rétroéclairé LED',
+    category: 'Meubles',
+    shortDesc: 'Meuble TV flottant sur mesure avec tasseaux décoratifs en bois, niches de rangement et ruban LED.',
+    description: 'Conception et menuiserie haut de gamme par ICDD. Habillage mural avec tasseaux contemporains, meuble suspendu avec tiroirs invisibles push-to-open et passage de câbles totalement invisible. Dimensions ajustées à votre salon.',
+    priceDisplay: 'À partir de 450 $ sur mesure',
+    priceValue: 450,
+    availability: 'Sur commande / Sur mesure',
+    image: ICDD_ASSETS.r17,
+    badge: 'Sur Mesure',
+    specs: ['Finition : Chêne teinté, noir mat ou noyer', 'Rétroéclairage : LED indirect chaud 3000K', 'Passage de câbles dissimulé', 'Fixation murale haute sécurité'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite commander un Meuble TV Mural suspendu sur mesure.'
+  },
+  {
+    id: 'dressing-encastre-prestige',
+    name: 'Dressing Encastré & Armoire Modulaire Premium',
+    category: 'Meubles',
+    shortDesc: 'Agencement de dressing contemporain avec penderies éclairées, tiroirs feutrés et portes coulissantes ou battantes.',
+    description: 'Optimisation complète de vos espaces chambres et suites parentales. Finitions nobles, étagères modulables, penderies à bascule et éclairage intérieur automatique à l’ouverture.',
+    priceDisplay: 'Sur devis au mètre linéaire',
+    availability: 'Sur commande / Sur mesure',
+    image: ICDD_ASSETS.chambre2,
+    badge: 'Agencement Luxe',
+    specs: ['Structure : Panneaux haute densité hydrofuges', 'Système de fermeture soft-close amorti', 'Miroirs intégrés et éclairage LED', 'Conception 3D préalable incluse'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite un devis pour un Dressing Encastré sur mesure.'
+  },
+  {
+    id: 'buffet-enfilade-design',
+    name: 'Buffet Enfilade Design & Boiseries Cannelées',
+    category: 'Meubles',
+    shortDesc: 'Buffet bas pour salon ou salle à manger avec façades cannelées et plateau effet marbre.',
+    description: 'Alliance parfaite de l’artisanat d’ébénisterie et des lignes contemporaines. Offre un volume de rangement généreux tout en constituant la pièce maîtresse décorative de votre pièce de réception.',
+    priceDisplay: '580 $ / modèle standard',
+    priceValue: 580,
+    availability: 'Disponible',
+    image: ICDD_ASSETS.r4,
+    badge: 'Exclusivité',
+    specs: ['Dimensions standard : 180cm ou 220cm', 'Façades rainurées faites main', 'Piétement laqué métal noir ou or', 'Plateau effet quartz ou marbre'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite commander le Buffet Enfilade Design.'
+  },
+
+  // 6. TABLES (Salles à Manger, Salons & Bureaux)
+  {
+    id: 'table-manger-marbre-prestige',
+    name: 'Table à Manger Contemporaine Plateau Effet Marbre & Acier',
+    category: 'Tables',
+    shortDesc: 'Table de réception monumentale 8 à 12 personnes avec plateau céramique/marbre et piétement sculptural.',
+    description: 'Création signature ICDD pour vos salles à manger de prestige. Plateau résistant aux chocs et aux taches avec chanfrein poli, soutenu par un piètement architectural géométrique.',
+    priceDisplay: 'À partir de 650 $ selon dimensions',
+    priceValue: 650,
+    availability: 'Sur commande / Sur mesure',
+    image: ICDD_ASSETS.r11,
+    badge: 'Signature ICDD',
+    specs: ['Capacité : 6, 8, 10 ou 12 convives', 'Plateau : Finition Calacatta blanc, Noir Marquina ou Granit', 'Piétement : Métal thermolaqué haute résistance', 'Facilité d’entretien exemplaire'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite commander la Table à Manger Plateau Effet Marbre.'
+  },
+  {
+    id: 'table-basse-double-gigogne',
+    name: 'Ensemble Tables Basses Gigognes Duo Rondes',
+    category: 'Tables',
+    shortDesc: 'Duo de tables basses rondes de salon en verre fumé, bois précieux et contours dorés.',
+    description: 'Le complément indispensable de nos salons Décoration Luxueuse et Gold. Modulables, légères et élégantes, elles subliment le centre de votre espace détente devant vos canapés.',
+    priceDisplay: '240 $ le set de 2',
+    priceValue: 240,
+    availability: 'En stock à Kinshasa',
+    image: ICDD_ASSETS.r19,
+    badge: 'Tendance Salon',
+    specs: ['Set : Grande table Ø 80cm + Petite table Ø 60cm', 'Plateau : Verre trempé teinté ou marbre', 'Cerclage métal doré ou noir mat', 'Patin de protection pour carrelage et parquet'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite commander l’Ensemble Tables Basses Gigognes.'
+  },
+  {
+    id: 'table-bureau-direction-luxe',
+    name: 'Bureau de Direction Contemporain & Table de Conférence',
+    category: 'Tables',
+    shortDesc: 'Table de travail exécutive avec passe-câbles intégré, caisson latéral et finitions cuir/bois.',
+    description: 'Conçue pour les dirigeants et espaces professionnels de standing à Kinshasa. Ergonomie soignée, large plateau de travail et intégration discrète des branchements électriques et réseau.',
+    priceDisplay: 'Sur devis / Sur mesure',
+    availability: 'Disponible',
+    image: ICDD_ASSETS.bureau1,
+    badge: 'Espace Direction',
+    specs: ['Dimensions : 200x90cm ou 240x100cm', 'Boîtier connectique escamotable intégré', 'Plateau anti-rayures traitement mat', 'Caisson sécurisé avec serrure'],
+    whatsappMessage: 'Bonjour ICDD, je souhaite commander un Bureau de Direction / Table de Conférence.'
   }
 ];

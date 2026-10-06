@@ -8,6 +8,8 @@ import { RealisationsView } from './components/RealisationsView';
 import { ServicesView } from './components/ServicesView';
 import { ShopView } from './components/ShopView';
 import { ContactView } from './components/ContactView';
+import { LoginView } from './components/LoginView';
+import { AdminView } from './components/AdminView';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { QuoteEstimatorModal } from './components/QuoteEstimatorModal';
 import icddDecoBg from './assets/realisations/icdd_realisation_19.jpg';
@@ -22,6 +24,8 @@ const TAB_BACKGROUNDS: Record<NavTab, string> = {
   services: icddDecoServices,
   shop: icddDecoShop,
   contact: icddDecoContact,
+  connexion: icddDecoBg,
+  admin: icddDecoBg,
 };
 
 export default function App() {
@@ -173,6 +177,20 @@ export default function App() {
           {activeTab === 'contact' && (
             <ContactView
               openQuoteModal={() => handleOpenQuoteModal()}
+            />
+          )}
+
+          {activeTab === 'connexion' && (
+            <LoginView
+              onOpenQuoteModal={() => handleOpenQuoteModal()}
+              onNavigate={(tab) => setActiveTab(tab)}
+              onSelectProject={handleOpenProject}
+            />
+          )}
+
+          {activeTab === 'admin' && (
+            <AdminView
+              onNavigate={(tab) => setActiveTab(tab)}
             />
           )}
 

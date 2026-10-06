@@ -14,7 +14,6 @@ import {
   ShoppingBag, 
   Phone,
   ArrowRight,
-  ShieldCheck,
   MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -42,6 +41,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     { id: 'services', label: 'Services', icon: Compass, desc: 'Nos expertises sur mesure' },
     { id: 'shop', label: 'Shop', icon: ShoppingBag, desc: 'Matériaux, Cuisines & Portes' },
     { id: 'contact', label: 'Contact', icon: Phone, desc: 'Kinshasa & Devis gratuit' },
+    { id: 'connexion', label: 'Connexion / Mon Compte', icon: UserIcon, desc: 'Email, mot de passe & favoris' },
   ];
 
   const handleMobileNavClick = (tab: NavTab) => {
@@ -193,7 +193,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                   <button
                     type="button"
                     onClick={() => {
-                      setIsAuthModalOpen(true);
+                      setActiveTab('connexion');
                       setIsMobileMenuOpen(false);
                     }}
                     className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors text-left"
@@ -223,13 +223,13 @@ export const TopBar: React.FC<TopBarProps> = ({
                 ) : (
                   <button
                     onClick={() => {
-                      setIsAuthModalOpen(true);
+                      setActiveTab('connexion');
                       setIsMobileMenuOpen(false);
                     }}
                     className="text-xs font-bold text-sky-300 hover:text-white flex items-center gap-1.5 py-1"
                   >
                     <LogIn className="w-3.5 h-3.5" />
-                    <span>Se connecter avec Google</span>
+                    <span>Connexion (Email & mot de passe)</span>
                   </button>
                 )}
                 <span className="text-[10px] text-slate-400 font-medium">Kinshasa</span>
@@ -319,14 +319,18 @@ export const TopBar: React.FC<TopBarProps> = ({
             <span>Demander un devis</span>
           </button>
 
-          {/* User Profile / Google Auth */}
+          {/* User Profile / Auth */}
           {loading ? (
             <div className="w-8 h-8 rounded-full bg-slate-800 animate-pulse border border-white/20" />
           ) : user ? (
             <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-1.5 bg-slate-950/80 hover:bg-slate-900 backdrop-blur-xl p-1.5 rounded-full border border-white/20 hover:border-sky-400 shadow-lg text-white transition-all cursor-pointer"
-              title="Mon compte Google & favoris"
+              onClick={() => setActiveTab('connexion')}
+              className={`flex items-center gap-1.5 backdrop-blur-xl p-1.5 rounded-full border shadow-lg text-white transition-all cursor-pointer ${
+                activeTab === 'connexion' 
+                  ? 'bg-[#005EA6] border-sky-300 ring-2 ring-sky-400/40' 
+                  : 'bg-slate-950/80 hover:bg-slate-900 border-white/20 hover:border-sky-400'
+              }`}
+              title="Mon compte & favoris"
             >
               {user.photoURL ? (
                 <img
@@ -349,9 +353,13 @@ export const TopBar: React.FC<TopBarProps> = ({
             </button>
           ) : (
             <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="px-3.5 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900 text-slate-200 hover:text-white shadow-lg active:scale-95 transition-all cursor-pointer border border-white/20 backdrop-blur-xl flex items-center gap-2 text-xs font-bold"
-              title="Connexion Google"
+              onClick={() => setActiveTab('connexion')}
+              className={`px-3.5 py-1.5 rounded-full shadow-lg active:scale-95 transition-all cursor-pointer border backdrop-blur-xl flex items-center gap-2 text-xs font-bold ${
+                activeTab === 'connexion'
+                  ? 'bg-[#005EA6] text-white border-sky-300 shadow-sky-500/25'
+                  : 'bg-slate-950/80 hover:bg-slate-900 text-slate-200 hover:text-white border-white/20'
+              }`}
+              title="Connexion email & mot de passe"
             >
               <LogIn className="w-3.5 h-3.5 text-sky-300" />
               <span>Connexion</span>

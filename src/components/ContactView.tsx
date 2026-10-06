@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, Sparkles, FileText, Loader2, MessageCircle, ShieldCheck, UserCheck, ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { useStaffMembers } from '../utils/useAppData';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import icddOfficialLogo from '../assets/images/icdd.jpeg';
 
@@ -12,6 +13,7 @@ interface ContactViewProps {
 
 export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
   const { user } = useAuth();
+  const { staff } = useStaffMembers();
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -239,141 +241,71 @@ export const ContactView: React.FC<ContactViewProps> = ({ openQuoteModal }) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* 1. C.E.O */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/15 hover:border-sky-400/40 transition-colors flex flex-col justify-between space-y-3 group">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border border-sky-400/40 bg-white p-0.5 shadow-sm">
-                    <img src={icddOfficialLogo} alt="Logo C.E.O ICDD" className="w-full h-full object-cover" />
-                  </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-sky-500/20 to-[#005EA6]/30 text-[#00D7FF] border border-sky-400/30">
-                    Fondateur / C.E.O
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-sky-200 transition-colors">
-                    Direction Générale
-                  </h4>
-                  <span className="text-[11px] font-semibold text-[#00D7FF] block mt-0.5">
-                    C.E.O & Vision Globale
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                  Supervision de l'excellence architecturale, signature des projets et engagements de qualité.
-                </p>
-              </div>
-
-              <a
-                href="https://wa.me/243897504570?text=Bonjour%20la%20Direction%20ICDD,%20je%20souhaite%20un%20%C3%A9change%20pour%20un%20projet."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pt-2 flex items-center justify-between text-[11px] font-semibold text-sky-300 hover:text-white transition-colors border-t border-white/10"
+            {staff.map((member) => (
+              <div 
+                key={member.id} 
+                className="p-4 rounded-2xl bg-slate-950/60 border border-white/15 hover:border-sky-400/40 transition-colors flex flex-col justify-between space-y-3 group"
               >
-                <span>Contacter la direction</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            {/* 2. Directeur Technique */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/15 hover:border-sky-400/40 transition-colors flex flex-col justify-between space-y-3 group">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border border-sky-400/40 bg-white p-0.5 shadow-sm">
-                    <img src={icddOfficialLogo} alt="Logo Direction Technique ICDD" className="w-full h-full object-cover" />
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-sky-400/40 bg-white p-0.5 shadow-sm">
+                      <img 
+                        src={member.photoUrl || icddOfficialLogo} 
+                        alt={member.name} 
+                        className="w-full h-full object-cover rounded-full"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = '/icdd.jpeg';
+                        }}
+                      />
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-sky-500/20 to-[#005EA6]/30 text-[#00D7FF] border border-sky-400/30">
+                      {member.badge || member.role}
+                    </span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/10 text-slate-300 border border-white/15">
-                    Chantiers
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-sky-200 transition-colors">
-                    Direction Technique
-                  </h4>
-                  <span className="text-[11px] font-semibold text-slate-300 block mt-0.5">
-                    Supervision Staff & Travaux
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                  Coordination des maîtres staffeurs, enduiseurs et contrôle minutieux des finitions murales.
-                </p>
-              </div>
-
-              <a
-                href="tel:+243897504570"
-                className="pt-2 flex items-center justify-between text-[11px] font-semibold text-slate-300 hover:text-white transition-colors border-t border-white/10"
-              >
-                <span>Suivi technique</span>
-                <Phone className="w-3 h-3 text-sky-400" />
-              </a>
-            </div>
-
-            {/* 3. Architecte d'Intérieur */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/15 hover:border-sky-400/40 transition-colors flex flex-col justify-between space-y-3 group">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border border-sky-400/40 bg-white p-0.5 shadow-sm">
-                    <img src={icddOfficialLogo} alt="Logo Design 3D ICDD" className="w-full h-full object-cover" />
+                  <div>
+                    <h4 className="text-sm font-bold text-white group-hover:text-sky-200 transition-colors">
+                      {member.name}
+                    </h4>
+                    <span className="text-[11px] font-semibold text-[#00D7FF] block mt-0.5">
+                      {member.role}
+                    </span>
+                    {member.department && (
+                      <span className="text-[10px] text-slate-400 block">
+                        {member.department}
+                      </span>
+                    )}
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/10 text-slate-300 border border-white/15">
-                    Design & 3D
-                  </span>
+                  <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
+                    {member.description}
+                  </p>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-sky-200 transition-colors">
-                    Pôle Conception & 3D
-                  </h4>
-                  <span className="text-[11px] font-semibold text-slate-300 block mt-0.5">
-                    Architecture & Ambiance
-                  </span>
+
+                <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+                  {member.phone ? (
+                    <a
+                      href={`https://wa.me/${member.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(member.whatsappMessage || 'Bonjour, je souhaite un échange pour un projet.')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between w-full text-[11px] font-semibold text-sky-300 hover:text-white transition-colors"
+                    >
+                      <span className="truncate">Contacter</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0" />
+                    </a>
+                  ) : (
+                    <a
+                      href="https://wa.me/243897504570?text=Bonjour%20la%20Direction%20ICDD,%20je%20souhaite%20un%20%C3%A9change%20pour%20un%20projet."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between w-full text-[11px] font-semibold text-sky-300 hover:text-white transition-colors"
+                    >
+                      <span>Contacter</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                  Plans d'agencement, perspectives photoréalistes 3D et harmonies de matières sur mesure.
-                </p>
               </div>
-
-              <a
-                href="https://wa.me/243897504570?text=Bonjour,%20je%20souhaite%20des%20informations%20sur%20la%20conception%203D."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pt-2 flex items-center justify-between text-[11px] font-semibold text-slate-300 hover:text-white transition-colors border-t border-white/10"
-              >
-                <span>Demander un plan 3D</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            {/* 4. Conseil Clientèle & Métré */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/15 hover:border-sky-400/40 transition-colors flex flex-col justify-between space-y-3 group">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border border-sky-400/40 bg-white p-0.5 shadow-sm">
-                    <img src={icddOfficialLogo} alt="Logo Relations Clients ICDD" className="w-full h-full object-cover" />
-                  </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                    Conseil
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-sky-200 transition-colors">
-                    Relations Clients & Devis
-                  </h4>
-                  <span className="text-[11px] font-semibold text-slate-300 block mt-0.5">
-                    Accueil & Visites sur Site
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed font-normal">
-                  Prise de rendez-vous pour relevé métrique, calculs estimatifs et accompagnement dédié.
-                </p>
-              </div>
-
-              <a
-                href="tel:+243897504570"
-                className="pt-2 flex items-center justify-between text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors border-t border-white/10"
-              >
-                <span>Prendre RDV métré</span>
-                <Phone className="w-3 h-3" />
-              </a>
-            </div>
+            ))}
           </div>
         </motion.div>
 

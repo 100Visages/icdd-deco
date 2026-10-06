@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ICDD_SHOP_PRODUCTS, getWhatsAppProductLink, ICDD_WHATSAPP_NUMBER } from '../data/shop';
+import { getWhatsAppProductLink, ICDD_WHATSAPP_NUMBER } from '../data/shop';
+import { useShopProducts } from '../utils/useAppData';
 import { ShopCategory, ShopProduct } from '../types';
 import { 
   ShoppingBag, 
@@ -11,6 +12,9 @@ import {
   DoorClosed, 
   ChefHat, 
   Layers, 
+  Armchair,
+  Table,
+  Tag,
   CheckCircle2, 
   ExternalLink,
   Phone,
@@ -27,6 +31,7 @@ interface ShopViewProps {
 }
 
 export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
+  const { products } = useShopProducts();
   const [selectedCategory, setSelectedCategory] = useState<ShopCategory>('Tous');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeModalProduct, setActiveModalProduct] = useState<ShopProduct | null>(null);
@@ -45,35 +50,47 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
       id: 'Tous',
       label: 'Tous',
       icon: Sparkles,
-      count: ICDD_SHOP_PRODUCTS.length,
+      count: products.length,
     },
     {
       id: 'Peintures',
       label: 'Peintures',
       icon: Paintbrush,
-      count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Peintures').length,
+      count: products.filter(p => p.category === 'Peintures').length,
     },
     {
       id: 'Portes',
       label: 'Portes',
       icon: DoorClosed,
-      count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Portes').length,
+      count: products.filter(p => p.category === 'Portes').length,
     },
     {
       id: 'Cuisines',
       label: 'Cuisines',
       icon: ChefHat,
-      count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Cuisines').length,
+      count: products.filter(p => p.category === 'Cuisines').length,
     },
     {
       id: 'Matériaux',
       label: 'Staff',
       icon: Layers,
-      count: ICDD_SHOP_PRODUCTS.filter(p => p.category === 'Matériaux').length,
+      count: products.filter(p => p.category === 'Matériaux').length,
+    },
+    {
+      id: 'Meubles',
+      label: 'Meubles',
+      icon: Armchair,
+      count: products.filter(p => p.category === 'Meubles').length,
+    },
+    {
+      id: 'Tables',
+      label: 'Tables',
+      icon: Table,
+      count: products.filter(p => p.category === 'Tables').length,
     },
   ];
 
-  const filteredProducts = ICDD_SHOP_PRODUCTS.filter(p => {
+  const filteredProducts = products.filter(p => {
     if (selectedCategory !== 'Tous' && p.category !== selectedCategory) {
       return false;
     }
@@ -217,40 +234,66 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
                 {/* Architectural Dark Gradient Mask */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/20 group-hover:via-slate-950/30 transition-colors duration-500 pointer-events-none" />
 
-                {/* Top Badges: Category & Price */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="bg-slate-950/70 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium text-white border border-white/20 flex items-center gap-1.5">
+                {/* Top Badges: Category & Luxury Price Highlight */}
+                <div className="relative z-10 flex items-center justify-between gap-2">
+                  <div className="bg-slate-950/80 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-white border border-white/20 flex items-center gap-1.5 shadow-md">
                     <Sparkles className="w-3.5 h-3.5 text-[#00D7FF]" />
                     <span>{product.category}</span>
                   </div>
 
-                  <span className="bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/20 shadow-xs">
-                    {product.priceDisplay}
-                  </span>
+                  {/* Prominent Price Tag with Emerald Accent */}
+                  <div className="bg-gradient-to-r from-emerald-600/95 to-teal-700/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-black text-white border border-emerald-300/40 shadow-lg flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-emerald-200" />
+                    <span>{product.priceDisplay}</span>
+                  </div>
                 </div>
 
                 {/* Bottom Decorative Content */}
-                <div className="relative z-10 space-y-2">
-                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight group-hover:text-sky-200 transition-colors line-clamp-1">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs text-slate-300 font-light line-clamp-1">
-                    {product.shortDesc}
-                  </p>
+                <div className="relative z-10 space-y-2.5">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black text-white tracking-tight group-hover:text-sky-200 transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-slate-300 font-light line-clamp-1 mt-0.5">
+                      {product.shortDesc}
+                    </p>
+                  </div>
 
-                  <div className="pt-2 flex items-center justify-between gap-2">
+                  {/* Explicit Price & Availability Bar */}
+                  <div className="bg-slate-950/85 backdrop-blur-md p-2.5 rounded-2xl border border-white/15 flex items-center justify-between gap-2">
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Tarif
+                      </span>
+                      <span className="text-sm sm:text-base font-black text-emerald-400 tracking-tight block">
+                        {product.priceDisplay}
+                      </span>
+                    </div>
+
+                    <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${
+                      product.availability === 'En stock à Kinshasa'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        : product.availability === 'Disponible'
+                        ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    }`}>
+                      {product.availability}
+                    </span>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between gap-2">
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="px-3.5 py-2 rounded-full bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 border border-emerald-400/40 shadow-xs transition-all active:scale-95 cursor-pointer"
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-white text-xs font-extrabold flex items-center justify-center gap-2 border border-emerald-400/40 shadow-md transition-all active:scale-95 cursor-pointer"
                     >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>WhatsApp</span>
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Commander</span>
                     </a>
 
-                    <div className="w-9 h-9 rounded-full bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-110">
+                    <div className="w-10 h-10 rounded-xl bg-white/15 group-hover:bg-[#005EA6] text-white flex items-center justify-center backdrop-blur-md border border-white/25 transition-all duration-300 group-hover:scale-105 shrink-0">
                       <ExternalLink className="w-4 h-4" />
                     </div>
                   </div>
@@ -341,6 +384,31 @@ export const ShopView: React.FC<ShopViewProps> = ({ openQuoteModal }) => {
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 custom-scrollbar">
+              {/* Dedicated Luxury Pricing & Availability Card */}
+              <div className="p-4 rounded-2xl bg-slate-900 border border-emerald-500/30 flex items-center justify-between gap-4 text-white shadow-md">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 block">
+                    Tarif & Conditions ICDD
+                  </span>
+                  <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                    {activeModalProduct.priceDisplay}
+                  </span>
+                  {activeModalProduct.priceValue && (
+                    <span className="text-[11px] text-slate-400 block mt-0.5">
+                      Montant de référence : {activeModalProduct.priceValue} $
+                    </span>
+                  )}
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                    Disponibilité
+                  </span>
+                  <span className="text-xs font-bold text-emerald-300 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 inline-block mt-1">
+                    {activeModalProduct.availability}
+                  </span>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <h4 className="text-xs uppercase font-bold text-slate-400">Description</h4>
                 <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
